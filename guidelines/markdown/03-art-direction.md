@@ -1,225 +1,253 @@
-# Open Session Art Direction Guide
-*Version 1.0 - AI-Interpretable Brand System*
+---
+title: "Art Direction"
+version: "1.0"
+source_pdf: "../pdf/3- Art Direction.pdf"
+last_updated: "2026-05"
+---
 
-## Brand Overview
+# 03 Art Direction
 
-Open Session is a design company operating at the intersection of traditional design excellence and AI-powered creativity. We serve two audiences:
-- **Clients**: Through design systems, brand identity, web development, workshops, and public speaking
-- **Community**: Via open-source design platforms, repositories, and AI education for creatives
+## Art Direction Overview
 
-Our visual language reflects the duality of isolation and acceleration that creatives experience today - meeting them in their solitary moments while preparing them for a rapidly evolving world.
+Open Session's art direction encompasses six visual territories that define how the brand appears across all creative touchpoints. Each territory has specific guidelines for composition, framing, figures, and subjects.
 
-## Creative Territories
+### Visual Territories
 
-### Channel Strategy
-| Channel Type | Platforms | Territories | Purpose |
-|-------------|-----------|------------|---------|
-| Social Channels | Instagram, Dribbble, Pinterest | Auto, Lifestyle, Move | Top of funnel - capture attention, showcase AI applications |
-| Deeper Channels | Website, Newsletter | Work, Feel, Escape | Bottom of funnel - demonstrate depth, build trust |
-
-### Territory Definitions
-
-#### 1. AUTO - Performance & Precision
-**Core Concept**: The intersection of human and machine through automotive excellence
-
-**Visual Language**:
-- High-contrast automotive photography
-- Technical details and engineering precision
-- Dramatic lighting with reflections
-- Film grain and studio lighting with modern grit
-
-**Do's**:
-- Emphasize car culture across eras
-- Use dramatic lighting and reflections
-- Include technical details and film grain
-- Maintain premium, sophisticated feel
-
-**Don'ts**:
-- Avoid cluttered/busy backgrounds
-- No oversaturated colors
-- Skip generic stock imagery
-- Never feel too commercial
-
-**Channel**: Social (Instagram, Dribbble, Pinterest)
+| Territory | Purpose |
+|-----------|---------|
+| Reality on Film | Authentic team and workspace photography |
+| Analog | Retro-inspired visuals with vintage technology |
+| Outdoor Productivity | Technology in natural landscapes |
+| Code in Reality | Technology integrated into everyday moments |
+| Dreamscape | Abstract emotional imagery |
+| The Work | Showcasing actual creative work |
 
 ---
 
-#### 2. LIFESTYLE - Human Connection
-**Core Concept**: Authentic human experiences and cultural moments
+## Reality on Film
 
-**Visual Language**:
-- Authentic portraiture
-- Fashion-forward imagery
-- Diverse representation
-- Natural, flattering lighting
+Utilizing flash film photography to allow our authentic selves to be visualized. Used to portray us working and creating, team members, workspaces, community events.
 
-**Do's**:
-- Prioritize authentic, diverse personas
-- Capture genuine emotions
-- Show real environments and contexts
-- Use natural lighting
+### Territory Specs
 
-**Don'ts**:
-- Avoid overly staged poses
-- Don't rely on stereotypes
-- Skip heavy retouching/filters
-- Maintain cultural sensitivity
+#### Composition & Framing
 
-**Channel**: Social (Instagram, Dribbble, Pinterest)
+- **Imperfection = Authenticity**
+- Use best judgement for composition: rule of thirds, center-weighted, edge-tension
+- Intimate framing/cropping to create first-person perspective
+- Use negative space if it emphasizes the subject; unlikely with intimate framing
 
----
+#### Figures & Subjects
 
-#### 3. MOVE - Dynamic Energy
-**Core Concept**: Motion, transformation, and kinetic energy
-
-**Visual Language**:
-- Motion blur and trails
-- Dynamic angles
-- Athletic forms
-- Energy and vitality
-
-**Do's**:
-- Capture motion blur and trails
-- Use dynamic perspectives
-- Show athletic form and technique
-- Emphasize energy
-
-**Don'ts**:
-- Avoid static compositions
-- Don't overuse motion effects
-- Skip unrealistic body standards
-- Avoid poor action timing
-
-**Channel**: Social (Instagram, Dribbble, Pinterest)
+- Single subject per shot unless it's a collaborative scene or community gathering
+- Some images may only have objects as the main subject and no humans
+- Faces may be posed for portraits or candid to show emotion/personalities
+- Gaze falls depending on the type of photo being taken
+- **No faces will be generated with AI**
+- Wardrobe is neutral and/or complimentary to brand colors
 
 ---
 
-#### 4. ESCAPE - Wanderlust & Solitude
-**Core Concept**: Contemplation and adventure in vast landscapes
+## Analog
 
-**Visual Language**:
-- Environmental portraiture
-- Single figures in open spaces
-- Golden/blue hour lighting
-- Natural preservation focus
+Retro-inspired visuals featuring vintage televisions and computing equipment in nostalgic settings, evoking a sense of technological history with warm, film-like aesthetics.
 
-**Philosophical Context**: *Represents creative isolation - meeting creatives where they feel alone*
+### Territory Specs
 
-**Do's**:
-- Showcase scale through human placement
-- Capture golden/blue hour
-- Include authentic outdoor moments
-- Emphasize natural beauty
+#### Composition & Framing
 
-**Don'ts**:
-- Avoid crowded tourist spots
-- Consider environmental impact
-- Skip heavy filters
-- Maintain authenticity
+- Center-weighted subject placement is ideal for flexible use across different channels and aspect ratios
+- Use negative space to draw the eye to the subject, especially when depicting messages on a screen
+- Framing/composition is dependent on the image and the desired amount of negative space
+- If a horizon line is present, it should be in the lower half of the image
 
-**Channel**: Website, Newsletter
+#### Figures & Subjects
+
+- Single subject per shot unless it's a collaborative scene or community gathering
+- Some images may only have objects as the main subject and no humans
+- **No faces are to be generated with AI**
+- All AI-generated figures must be facing away from the "camera" or shown as an indistinct figure with no detailed features except for an outer silhouette of a person
+- Wardrobe is neutral and/or complimentary to brand colors
 
 ---
 
-#### 5. WORK - Design Transformation
-**Core Concept**: Innovation showcase and experimental playground
+## Outdoor Productivity
 
-**Visual Language**:
-- Real project outcomes
-- Before/after transformations
-- Data visualizations
-- Collaborative processes
+Technology placed in expansive natural landscapes where computers and monitors are juxtaposed against fields, grass, and open skies to emphasize the contrast between digital tools and the vastness of nature.
 
-**Special Focus**: *Experimentation with AI tools (MCP, Figma, Framer, ChatGPT, Gemini, Runway, Midjourney, Claude)*
+### Territory Specs
 
-**Do's**:
-- Feature real projects AND experiments
-- Show transformations
-- Include metrics and data viz
-- Highlight collaborative processes
+#### Composition & Framing
 
-**Don'ts**:
-- No generic office imagery
-- Avoid staged scenarios
-- Skip hypothetical work
-- Don't obscure metrics
+- Center-weighted subject placement is ideal for flexible use across different channels and aspect ratios
+- Higher percentage of negative space to show the vastness of the outdoors
+- Empty space around the subject emphasizes the idea of technology being small in the grand scheme of what it means to be human
+- Framing/composition with increased space around the subject
 
-**Channel**: Website, Newsletter
+#### Figures & Subjects
+
+- Single subject per shot unless it's a collaborative scene or community gathering
+- Some images may only have objects as the main subject and no humans
+- **No faces are to be generated with AI**
+- All AI-generated figures must be facing away from the "camera" or shown as an indistinct figure with no detailed features except for an outer silhouette of a person
+- Wardrobe is neutral and/or complimentary to brand colors
 
 ---
 
-#### 6. FEEL - Atmospheric Abstraction
-**Core Concept**: Mood over message, feeling over form
+## Code in Reality
 
-**Visual Language**:
-- Textural landscapes
-- Color gradients
-- Organic shapes
-- Atmospheric elements
+AI-generated lifestyle imagery showing technology integrated into everyday moments like dining and urban scenes, with warm tones and natural human interaction.
 
-**Do's**:
-- Experiment with gradients
-- Capture natural textures
-- Use soft focus/bokeh
-- Emphasize mood
+### Territory Specs
 
-**Don'ts**:
-- Avoid harsh transitions
-- Don't over-explain
-- Skip digital artifacts
-- Avoid predictable colors
+#### Composition & Framing
 
-**Channel**: Website, Newsletter
+- Center-weighted subject placement is ideal for flexible use across different channels and aspect ratios
+- Use negative space if it emphasizes the subject
+- If a horizon line is present, it should be in the lower half of the image
+
+#### Figures & Subjects
+
+- Single subject per shot unless it's a collaborative scene or community gathering
+- Some images may only have objects as the main subject and no humans
+- **No faces are to be generated with AI**
+- All AI-generated figures must be facing away from the "camera" or shown as an indistinct figure with no detailed features except for an outer silhouette of a person
+- Wardrobe is neutral and/or complimentary to brand colors
 
 ---
 
-## Universal Design Principles
+## Dreamscape
 
-### Core Aesthetic Threads
-All territories share these foundational elements:
-- **Dramatic lighting** that creates mood
-- **Authentic moments** over staged scenarios
-- **Natural textures** as grounding elements
-- **World-building** mindset for immersion
+Elicit feelings and emotion using abstract scenes, shapes, colors, and lighting to create a sense of feeling in a world that's filled with distracting content. Lean into content generation as an art-form with emotional abstraction.
 
-### Emotional Framework
+### Territory Specs
 
-**Visual Narrative Components**:
-- **Isolation**: Single figures in open spaces
-- **Acceleration**: Movement in crowded spaces
-- **Elevation**: Meeting creatives in isolation, lifting them up
+#### Composition & Framing
 
-### Photography Hierarchy
-1. **Primary**: Photography (generates feeling, vibe, enablement)
-2. **Secondary**: Illustrations (from Sigma/Counterfeit Works)
-3. **Support**: Icons (IBM system, 2000+ icons)
+- Center-weighted subject placement is ideal for flexible use across different channels and aspect ratios
+- Use negative space if it emphasizes the subject
+- Framing/composition is dependent on the image and the desired amount of negative space
+
+#### Figures & Subjects
+
+- Objects will primarily be the main subject; no limit on figures shown if they're present in image
+- **No faces are to be generated with AI**
+- All AI-generated figures must be facing away from the "camera" or shown as an indistinct figure with no detailed features except for an outer silhouette of a person
+- Wardrobe is neutral and/or complimentary to brand colors
 
 ---
 
-## Texture System
+## The Work
 
-### ASCII Textures
-**Role**: Core visual element with strong presence
-**Application**: Motion effects, primary design element
+At the end of the day, you're focused on brand and creative work. It's important that you showcase the work you've done in the past in ways that ground the user and audience back in the reality of your craft.
 
-| Property | Specification |
-|----------|--------------|
-| Layer Position | Back-most |
-| Opacity | 25% |
-| Blend Mode (Dark with Light) | Difference |
-| Blend Mode (Light with Dark) | Plus Darker |
-| Allowed Backgrounds | Vanilla, Charcoal only |
+### Territory Specs
 
-### Halftone Textures
-**Role**: Background texture for hero/cover slides
+#### Composition & Framing
+
+- Center-weighted subject placement is ideal for flexible use across different channels and aspect ratios
+- Use negative space if it emphasizes the subject
+- Framing/composition is dependent on the image and the desired amount of negative space
+
+#### Figures & Subjects
+
+- May be a single person, a collaborative scene, or community gathering, etc.
+- Some images may only have objects as the main subject and no humans
+- **Only real humans are to be used here; No AI-generated persons**
+- Wardrobe is ideally neutral
+
+---
+
+## Color Composition
+
+Our brand colors are simple yet strong. Keeping consistency in color usage in our art direction will reinforce brand recognition.
+
+### Guidelines
+
+| Guideline | Description |
+|-----------|-------------|
+| Warm Bias | Bias warm color/tone, orange-leaning |
+| Accent Color | Use accent color Aperol for color pops |
+| White Tones | Whites resemble Vanilla brand color |
+| Black Tones | Blacks resemble Charcoal brand color |
+| Color Ratio | Stay as close to the 60/30/10 rule as possible |
+| Saturation | No over-saturation; realistic saturation for film or CRT |
+| Grain Effects | Use light grain effects to recreate a film look or mask imperfections of generated imagery |
+
+---
+
+## Type on Image
+
+Most commonly for social thumbnail applications, prioritize simplicity and legibility.
+
+### Guidelines
+
+- Use **Neue Haas** for important copy
+- Large or single word copy can be in the more stylistic **OBB** (font)
+- Place in "negative space" or over less detailed sections of image
+- Place subtle gradient under text or apply subtle drop shadow to text to increase contrast if necessary
+- **Must pass AAA accessibility standards for important copy**
+
+---
+
+## The Consolidated 'Never' List
+
+We hold ourselves to high standards, especially with generated imagery and content. Always avoid the following in our art direction and imagery.
+
+### Avoid
+
+| Rule | Description |
+|------|-------------|
+| No AI Faces | Never show AI-generated faces. If an AI-generated person is shown as the subject, the face should be obscured or looking away from the "camera" |
+| No Distortion | Never show distorted human figures |
+| No IP Theft | Never ever steal IP/people's likeness |
+| Color Balance | Never mix too many off-brand colors. It's okay to reveal settings and nature, but we should try to lean into having a decent amount of Vanilla, Charcoal, or Aperol. Try to stay as close to the 60/30/10 rule as possible |
+
+---
+
+## Textures
+
+Open Session uses three texture types to add depth and visual interest to designs. Each texture has specific application guidelines depending on the background color.
+
+### ASCII Texture
+
+#### Application Guidelines
+
+- Should always be the back-most layer
+- Set layer opacity to **25%**
+- If dark with light texture elements, use **Difference** blend mode
+- If light with dark texture elements, use **Plus Darker** blend mode
+- Only use on backgrounds that are our brand's primary colors: Vanilla and Charcoal
+
+#### Examples
+
+| Background | Opacity | Blend Mode |
+|------------|---------|------------|
+| Dark (light texture) | 25% | Difference |
+| Light (dark texture) | 25% | Plus Darker |
+
+---
+
+### Halftone Texture
+
+#### Application Guidelines
+
+- Should always be the back-most layer
+- Only use on backgrounds that are our brand's primary colors: Vanilla and Charcoal
 
 | Background | Opacity | Blend Mode |
 |------------|---------|------------|
 | Vanilla | 25% | Difference |
 | Charcoal | 100% | Soft Light |
 
-### Paper Textures
-**Role**: Background texture layer
+---
+
+### Paper Texture
+
+#### Application Guidelines
+
+- Should always be the back-most layer
+- Only use on backgrounds that are our brand's primary colors: Vanilla and Charcoal
 
 | Background | Opacity | Blend Mode |
 |------------|---------|------------|
@@ -228,159 +256,107 @@ All territories share these foundational elements:
 
 ---
 
-## Digital Joy Aesthetic
+## Icons
 
-### Current Implementation
-- **3D/Motion**: CRT, film grain, aberration, halation
-- **Video Effects**: Dehancer, digital nostalgia
-- **Templates**: Happy Editing Co., Fredpelle
+With over 4,600+ icons, we leverage both the Figma and Component Library with the pro license from **Untitled UI**.
 
-### Future Exploration
-- Extending to 2D static imagery
-- Dreamy, nostalgic appearance
-- Film-like degradation as beauty
+We find it to be one of the most comprehensive systems and then we use other libraries to support missing icons like popular brand logos and other creative iconography that speaks to the brand and product functionality.
 
-### Technical Stack
+### Resources
 
-**Style Effects**:
-- CRT emulation
-- Film grain
-- Chromatic aberration
+| Resource | Type |
+|----------|------|
+| Untitled UI Icons | Figma Library |
+| Version | v1.6 |
+
+---
+
+## Illustrations
+
+Our illustrations are sourced from **Sigma**, specifically the agency **Counterfeit Works**. These visuals showcase layers of data design, and the intersection of science aligns well with our core values and visual aspirations.
+
+### Available Sets
+
+- **Shapes Vol.1**
+- **Shapes Vol.2**
+
+---
+
+## Video & Effects
+
+### Style
+
+Our style emulates CRT and film-like effects, drawing inspiration from the **digital joy aesthetic**. We aim to bring a nostalgic and vibrant feel to your videos.
+
+#### Key Effects
+
+- CRT
+- Film
+- Grit
+- Grain
+- Aberration
 - Halation
-- Grit textures
 
-**Tools**:
-- ASCII Generators: Endless Tools, Video to ASC2
-- Video Templates: Caption, Happy Editing Co., Fredpelle
-- Effects: Dehancer, Digital Joy filters
+### Templates
 
----
+To maintain agility and effectiveness, we utilize top-tier templates from industry repositories. This allows us to show up well across short-form and long-form content.
 
-## AI Implementation Guidelines
+| Provider | Purpose |
+|----------|---------|
+| Happy Editing Co. | Video templates |
+| Fredpelle | Video templates |
 
-### Decision Tree for Territory Selection
+### Tools
 
-**Social Channel Logic**:
-- Automotive/Technical Content → **Auto**
-- Human/Portrait Content → **Lifestyle**
-- Action/Sports Content → **Move**
+We leverage a range of fast-access web tools to craft engaging video snippets and stunning effects. These tools allow us to easily edit and enhance our videos.
 
-**Website/Newsletter Logic**:
-- Case Study/Experiment → **Work**
-- Landscape/Contemplative → **Escape**
-- Abstract/Emotional → **Feel**
-
-### Texture Application Logic
-
-1. Assess hero element needs
-2. If background texture needed:
-   - Cover slides → Apply Halftone or Paper
-   - Motion graphics → Apply ASCII (core element)
-3. Always maintain exact opacity and blend mode specifications
-4. Only apply to Vanilla or Charcoal backgrounds
-
-### World-Building Checklist
-- [ ] Does the image create an immersive mood?
-- [ ] Is there a clear emotional narrative?
-- [ ] Does it reflect isolation OR acceleration?
-- [ ] Are visual cues consistent with territory?
-- [ ] Will the creative audience see themselves?
+| Tool | Purpose |
+|------|---------|
+| Digital Joy | CRT, film effects |
+| Dehancer | Film emulation |
+| Caption | Captioning |
+| Endless Tools | ASCII & 3D generators |
+| Video to ASCII | ASCII conversion |
 
 ---
 
-## Brand Boundaries
+## Social Visuals
 
-### Never Include
-- Generic stock photography
-- Overly commercial feeling
-- Heavy filters that obscure authenticity
-- Cluttered compositions
-- Stereotypical representations
-- Staged workplace scenarios
+When creating thematic content for socials, **at least 3 of the 5 pillars** below should be used to guide our social content in the desired artistic direction. This applies to covers, thumbnails, and artistic content.
 
-### Always Maintain
-- Premium sophistication
-- Authentic moments
-- Cultural sensitivity
-- Environmental consciousness
-- Technical precision in specifications
-- Emotional resonance
+### Self-Guided Pillars
+
+| Pillar | Name | Description |
+|--------|------|-------------|
+| 1 | Secondary is Primary | Orange highlights |
+| 2 | Limitless | Infinite possibilities, empowerment |
+| 3 | Metaphorical Me | Human/machine, empathetic |
+| 4 | Raw Aesthetic | Texture, grain, film, personal |
+| 5 | Dreamscape | Different dimensions |
 
 ---
 
-## Resource Library
+## Social Typography
 
-### Icons
-- **System**: IBM Icon Library
-- **Count**: 2000+ icons
-- **Access**: Via dedicated Figma branch
+### Type Scale
 
-### Illustrations
-- **Source**: Sigma (Counterfeit Works agency)
-- **Collections**: Shapes Vol.1, Shapes Vol.2
-- **Style**: Layers of data design, science intersection
+| Level | Name | Usage |
+|-------|------|-------|
+| d1 | Display 1 | Largest display text |
+| d2 | Display 2 | Large display text |
+| d3 | Display 3 | Medium display text |
+| h1 | Heading 1 | Primary headings |
+| h2 | Heading 2 | Secondary headings |
+| h3 | Heading 3 | Tertiary headings |
+| b1 | Body 1 | Primary body text |
+| b2 | Body 2 | Secondary body text |
+| Caption | Caption | Small text, captions |
+| Numbers | Numbers | Numerical content |
+| Quote | Quote | Quoted text |
 
-### Video Resources
-- **Templates**: Caption templates, Happy Editing Co., Fredpelle
-- **Effects**: Digital Joy, Dehancer
-- **Generators**: Endless Tools, Video to ASC2
+### Legibility Guidelines
 
----
-
-## Evolution Protocol
-
-This system is designed to evolve. When experimenting:
-1. Document new AI tool integrations in Work territory
-2. Test Digital Joy aesthetic expansions carefully
-3. Maintain core emotional framework
-4. Share learnings with community (open source ethos)
-5. Update this document quarterly
-
-### AI Tools in Active Exploration
-- MCP (Model Context Protocol)
-- Figma AI features
-- Framer AI
-- ChatGPT
-- Gemini
-- Runway
-- Midjourney
-- Claude
-
-### Version History
-- v1.0 - Initial AI-interpretable system (2024)
-- Future: Add specific AI tool parameters as discovered
-
----
-
-## Quick Reference
-
-### Territory by Purpose
-| Need | Territory | Channel |
-|------|-----------|---------|
-| Attention-grabbing | Auto, Lifestyle, Move | Social |
-| Trust-building | Work, Feel, Escape | Website |
-| Technical showcase | Auto, Work | Any |
-| Human stories | Lifestyle, Escape | Any |
-| Energy/Motion | Move | Social |
-| Contemplation | Escape, Feel | Website |
-
-### Texture Quick Guide
-| Texture | Primary Use | Opacity | Notes |
-|---------|------------|---------|-------|
-| ASCII | Motion, Core element | 25% | Strong presence |
-| Halftone | Hero slides | 25% (V) / 100% (C) | Background layer |
-| Paper | Background texture | 50% (V) / 100% (C) | Background layer |
-
-*V = Vanilla background, C = Charcoal background*
-
----
-
-## Contact & Updates
-
-For questions about implementation or to contribute to this evolving system:
-- Submit updates via pull request
-- Tag changes with territory name
-- Document experiments in Work section
-- Share discoveries with community
-
-*Remember: This is a living document designed to grow with our understanding of AI-assisted design.*
+If necessary to increase legibility, then one of these effects may be used:
+- Subtle gradient behind text
+- Drop shadow on text
+- Placement in negative space areas
