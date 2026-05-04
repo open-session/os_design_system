@@ -1,0 +1,49 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/config-schema.json",
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(bun *)",
+      "Bash(npm *)",
+      "Bash(pnpm *)",
+      "Bash(yarn *)",
+      "Bash(npx *)",
+      "Bash(bunx *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(mv *)",
+      "Bash(cp *)",
+      "Bash(rm:!-rf *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(grep *)",
+      "Bash(find *)",
+      "Bash(wc *)",
+      "Bash(gh *)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "mcp__github__*"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf *)"
+    ]
+  },
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"]
+    }
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "command": "echo '## Session started: '$(date '+%Y-%m-%d %H:%M')",
+        "type": "inject"
+      }
+    ]
+  }
+}

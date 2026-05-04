@@ -1,0 +1,144 @@
+# [Project Name] - Claude Configuration
+
+> Brief project description
+
+---
+
+## Project Overview
+
+[Description of what this project does, target users, key features]
+
+---
+
+## Essential Commands
+
+```bash
+# Development
+bun dev          # Start dev server
+bun run build    # Production build
+bun run lint     # Linting
+bun test         # Run tests
+```
+
+---
+
+## Tech Stack
+
+- **Framework**: [Next.js / React / Vue / etc.]
+- **Styling**: [Tailwind CSS / CSS Modules / etc.]
+- **State**: [Zustand / Redux / etc.]
+- **Database**: [Supabase / Prisma / etc.]
+
+---
+
+## Key Directories
+
+```
+app/                    # Application routes/pages
+components/             # UI components
+  ui/                   # Primitive components
+  features/             # Feature-specific components
+lib/                    # Utilities and helpers
+hooks/                  # Custom React hooks
+```
+
+---
+
+## Code Conventions
+
+### TypeScript
+
+- Strict mode enabled
+- Prefer `interface` for component props
+- Use Zod for runtime validation
+
+### Components
+
+- Use design system primitives from `components/ui/`
+- Co-locate component-specific types
+- Prefer composition over prop drilling
+
+### Styling
+
+Use semantic design tokens:
+
+```css
+/* Use these */
+bg-bg-primary          /* Main background */
+bg-bg-secondary        /* Elevated surfaces */
+text-fg-primary        /* Primary text */
+text-fg-secondary      /* Secondary text */
+border-border-primary  /* Interactive borders */
+border-border-secondary /* Container borders */
+
+/* Avoid these */
+bg-gray-100            /* Raw colors bypass theming */
+bg-[var(--bg-primary)] /* Bracket syntax breaks opacity */
+```
+
+---
+
+## Design System
+
+### Hard Rules
+
+- **NEVER** use raw color classes (e.g., `bg-gray-100`)
+- **NEVER** use bracket CSS variable syntax
+- **ALWAYS** use semantic token classes
+
+### Validation
+
+Before completing any feature:
+
+1. `bun run typecheck` - No TypeScript errors
+2. `bun test` - All tests pass
+3. `bun run build` - Clean build
+
+---
+
+## Auto-Activating Skills
+
+| Skill | Triggers On |
+|-------|-------------|
+| `brand-guidelines` | Brand identity questions |
+| `frontend-design` | UI/component work |
+| `incremental-commits` | Any code changes |
+| `verification-before-completion` | Task completion |
+
+---
+
+## Available Plugins
+
+- `/feature-dev` - Feature development workflow
+- `/code-review` - Automated code review
+- `/pr-review-toolkit` - PR review with analyzers
+- `/commit-commands` - Git commit helpers
+
+---
+
+## Git Workflow
+
+Follow conventional commits:
+
+```
+<type>(<scope>): <description>
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+Types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`
+
+---
+
+## Instruction Precedence
+
+When instructions conflict, follow this priority:
+
+1. Agent-specific instructions
+2. Plugin rules (if applicable)
+3. Project CLAUDE.md (this file)
+4. Global ~/.claude/CLAUDE.md
+
+---
+
+*[Project Name] - Claude Configuration*
