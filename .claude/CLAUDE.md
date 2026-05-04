@@ -1,21 +1,35 @@
-# Open Session Design System - Claude Configuration
+# Open Session Design System - Claude Configuration Hub
 
-> Brand assets, design tokens, and AI-ready documentation for Open Session.
+> Central hub for brand assets, design tokens, and agnostic Claude Code tooling.
 
 ---
 
 ## Repository Overview
 
-This is the **second brain** for Open Session brand — combining:
+This repository serves two purposes:
 
-- **Brand Assets**: Logos, fonts, art direction, content resources
-- **Design Tokens**: CSS variables, Tailwind config, component examples
-- **Guidelines**: Voice, identity, art direction, AI usage, activation
-- **AI Context**: Writing guides, auto-activating skills, design system reference
+1. **Brand System**: Logos, tokens, guidelines, and content resources for Open Session
+2. **Claude Code Hub**: Canonical template for agnostic Claude Code tooling (KARIMO, plugins, skills)
 
 ---
 
 ## Quick Start
+
+### For New Projects
+
+Copy the tooling you need to your project. See `templates/integration-guide.md` for full instructions.
+
+```bash
+# Copy essential skills
+cp -R .claude/skills/development/* your-project/.claude/skills/
+
+# Copy plugins you need
+cp -R .claude/plugins/feature-dev your-project/.claude/plugins/
+cp -R .claude/plugins/commit-commands your-project/.claude/plugins/
+
+# Copy KARIMO for PRD-driven development
+cp -R .claude/core/karimo your-project/.claude/plugins/karimo
+```
 
 ### For Brand Context
 
@@ -27,19 +41,134 @@ Read in order for full brand understanding:
 4. `guidelines/markdown/04-ai-usage.md` — AI integration guidelines
 5. `guidelines/markdown/05-brand-activation.md` — Web, social, physical presence
 
-### For Development
+---
 
-1. Import `tokens/ds/brand.css` for CSS variables
-2. Use `tokens/tailwind.config.ts` as Tailwind preset
-3. Reference `tokens/components/examples/` for patterns
+## Claude Code Hub Structure
 
-### For Content Creation
+```
+.claude/
+├── CLAUDE.md                    # This file (hub manifest)
+├── README.md                    # Hub documentation
+│
+├── core/                        # Foundational methodology
+│   └── karimo/                  # KARIMO autonomous dev framework
+│       ├── KARIMO_RULES.md      # Core methodology rules
+│       ├── agents/              # 22 specialized agents
+│       ├── commands/            # 11 commands (/karimo:*)
+│       └── skills/              # Internal KARIMO skills
+│
+├── plugins/                     # Reusable plugins
+│   ├── feature-dev/             # 7-phase feature workflow
+│   ├── pr-review-toolkit/       # Multi-agent PR review
+│   ├── code-review/             # Automated code review
+│   ├── plugin-dev/              # Plugin creation toolkit
+│   ├── commit-commands/         # Git commit helpers
+│   ├── agent-sdk-dev/           # Agent SDK development
+│   ├── hookify/                 # Custom hooks framework
+│   └── ralph-wiggum/            # AI loop handler
+│
+├── skills/                      # Auto-activating skills
+│   ├── development/             # Workflow skills
+│   │   ├── incremental-commits/
+│   │   ├── verification-before-completion/
+│   │   ├── writing-plans/
+│   │   ├── systematic-debugging/
+│   │   ├── subagent-driven-development/
+│   │   ├── security-guidance/
+│   │   └── docs-conventions/
+│   ├── tooling/                 # Tool-specific skills
+│   │   ├── skill-creator/
+│   │   ├── website-intelligence/
+│   │   ├── firecrawl-web-tools/
+│   │   ├── git-worktree-ops/
+│   │   └── untitled-ui/
+│   └── brand/                   # Brand-specific skills
+│       ├── brand-guidelines/
+│       ├── frontend-design/
+│       └── create-post-copy/
+│
+├── commands/                    # Standalone commands
+│   ├── design-review.md         # Design system validation
+│   ├── chatlog.md               # Export conversation
+│   ├── restart.md               # Reset session
+│   └── use-pack.md              # Load agency packs
+│
+├── agency-packs/                # Specialized agent templates
+│   ├── a11y/                    # Accessibility auditor
+│   ├── perf/                    # Performance benchmarker
+│   ├── security/                # Security engineer
+│   ├── database/                # Database optimizer
+│   └── ux/                      # UX researcher
+│
+├── brand/writing/               # Writing guides
+├── reference/                   # Design system reference
+└── templates/                   # Integration templates
+    ├── settings.json.template
+    ├── claude.md.template
+    └── integration-guide.md
+```
 
-Check writing guides in `.claude/brand/writing/`:
-- `blog.md` — Long-form articles
-- `creative.md` — Artistic expression
-- `short-form.md` — Social media
-- `strategic.md` — Business content
+---
+
+## Available Plugins
+
+| Plugin | Command | Purpose |
+|--------|---------|---------|
+| feature-dev | `/feature-dev` | 7-phase feature development workflow |
+| pr-review-toolkit | `/review-pr` | Multi-agent PR review system |
+| code-review | `/code-review` | Automated code review |
+| commit-commands | `/commit` | Git commit with conventional format |
+| plugin-dev | `/create-plugin` | Plugin creation toolkit |
+| agent-sdk-dev | `/new-sdk-app` | Anthropic Agent SDK development |
+
+---
+
+## Auto-Activating Skills
+
+### Development Skills
+
+| Skill | Triggers On |
+|-------|-------------|
+| `incremental-commits` | Commit-related work |
+| `verification-before-completion` | Task completion |
+| `systematic-debugging` | Debugging sessions |
+| `writing-plans` | Plan documentation |
+| `subagent-driven-development` | Multi-agent patterns |
+| `security-guidance` | Security considerations |
+
+### Brand Skills
+
+| Skill | Triggers On |
+|-------|-------------|
+| `brand-guidelines` | Brand identity questions |
+| `frontend-design` | UI/component work |
+| `create-post-copy` | Content creation |
+
+---
+
+## KARIMO Framework
+
+KARIMO enables PRD-driven autonomous development with multi-agent execution.
+
+### Core Commands
+
+| Command | Purpose |
+|---------|---------|
+| `/karimo:research` | Research phase with web context |
+| `/karimo:plan` | Interview → PRD generation |
+| `/karimo:run` | Execute PRD tasks in parallel |
+| `/karimo:merge` | Final PR creation |
+| `/karimo:feedback` | Learning capture |
+
+### Key Features
+
+- Feature branch execution model
+- Wave-based parallel task execution
+- Automatic Greptile review integration
+- Loop awareness and model escalation
+- 22 specialized agents
+
+See `core/karimo/README.md` for full documentation.
 
 ---
 
@@ -81,48 +210,15 @@ Check writing guides in `.claude/brand/writing/`:
 
 ---
 
-## Auto-Activating Skills
+## Integration
 
-| Skill | Triggers On |
-|-------|-------------|
-| `brand-guidelines` | Brand identity questions |
-| `frontend-design` | UI/component work |
-| `create-post-copy` | Content creation |
+To use this hub in your project:
 
----
+1. Copy directories you need to your `.claude/` folder
+2. Customize `CLAUDE.md` with your project specifics
+3. Configure `settings.json` for permissions
 
-## Directory Structure
-
-```
-os_design_system/
-├── assets/              # Logos, fonts, art direction
-├── content/             # Illustrations, photos, textures
-├── guidelines/          # Brand guidelines (PDF + Markdown)
-├── tokens/              # Design system
-│   ├── tailwind.config.ts
-│   ├── ds/              # CSS variables, motion, shape
-│   └── components/      # Reference implementations
-├── docs/                # Audience guides
-└── .claude/             # Claude Code config
-    ├── brand/writing/   # Writing guides
-    ├── skills/          # Auto-activating skills
-    └── reference/       # Design system ref
-```
-
----
-
-## File Reference
-
-| Need | File |
-|------|------|
-| Voice guide | `guidelines/markdown/01-brand-messaging.md` |
-| Colors/typography | `guidelines/markdown/02-brand-identity.md` |
-| Visual style | `guidelines/markdown/03-art-direction.md` |
-| AI integration | `guidelines/markdown/04-ai-usage.md` |
-| Activation guide | `guidelines/markdown/05-brand-activation.md` |
-| Tailwind config | `tokens/tailwind.config.ts` |
-| CSS variables | `tokens/ds/brand.css` |
-| Design system | `.claude/reference/design-system.md` |
+See `templates/integration-guide.md` for detailed instructions.
 
 ---
 
@@ -134,4 +230,4 @@ os_design_system/
 
 ---
 
-*Open Session Design System — The second brain for brand consistency.*
+*Open Session Design System — Central hub for brand and Claude Code tooling.*
