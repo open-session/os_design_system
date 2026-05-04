@@ -1,0 +1,156 @@
+---
+title: "Motion Token Transform"
+rule: 1
+scope: ["duration-*", "ease-*", "transition-duration-*", "transition-timing-function-*"]
+author: "@karim"
+last-updated: "2026-04-26"
+---
+
+# Rule 1 — Motion Token Transform
+
+## Rule Summary
+
+Replace UUI's stock transition duration and easing utilities with BOS's named motion tokens. BOS owns its motion design language: every animation on every surface uses the same timing curves and duration tiers, making motion a consistent brand signal rather than a per-component choice. The BOS motion system is defined in `ds/brand.css` (`:root {}` block) and bridged to Tailwind utility classes via `tailwind.config.ts:391-402`.
+
+**Coverage:** Applied to 23 UUI files in commit `2908b648`.
+
+---
+
+## Scope
+
+This rule applies to the following Tailwind utility class prefixes when they appear as transition or animation timing values on UUI or DS components:
+
+- `duration-*` — transition duration utilities (`duration-75`, `duration-100`, `duration-150`, `duration-200`, etc.)
+- `ease-*` — transition timing function utilities (`ease-out`, `ease-in`, `ease-in-out`, `ease-linear`)
+- `transition-duration-*` — longhand transition duration
+- `transition-timing-function-*` — longhand transition timing
+
+**This rule does NOT apply to:**
+
+- `animate-in` / `animate-out` compound classes from the `tailwindcss-animate` plugin (see Edge Cases)
+- Keyframe animation durations in `@keyframes` CSS blocks
+- Framer Motion `transition` prop values — those are handled by `lib/motion.tsx`
+
+---
+
+## Before / After Table
+
+| Before (UUI stock) | After (BOS) | BOS utility | CSS variable |
+| --- | --- | --- | --- |
+| `duration-200` | `duration-standard` | `duration-standard` | `--duration-standard: 200ms` |
+| `duration-150` | `duration-quick` | `duration-quick` | `--duration-quick: 150ms` |
+| `duration-100` | `duration-micro` | `duration-micro` | `--duration-micro: 100ms` |
+| `ease-out` | `ease-motion-out` | `ease-motion-out` | `--ease-out: cubic-bezier(0.4, 0, 0.2, 1)` |
+| `ease-in-out` | `ease-motion-in-out` | `ease-motion-in-out` | `--ease-in-out: cubic-bezier(0.4, 0, 0.6, 1)` |
+| `ease-in` | `ease-motion-in` | `ease-motion-in` | `--ease-in: cubic-bezier(0.4, 0, 1, 1)` |
+| `duration-100 ease-linear` | `duration-micro ease-motion-out` | compound | (both vars) |
+| `duration-150 ease-out` | `duration-micro ease-motion-out` | compound | (both vars) |
+
+**Token source:** `ds/brand.css` `:root {}` block (motion token section).
+**Tailwind bridge:** `tailwind.config.ts:391-402` (`transitionDuration` and `transitionTimingFunction` theme extensions).
+
+---
+
+## Examples
+
+### Example 1 — Badge / Button: `duration-200` → `duration-standard` (already applied)
+
+```tsx
+// BEFORE (UUI stock):
+"transition duration-200 ease-out"
+
+// AFTER (BOS — applied in commit 2908b648):
+"transition duration-standard ease-motion-out"
+```
+
+**File:** `components/ds/badges/badges.tsx` (transform applied correctly).
+
+---
+
+### Example 2 — Select Popover: `duration-150 ease-out` → `duration-micro ease-motion-out` (stale, not yet fixed)
+
+```tsx
+// BEFORE (UUI stock — stale instance in select/popover.tsx:26):
+"transition duration-150 ease-out"
+
+// AFTER (BOS):
+"transition duration-micro ease-motion-out"
+```
+
+**File:** `components/ds/select/popover.tsx:26` — this instance is stale and will be addressed in task 6d.
+
+---
+
+### Example 3 — Input: `duration-200` → `duration-standard` (stale, not yet fixed)
+
+```tsx
+// BEFORE (UUI stock — stale instance in input.tsx:140):
+"transition duration-200"
+
+// AFTER (BOS):
+"transition duration-standard"
+```
+
+**File:** `components/ds/input/input.tsx:140` — stale instance, addressed in task 6b.
+
+---
+
+### Example 4 — Label: `duration-150 ease-out` → `duration-micro ease-motion-out` (stale)
+
+```tsx
+// BEFORE (UUI stock — stale instance in input/label.tsx:42):
+"transition-all duration-150 ease-out"
+
+// AFTER (BOS):
+"transition-all duration-micro ease-motion-out"
+```
+
+**File:** `components/ds/input/label.tsx:42` — stale instance, addressed in task 6b.
+
+---
+
+## Edge Cases
+
+### CRITICAL: `ease-out` inside `animate-in` compound class — DO NOT CONVERT
+
+UUI tooltip uses `animate-in` from the `tailwindcss-animate` plugin:
+
+```tsx
+// FROM tooltip.tsx:67,76:
+isEntering && "ease-out animate-in fade-in zoom-in-95 ..."
+isExiting && "ease-in animate-out fade-out zoom-out-95 ..."
+```
+
+**Decision: DO NOT convert `ease-out` here.**
+
+The `tailwindcss-animate` plugin uses `ease-out` as a composition argument to `animate-in` — it controls the CSS animation's `animation-timing-function`, not the `transition-timing-function`. Converting it to `ease-motion-out` would break the animation composition because:
+
+1. `animate-in ease-out` is a shorthand understood by the `tailwindcss-animate` plugin
+2. `ease-motion-out` is a BOS custom transition timing function, not recognized by `tailwindcss-animate`
+3. The animation would fall back to its default timing, producing a different visual result
+
+**The rule:** `ease-out` as a standalone `transition-timing-function` utility → convert to `ease-motion-out`. `ease-out` appearing after `animate-in` or `animate-out` → **leave as-is**.
+
+**Detection heuristic (Phase 1 §6.1):** A line is convertible by Rule 1 only if it contains `ease-(out|in|in-out|linear)` AND does NOT also contain `animate-(in|out)` on the same className string (whether as a literal string or a `cx()` argument).
+
+Codemod-friendly regex for finding safe-to-convert instances:
+
+```bash
+# Finds ease-* NOT followed by or preceded by animate-in/out on same string:
+grep -rn "ease-\(out\|in\|in-out\|linear\)" components/uui/ components/ds/ \
+  | grep -v "animate-\(in\|out\)"
+```
+
+This was discovered during Phase 1 (task 1c) and confirmed in `docs/spikes/ds-architecture-migration-phase1-findings.md` §6.1. Codified here by task 3e after Phase 1 empirical proof.
+
+---
+
+### Reduced-motion media query
+
+The `@media (prefers-reduced-motion: reduce)` block in `ds/brand.css` overrides all duration tokens to `0ms`. This means components using BOS motion utilities automatically respect the prefers-reduced-motion preference — no additional code needed. This is a feature, not a limitation: another reason to use BOS motion tokens over raw `duration-*` values.
+
+---
+
+### Framer Motion integration
+
+Components that use Framer Motion for complex animations (e.g., sidebar expand, page transitions) use the `lib/motion.tsx` constants, NOT Tailwind utilities. Those are out of scope for this rule. Apply only to Tailwind transition utilities (`transition`, `duration-*`, `ease-*`).

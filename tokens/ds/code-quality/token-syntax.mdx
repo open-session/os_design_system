@@ -1,0 +1,179 @@
+---
+title: "Token Syntax Transform"
+rule: 4
+scope: ["bg-[var(--*)]", "text-[var(--*)]", "border-[var(--*)]"]
+author: "@karim"
+last-updated: "2026-04-26"
+---
+
+# Rule 4 — Token Syntax Transform
+
+## Rule Summary
+
+Use **Style 2 mapped classes** (`bg-bg-primary`, `text-fg-primary`) instead of **Style 1 bracket notation** (`bg-[var(--bg-primary)]`, `text-[var(--fg-primary)]`). Style 1 has a critical silent failure: the `/30` opacity modifier is silently ignored when applied to a CSS variable. Style 2 produces the correct result because Tailwind generates the utility class from the known token value, not from a dynamic CSS variable reference.
+
+This is the most consequential syntax rule for developer experience. The bug is non-obvious — the code looks correct, linting does not catch it, and the UI renders without error. The `/30` opacity simply does not apply. **Style 1 is banned codebase-wide.** Style 2 is guaranteed to work correctly with both opacity modifiers and `@theme` auto-generation.
+
+---
+
+## Scope
+
+This rule applies to any Tailwind utility class that uses CSS variable bracket notation for a BOS design token:
+
+```bash
+# Detection command — find Rule 4 violations:
+grep -rn "bg-\[var(--\|text-\[var(--\|border-\[var(--" components/uui/ components/ds/ app/
+```
+
+**In scope:**
+
+- `bg-[var(--token)]` → `bg-token` (wherever `--token` has a Style 2 mapped class)
+- `text-[var(--token)]` → `text-token`
+- `border-[var(--token)]` → `border-token`
+- Any `*-[var(--token)]` form for `ring`, `fill`, `stroke`, `shadow`, `outline`
+
+**NOT in scope:**
+
+- Raw computed values: `bg-[calc(100%_-_2px)]` — bracket notation is valid here (not a CSS var)
+- `bg-[#FE5102]` — hex color bracket notation (not a CSS var)
+- Third-party library inline styles (out of BOS control)
+
+---
+
+## Before / After Table
+
+| Before (Style 1) | After (Style 2) | Notes |
+| --- | --- | --- |
+| `bg-[var(--bg-primary)]` | `bg-bg-primary` | Clean, IntelliSense works |
+| `text-[var(--fg-primary)]` | `text-fg-primary` | |
+| `border-[var(--border-primary)]` | `border-border-primary` | |
+| `bg-[var(--bg-primary)]/30` | `bg-bg-primary/30` | **CRITICAL**: `/30` was silently ignored in Style 1 |
+| `text-[var(--fg-secondary)]/50` | `text-fg-secondary/50` | **CRITICAL**: `/50` was silently ignored in Style 1 |
+
+---
+
+## Examples
+
+### Example 1 — The broken opacity case (most important)
+
+```tsx
+// BEFORE (Style 1 — broken):
+<div className="bg-[var(--bg-primary)]/30">
+  {/* The /30 opacity modifier is SILENTLY IGNORED.
+      The background renders at full opacity.
+      No error is thrown. No warning is shown. */}
+</div>
+
+// AFTER (Style 2 — correct):
+<div className="bg-bg-primary/30">
+  {/* The /30 opacity modifier works correctly.
+      The background renders at 30% opacity. */}
+</div>
+```
+
+**Why does Style 1 break?** Tailwind's opacity modifier works by extracting the color's RGB channel values and constructing `rgba(R, G, B, 0.30)`. When the value is `var(--bg-primary)` (a CSS variable reference), Tailwind cannot extract the channel values at compile time — the CSS variable resolves at runtime. The modifier is silently dropped.
+
+With Style 2 (`bg-bg-primary`), Tailwind generates the utility class from the `@theme {}` token definition at compile time. The color channels are known, and the opacity modifier works correctly.
+
+---
+
+### Example 2 — Background, text, and border transforms
+
+```tsx
+// BEFORE (Style 1):
+<div
+  className={cx(
+    "bg-[var(--bg-secondary)]",
+    "text-[var(--fg-primary)]",
+    "border border-[var(--border-primary)]",
+  )}
+>
+
+// AFTER (Style 2):
+<div
+  className={cx(
+    "bg-bg-secondary",
+    "text-fg-primary",
+    "border border-border-primary",
+  )}
+>
+```
+
+---
+
+### Example 3 — What does NOT trigger this rule
+
+```tsx
+// Raw hex — not a CSS var, leave as-is (or convert to token if one exists):
+"bg-[#FE5102]"
+
+// Computed value — not a CSS var, leave as-is:
+"w-[calc(100%_-_16px)]"
+
+// Raw number — not a CSS var, leave as-is:
+"translate-x-[-50%]"
+
+// Ring with raw alpha — this IS a candidate for Rule 4:
+"ring-[var(--focus-ring)]"  → "ring-ring-primary" (if a mapped class exists)
+```
+
+---
+
+### Example 4 — Tailwind v4 `@theme` context
+
+After task 2.5a, `ds/brand.css` uses `@theme {}` syntax:
+
+```css
+@theme {
+  --bg-primary: var(--color-vanilla);
+  --fg-primary: var(--color-charcoal);
+  /* ... */
+}
+```
+
+Tailwind v4 automatically generates Style 2 utility classes from all tokens inside `@theme {}`:
+- `--bg-primary` → generates `bg-bg-primary`
+- `--fg-primary` → generates `text-fg-primary`
+
+**Style 1 bypasses this auto-generation.** A component using `bg-[var(--bg-primary)]` receives no benefit from `@theme` — the CSS variable is referenced directly, skipping the Tailwind utility pipeline. Style 2 is the correct way to consume `@theme`-generated tokens.
+
+---
+
+## Edge Cases
+
+### CSS variable does not have a Style 2 class
+
+Some CSS variables defined in `ds/brand.css` may not have Style 2 mapped Tailwind classes. For example, a variable used only in CSS calculations may not be registered with a utility class generator.
+
+**Action:** If no Style 2 class exists for a variable, do not force-convert. Instead:
+
+1. Check `tailwind.config.ts` for any `theme.extend.*` entries that map the variable
+2. Check `@theme {}` in `ds/brand.css` — if the variable is in `@theme`, Tailwind v4 generates a utility class automatically
+3. If neither applies, use the bracket notation as a temporary measure and add a note: `// TODO: add @theme entry for --token-name to generate mapped class`
+
+---
+
+### `ring-*` and `outline-*` utilities
+
+The same rule applies to `ring` and `outline` utilities:
+
+```tsx
+// BEFORE:
+"ring-[var(--focus-ring)]"
+
+// AFTER (if mapped class exists):
+"ring-ring-brand"
+```
+
+Check that the mapped class exists before converting. The focus ring system has dedicated semantic tokens (`ring-ring-brand`, `ring-ring-error`) that are the correct Style 2 targets.
+
+---
+
+### IntelliSense verification
+
+After converting to Style 2, verify IntelliSense works in VS Code:
+
+1. Type `bg-bg-` — autocomplete should show all `--bg-*` tokens
+2. Type `/30` after a color utility — autocomplete should show the opacity modifier options
+
+If IntelliSense does not show the token, the `@theme {}` registration may be incomplete. Check `ds/brand.css` and `tailwind.config.ts`.
