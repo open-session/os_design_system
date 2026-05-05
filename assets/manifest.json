@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "lastUpdated": "2025-05-04",
+  "description": "Open Session brand assets manifest for AI and tooling consumption",
+  "repository": "os_design_system",
+
+  "logos": {
+    "main": {
+      "description": "Primary Open Session logo in multiple configurations",
+      "variants": {
+        "brandmark": {
+          "description": "Icon/symbol only (the 'OS' mark)",
+          "usage": "Favicons, app icons, small spaces, avatars"
+        },
+        "combo": {
+          "description": "Brandmark + wordmark combined",
+          "usage": "Primary logo usage, headers, hero sections"
+        },
+        "horizontal": {
+          "description": "Brandmark + wordmark in horizontal layout",
+          "usage": "Navigation bars, footers, wide spaces"
+        },
+        "stacked": {
+          "description": "Brandmark over wordmark in vertical layout",
+          "usage": "Square spaces, centered layouts"
+        }
+      },
+      "colorVariants": {
+        "charcoal": {
+          "hex": "#191919",
+          "usage": "Light backgrounds (vanilla, white)"
+        },
+        "glass": {
+          "hex": "transparent with stroke",
+          "usage": "Photo overlays, dark backgrounds with transparency"
+        },
+        "vanilla": {
+          "hex": "#FFFAEE",
+          "usage": "Dark backgrounds (charcoal)"
+        }
+      },
+      "paths": {
+        "svg": "assets/logos/main/svg/{color}/{variant}.svg",
+        "png": "assets/logos/main/png/{color}/{variant}.png"
+      }
+    },
+    "accessory": {
+      "description": "Secondary logo marks for special applications",
+      "variants": {
+        "filled": {
+          "description": "Solid fill version of the brandmark",
+          "usage": "Buttons, badges, solid backgrounds"
+        },
+        "outline": {
+          "description": "Outline-only version of the brandmark",
+          "usage": "Subtle branding, watermarks, overlays"
+        },
+        "monogram": {
+          "description": "Stylized 'OS' letterform",
+          "usage": "Monogram applications, stamps, patterns"
+        }
+      },
+      "colorVariants": ["charcoal", "glass", "vanilla"],
+      "paths": {
+        "svg": "assets/logos/accessory/svg/{color}/{variant}.svg",
+        "png": "assets/logos/accessory/png/{color}/{variant}.png"
+      }
+    },
+    "stamps": {
+      "description": "Decorative stamp graphics for visual texture",
+      "colorVariants": {
+        "aperol": { "hex": "#FE5102", "count": 6 },
+        "charcoal": { "hex": "#191919", "count": 6 },
+        "vanilla": { "hex": "#FFFAEE", "count": 6 },
+        "raw-scan": { "description": "Original scan texture", "count": 6 }
+      },
+      "usage": "Background textures, decorative elements, print collateral",
+      "path": "assets/logos/stamps/stamp-{color}-{1-6}.png"
+    }
+  },
+
+  "fonts": {
+    "neueHaasGroteskDisplay": {
+      "family": "Neue Haas Grotesk Display",
+      "role": "Display / Headlines",
+      "description": "Primary display typeface for headlines, titles, and large text",
+      "weights": {
+        "xxThin": 100,
+        "xThin": 200,
+        "thin": 300,
+        "light": 400,
+        "roman": 450,
+        "medium": 500,
+        "bold": 700,
+        "black": 900
+      },
+      "styles": ["normal", "italic"],
+      "paths": {
+        "web": "assets/fonts/neue-haas-grotesk-display/Web/NeueHaasDisplay{Weight}{Style}.woff2",
+        "desktop": "assets/fonts/neue-haas-grotesk-display/Desktop/NeueHaasDisplay{Weight}{Style}.ttf"
+      },
+      "cssVariable": "--font-display"
+    },
+    "neueHaasGroteskText": {
+      "family": "Neue Haas Grotesk Text",
+      "role": "Body / UI",
+      "description": "Primary text typeface for body copy, UI elements, and small text",
+      "weights": {
+        "regular": 400,
+        "medium": 500,
+        "bold": 700
+      },
+      "styles": ["normal", "italic"],
+      "paths": {
+        "web": "assets/fonts/neue-haas-grotesk-text/Web/NeueHaasText{Weight}{Style}.woff2",
+        "desktop": "assets/fonts/neue-haas-grotesk-text/Desktop/NeueHaasText{Weight}{Style}.otf"
+      },
+      "cssVariable": "--font-sans"
+    },
+    "offBit": {
+      "family": "OffBit",
+      "role": "Accent / Monospace",
+      "description": "Pixel/bitmap-style typeface for technical or retro aesthetic",
+      "variants": {
+        "regular": "Standard pixel font",
+        "bold": "Bold weight",
+        "101": "Alternative character set",
+        "101Bold": "Alternative character set bold",
+        "dot": "Dot-matrix style",
+        "dotBold": "Dot-matrix bold"
+      },
+      "paths": {
+        "web": "assets/fonts/offbit/Web/OffBit-{Variant}.woff2",
+        "desktop": "assets/fonts/offbit/Desktop/OffBit-{Variant}.ttf"
+      },
+      "cssVariable": "--font-mono"
+    }
+  },
+
+  "illustrations": {
+    "library": "Goodle",
+    "description": "Minimalist line-art illustrations for various contexts",
+    "categories": {
+      "avatars": {
+        "count": 99,
+        "description": "Character head/face illustrations for user avatars and profiles",
+        "style": "Simple line-art faces with various hairstyles, accessories, and expressions",
+        "path": "assets/illustrations/avatars/{name}.svg"
+      },
+      "hobby": {
+        "count": 25,
+        "description": "People engaged in leisure and recreational activities",
+        "examples": ["camping", "fishing", "skateboarding", "yoga"],
+        "path": "assets/illustrations/hobby/{name}.svg"
+      },
+      "life": {
+        "count": 25,
+        "description": "Everyday life situations and accessibility scenarios",
+        "examples": ["transit", "parachute", "wheelchair", "rollerblading"],
+        "path": "assets/illustrations/life/{name}.svg"
+      },
+      "tech": {
+        "count": 25,
+        "description": "Technology, AI, and digital life scenarios",
+        "examples": ["debugging", "ai-art", "robot-interaction", "vr"],
+        "path": "assets/illustrations/tech/{name}.svg"
+      },
+      "work": {
+        "count": 49,
+        "description": "Professional, business, and productivity scenarios",
+        "examples": ["brainstorming", "coffee-break", "leadership", "rocket-launch"],
+        "path": "assets/illustrations/work/{name}.svg"
+      }
+    },
+    "totalCount": 223,
+    "style": {
+      "strokeWidth": "2px",
+      "colors": "Single color (adapts to CSS currentColor)",
+      "format": "SVG with inline styles"
+    }
+  },
+
+  "externalAssets": {
+    "description": "Large assets not included in repo, available at source location",
+    "sourcePath": "~/Desktop/OS BRAND/",
+    "categories": {
+      "video": {
+        "path": "CONTENT/VIDEO/",
+        "description": "Video assets for marketing and web"
+      },
+      "photo": {
+        "path": "CONTENT/PHOTO/",
+        "description": "Photography assets"
+      },
+      "composition": {
+        "path": "CONTENT/COMPOSITION/",
+        "description": "Pre-composed social media templates"
+      },
+      "experimental": {
+        "path": "BRAND/LOGO/Experimental/",
+        "description": "3D models, animated logos, CRT effects"
+      }
+    }
+  },
+
+  "usage": {
+    "rules": {
+      "logoMinSize": "24px for brandmark, 120px for full logo",
+      "logoClearSpace": "Minimum clear space equal to brandmark height",
+      "colorOnDark": "Use vanilla or glass variants on dark backgrounds",
+      "colorOnLight": "Use charcoal variant on light backgrounds",
+      "aperolUsage": "Accent color only, never as primary background (max 10% of composition)"
+    },
+    "forbidden": {
+      "sparkles": "Never use the Sparkles icon from any icon library",
+      "aperolBackground": "Never use Aperol (#FE5102) as a primary background",
+      "thickBorders": "Never use border-2 or thicker for containers",
+      "brandColorBorders": "Never use brand colors for borders"
+    }
+  }
+}
