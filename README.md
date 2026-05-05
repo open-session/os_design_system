@@ -1,29 +1,31 @@
 # Open Session Design System
 
-> The second brain for Open Session brand assets, design tokens, and AI-ready documentation.
+> The "coding CMS" for Open Session — brand assets, design tokens, and AI-ready context in one canonical source.
 
 ---
 
 ## Quick Start
 
-### For Designers
+### For AI Agents (Claude Code/Desktop)
 
-1. **Brand Guidelines**: `guidelines/markdown/` — Markdown source (primary)
-2. **Assets**: `assets/logos/`, `assets/fonts/`, `assets/art-direction/`
-3. **Content**: `content/` — Illustrations, photos, videos, textures
+1. **Brand Context**: `brand-context.md` — Single-file consolidated brand reference
+2. **Token JSON**: `tokens/exports/tokens.json` — Programmatic token access
+3. **Asset Manifest**: `assets/manifest.json` — Asset paths and usage guidelines
+4. **Skills**: `.claude/skills/` — Auto-activating brand and development skills
 
 ### For Developers
 
-1. **Tailwind Config**: `tokens/tailwind.config.ts` — Ready-to-use Tailwind preset
-2. **CSS Variables**: `tokens/ds/brand.css` — CSS custom properties
-3. **Component Examples**: `tokens/components/examples/` — Reference implementations
+1. **CSS Variables**: `tokens/ds/brand.css` — 787 lines of semantic tokens
+2. **Tailwind Config**: `tokens/tailwind.config.ts` — Ready-to-use preset
+3. **Components**: `tokens/components/` — Symlinked to BOS-3.0 (source of truth)
 4. **Reference**: `.claude/reference/design-system.md` — Token selection guide
 
-### For AI Agents
+### For Designers
 
-1. **Voice & Tone**: `guidelines/markdown/01-brand-messaging.md`
-2. **Writing Guides**: `.claude/brand/writing/`
-3. **Skills**: `.claude/skills/` — Auto-activating context
+1. **Brand Guidelines**: `guidelines/markdown/` — Complete brand documentation
+2. **Logos**: `assets/logos/` — SVG/PNG in all variants and colors
+3. **Illustrations**: `assets/illustrations/` — 223 Goodle SVGs
+4. **Fonts**: `assets/fonts/` — Web (woff2) and desktop (otf/ttf)
 
 ---
 
@@ -37,9 +39,11 @@
 
 | Font | Usage |
 |------|-------|
-| Neue Haas Grotesk Display Pro | Headlines, titles |
-| Neue Haas Grotesk Text Pro | Body text, inputs |
+| Neue Haas Grotesk Display | Headlines, titles |
+| Neue Haas Grotesk Text | Body text, UI |
 | OffBit | Digital accent (max 2/viewport) |
+
+**Accessibility**: Vanilla on Charcoal = 18.5:1 (AAA)
 
 ---
 
@@ -47,33 +51,62 @@
 
 ```
 os_design_system/
-├── README.md                   # This file
-├── assets/                     # Static brand assets
-│   ├── logos/                  # main, stamps, accessory, experimental
-│   ├── fonts/                  # Display, text, accent fonts
-│   └── art-direction/          # Thematic visual collections
-├── content/                    # Media resources
-│   ├── illustrations/          # Goodle, Counterfeit
-│   ├── photos/                 # Brand photography
-│   ├── videos/                 # CRT, VHS effects
-│   ├── textures/               # Static textures
-│   └── composition/            # Templates, guides
-├── guidelines/                 # Brand guidelines
-│   ├── pdf/                    # Original PDFs (6 documents)
-│   └── markdown/               # Converted MDs (5 documents)
-├── tokens/                     # Design system
-│   ├── tailwind.config.ts      # Tailwind preset (ready to use)
-│   ├── ds/                     # CSS variables, transforms, motion
-│   └── components/examples/    # Reference implementations
-├── docs/                       # Audience guides
+├── README.md                    # This file
+├── brand-context.md             # Consolidated AI context (~10KB)
+│
+├── assets/                      # Static brand assets
+│   ├── manifest.json            # Asset paths and metadata
+│   ├── logos/
+│   │   ├── main/                # brandmark, combo, horizontal, stacked
+│   │   │   ├── svg/{charcoal,glass,vanilla}/
+│   │   │   └── png/{charcoal,glass,vanilla}/
+│   │   ├── accessory/           # filled, outline, monogram
+│   │   └── stamps/              # 24 decorative stamps
+│   ├── fonts/
+│   │   ├── neue-haas-grotesk-display/
+│   │   ├── neue-haas-grotesk-text/
+│   │   └── offbit/
+│   └── illustrations/           # 223 Goodle SVGs
+│       ├── avatars/             # 99 character faces
+│       ├── hobby/               # 25 leisure activities
+│       ├── life/                # 25 everyday scenarios
+│       ├── tech/                # 25 technology themes
+│       └── work/                # 49 professional scenarios
+│
+├── guidelines/                  # Brand guidelines
+│   ├── pdf/                     # Original PDFs
+│   └── markdown/                # 5 converted documents
+│       ├── 01-brand-messaging.md
+│       ├── 02-brand-identity.md
+│       ├── 03-art-direction.md
+│       ├── 04-ai-usage.md
+│       └── 05-brand-activation.md
+│
+├── tokens/                      # Design system
+│   ├── ds/
+│   │   └── brand.css            # CSS variables (source of truth)
+│   ├── exports/
+│   │   └── tokens.json          # JSON export for tooling
+│   ├── components/
+│   │   ├── base/                # → BOS-3.0/components/base (symlink)
+│   │   ├── custom/              # → BOS-3.0/components/custom (symlink)
+│   │   ├── ds/                  # → BOS-3.0/components/ds (symlink)
+│   │   └── examples/            # Standalone reference implementations
+│   └── tailwind.config.ts       # Tailwind preset
+│
+├── docs/                        # Audience guides
 │   ├── for-designers.md
 │   ├── for-developers.md
 │   └── for-agents.md
-└── .claude/                    # Claude Code config
-    ├── CLAUDE.md
-    ├── brand/                  # Identity & writing
-    ├── skills/                 # Auto-activating skills
-    └── reference/              # Design system ref
+│
+└── .claude/                     # Claude Code tooling hub
+    ├── CLAUDE.md                # Hub manifest
+    ├── core/karimo/             # KARIMO autonomous dev framework
+    ├── plugins/                 # 8 reusable plugins
+    ├── skills/                  # 15+ auto-activating skills
+    ├── agency-packs/            # 5 specialized agent packs
+    ├── commands/                # Standalone commands
+    └── templates/               # Integration templates
 ```
 
 ---
@@ -85,7 +118,7 @@ os_design_system/
 | Brand Messaging | `guidelines/markdown/01-brand-messaging.md` | Voice, audience, content pillars |
 | Brand Identity | `guidelines/markdown/02-brand-identity.md` | Colors, typography, logo system |
 | Art Direction | `guidelines/markdown/03-art-direction.md` | Visual territories, textures |
-| AI Usage | `guidelines/markdown/04-ai-usage.md` | AI integration across copy, code, creative |
+| AI Usage | `guidelines/markdown/04-ai-usage.md` | AI integration guidelines |
 | Brand Activation | `guidelines/markdown/05-brand-activation.md` | Web, social, physical presence |
 
 ---
@@ -94,8 +127,8 @@ os_design_system/
 
 Ready-to-use design tokens for any development environment:
 
-```bash
-# Import the Tailwind preset
+```typescript
+// Import the Tailwind preset
 import osTokens from './tokens/tailwind.config';
 
 export default {
@@ -105,12 +138,26 @@ export default {
 ```
 
 Key files:
+- `tokens/ds/brand.css` — CSS variables (787 lines, light/dark mode)
+- `tokens/exports/tokens.json` — JSON export for programmatic access
 - `tokens/tailwind.config.ts` — Complete Tailwind preset
-- `tokens/ds/brand.css` — CSS custom properties (source of truth)
-- `tokens/ds/README.md` — Design system formula spec
-- `tokens/components/examples/` — Reference component implementations
+- `tokens/components/` — Symlinks to BOS-3.0 production components
 
 > See `tokens/README.md` for full integration guide.
+
+---
+
+## Component Synchronization
+
+Components are **symlinked** to BOS-3.0 to prevent drift:
+
+```bash
+tokens/components/base/   → ../../../BOS-3.0/components/base   # UUI base
+tokens/components/custom/ → ../../../BOS-3.0/components/custom # OS custom
+tokens/components/ds/     → ../../../BOS-3.0/components/ds     # DS transforms
+```
+
+BOS-3.0 is the **single source of truth** for production components.
 
 ---
 
@@ -119,15 +166,16 @@ Key files:
 - **Never use the Sparkles icon** — hard brand ban
 - **No icons before section headers**
 - **Never use Aperol as primary background**
-- **Never use brand colors for borders**
+- **Never use brand colors for borders** — use neutral grays
 - **Max 10% Aperol in any composition**
-- **OffBit: max 2 instances per viewport**
+- **Never use thick borders** (`border-2` or larger)
+- **Always use Style 2 syntax**: `bg-bg-primary` not `bg-[var(--bg-primary)]`
 
 ---
 
 ## Voice Philosophy
 
-> **"Steward, not advisor"** — Speak from within the brand.
+> **"Steward, not advisor"** — Speak FROM within the brand.
 
 - Smart but not smug
 - Technical but accessible
@@ -138,9 +186,33 @@ Key files:
 
 ---
 
+## Claude Code Tooling
+
+This repository serves as the canonical hub for Claude Code tooling:
+
+| Category | Count | Description |
+|----------|-------|-------------|
+| Plugins | 8 | feature-dev, pr-review-toolkit, code-review, commit-commands, etc. |
+| Skills | 15+ | development (7), tooling (5), brand (3) |
+| Agency Packs | 5 | a11y, perf, security, database, ux |
+| KARIMO | 22 agents | PRD-driven autonomous development |
+
+See `.claude/CLAUDE.md` for hub documentation.
+
+---
+
+## External Assets
+
+Large media files not included in repo:
+- **Video**: `~/Desktop/OS BRAND/CONTENT/VIDEO/`
+- **Photo**: `~/Desktop/OS BRAND/CONTENT/PHOTO/`
+- **3D/Experimental**: `~/Desktop/OS BRAND/BRAND/LOGO/Experimental/`
+
+---
+
 ## Related Resources
 
-- **BOS-3.0**: Production codebase with live design tokens
+- **BOS-3.0**: Production codebase (components source of truth)
 - **Figma**: Source designs and component library
 - **Brand Hub**: Live brand exploration at `/brand-hub`
 
@@ -152,4 +224,4 @@ Internal use only. All assets are proprietary to Open Session.
 
 ---
 
-*Maintained by Open Session. Last updated May 2026.*
+*Open Session Design System — Maintained by Open Session. Last updated May 2025.*

@@ -33,13 +33,24 @@ cp -R .claude/core/karimo your-project/.claude/plugins/karimo
 
 ### For Brand Context
 
-Read in order for full brand understanding:
+**Quick Start**: Read `brand-context.md` (root) for consolidated AI context (~10KB).
 
+**Deep Dive** (read in order):
 1. `guidelines/markdown/01-brand-messaging.md` — Voice & tone
 2. `guidelines/markdown/02-brand-identity.md` — Colors, typography, logos
 3. `guidelines/markdown/03-art-direction.md` — Visual territories, textures
 4. `guidelines/markdown/04-ai-usage.md` — AI integration guidelines
 5. `guidelines/markdown/05-brand-activation.md` — Web, social, physical presence
+
+### Key Resources
+
+| Resource | Path | Description |
+|----------|------|-------------|
+| Brand Context | `brand-context.md` | Consolidated AI-optimized context |
+| Token JSON | `tokens/exports/tokens.json` | Programmatic token access |
+| Asset Manifest | `assets/manifest.json` | Asset paths and metadata |
+| CSS Tokens | `tokens/ds/brand.css` | Source of truth (787 lines) |
+| Components | `tokens/components/` | Symlinked to BOS-3.0 |
 
 ---
 
@@ -222,9 +233,24 @@ See `templates/integration-guide.md` for detailed instructions.
 
 ---
 
+## Asset Resources
+
+| Category | Path | Contents |
+|----------|------|----------|
+| Logos | `assets/logos/` | Main, accessory, stamps (SVG + PNG) |
+| Fonts | `assets/fonts/` | Display, Text, OffBit (web + desktop) |
+| Illustrations | `assets/illustrations/` | 223 Goodle SVGs |
+| Manifest | `assets/manifest.json` | Complete asset documentation |
+
+**External (not in repo):**
+- Video: `~/Desktop/OS BRAND/CONTENT/VIDEO/`
+- Photo: `~/Desktop/OS BRAND/CONTENT/PHOTO/`
+
+---
+
 ## Related Resources
 
-- **BOS-3.0**: Production codebase using these tokens
+- **BOS-3.0**: Production codebase (component source of truth)
 - **Figma**: Source designs and component library
 - **Brand Hub**: Live brand exploration at `/brand-hub`
 
