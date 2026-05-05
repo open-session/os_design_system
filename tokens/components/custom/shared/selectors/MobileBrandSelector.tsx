@@ -1,0 +1,518 @@
+'use client';
+
+import { useState, useRef, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import {
+  Check,
+  ChevronDown,
+  File01,
+  Image01,
+  Palette,
+  Plus,
+  Upload01,
+  XClose,
+} from '@untitledui-pro/icons/line';
+import { Brandmark } from '@/components/custom/shared/branding/Brandmark';
+import { Brand } from '@/types';
+import { devProps } from '@/lib/utils/dev-props';
+
+// Supabase storage URL helper
+function getSupabaseLogoUrl(filename: string): string {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  return `${supabaseUrl}/storage/v1/object/public/brand-assets/open-session/logos/${filename}`;
+}
+
+// Default brands - can be extended
+const DEFAULT_BRANDS: Brand[] = [
+  {
+    id: 'open-session',
+    name: 'Open Session',
+    logoPath: '', // Will be set based on Supabase URL
+    isDefault: true,
+  },
+];
+
+const STORAGE_KEY = 'selected-brand';
+const BRANDS_STORAGE_KEY = 'custom-brands';
+
+function getStoredBrands(): Brand[] {
+  if (typeof window === 'undefined') return DEFAULT_BRANDS;
+  
+  try {
+    const stored = localStorage.getItem(BRANDS_STORAGE_KEY);
+    if (stored && stored.trim() !== '') {
+      const customBrands = JSON.parse(stored);
+      return [...DEFAULT_BRANDS, ...customBrands];
+    }
+  } catch (error) {
+    console.error('Error loading stored brands:', error);
+  }
+  
+  return DEFAULT_BRANDS;
+}
+
+function getSelectedBrandId(): string {
+  if (typeof window === 'undefined') return DEFAULT_BRANDS[0].id;
+  
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && stored.trim() !== '') {
+      const brandId = JSON.parse(stored);
+      // Verify brand still exists
+      const allBrands = getStoredBrands();
+      if (allBrands.find(b => b.id === brandId)) {
+        return brandId;
+      }
+    }
+  } catch (error) {
+    console.error('Error loading selected brand:', error);
+  }
+  
+  return DEFAULT_BRANDS[0].id;
+}
+
+function saveSelectedBrand(brandId: string): void {
+  if (typeof window === 'undefined') return;
+  
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(brandId));
+  } catch (error) {
+    console.error('Error saving selected brand:', error);
+  }
+}
+
+function saveCustomBrand(brand: Brand): void {
+  if (typeof window === 'undefined') return;
+  
+  try {
+    const stored = localStorage.getItem(BRANDS_STORAGE_KEY);
+    const customBrands = (stored && stored.trim() !== '') ? JSON.parse(stored) : [];
+    customBrands.push(brand);
+    localStorage.setItem(BRANDS_STORAGE_KEY, JSON.stringify(customBrands));
+  } catch (error) {
+    console.error('Error saving custom brand:', error);
+  }
+}
+
+interface MobileBrandSelectorProps {
+  onClose?: () => void;
+}
+
+export function MobileBrandSelector({ onClose }: MobileBrandSelectorProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [brands, setBrands] = useState<Brand[]>(getStoredBrands());
+  const [selectedBrandId, setSelectedBrandId] = useState<string>(getSelectedBrandId());
+  const [newBrandName, setNewBrandName] = useState('');
+  const [newCompanyName, setNewCompanyName] = useState('');
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const selectedBrand = brands.find(b => b.id === selectedBrandId) || brands[0];
+
+  // Load brands on mount
+  useEffect(() => {
+    setBrands(getStoredBrands());
+    setSelectedBrandId(getSelectedBrandId());
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
+
+  const handleSelectBrand = useCallback((brandId: string) => {
+    setSelectedBrandId(brandId);
+    saveSelectedBrand(brandId);
+    setIsOpen(false);
+  }, []);
+
+  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setUploadedFiles(prev => [...prev, ...files]);
+  }, []);
+
+  const handleRemoveFile = useCallback((index: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  }, []);
+
+  const handleAddBrand = useCallback(() => {
+    if (!newBrandName.trim() || !newCompanyName.trim()) {
+      alert('Please provide your name and company name');
+      return;
+    }
+
+    // For now, use a default logo path or the first uploaded file
+    const defaultLogoUrl = getSupabaseLogoUrl('brandmark-vanilla.svg');
+    const logoPath = uploadedFiles.length > 0 
+      ? URL.createObjectURL(uploadedFiles[0])
+      : defaultLogoUrl;
+
+    const newBrand: Brand = {
+      id: `custom-${Date.now()}`,
+      name: newCompanyName.trim(),
+      logoPath: logoPath,
+    };
+
+    saveCustomBrand(newBrand);
+    setBrands(getStoredBrands());
+    handleSelectBrand(newBrand.id);
+    setNewBrandName('');
+    setNewCompanyName('');
+    setUploadedFiles([]);
+    setShowAddModal(false);
+  }, [newBrandName, newCompanyName, uploadedFiles, handleSelectBrand]);
+
+  return (
+    <>
+      <div {...devProps('MobileBrandSelector')} className="relative flex-1">
+        {/* Selector Trigger - Styled like an input */}
+        <button
+          ref={triggerRef}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsOpen(!isOpen);
+          }}
+          className="
+            w-full flex items-center justify-between
+            px-3 py-2
+            border border-border-secondary
+            rounded-lg
+            bg-bg-secondary
+            hover:border-brand-aperol/50
+            transition-all duration-200
+            cursor-pointer
+            group
+          "
+          aria-label="Select brand"
+        >
+          {/* Logo + Brand Name */}
+            <div className="flex items-center space-x-3 overflow-hidden">
+            <div className="flex-shrink-0">
+              {selectedBrand.logoPath ? (
+                <Image
+                  src={selectedBrand.logoPath}
+                  alt={selectedBrand.name}
+                  width={28}
+                  height={28}
+                  className="object-contain"
+                  style={{ width: 'auto', height: 'auto', maxWidth: 28, maxHeight: 28 }}
+                />
+              ) : (
+                <Brandmark size={28} />
+              )}
+            </div>
+            <span className="text-fg-primary font-medium text-sm truncate">
+              {selectedBrand.name}
+            </span>
+          </div>
+          
+          {/* Down Arrow */}
+          <ChevronDown 
+            className={`
+              w-4 h-4 text-fg-secondary
+              transition-transform duration-200
+              flex-shrink-0 ml-2
+              ${isOpen ? 'rotate-180' : ''}
+            `}
+          />
+        </button>
+
+        {/* Dropdown */}
+        {isOpen && (
+          <div
+            ref={dropdownRef}
+            className="
+              absolute top-full left-0 right-0 mt-2
+              bg-bg-secondary
+              rounded-lg border border-border-secondary
+              shadow-lg z-[60]
+              max-h-[300px] overflow-y-auto
+            "
+          >
+            <div className="p-2">
+              <div className="px-3 py-2 text-sm font-semibold text-fg-secondary uppercase tracking-wider">
+                SELECT BRAND
+              </div>
+
+              {brands.map((brand) => (
+                <button
+                  key={brand.id}
+                  onClick={() => handleSelectBrand(brand.id)}
+                  className={`
+                    w-full flex items-center justify-between
+                    px-3.5 py-2.5 rounded-lg
+                    hover:bg-bg-tertiary
+                    transition-colors duration-200
+                    ${selectedBrandId === brand.id ? 'bg-bg-tertiary' : ''}
+                  `}
+                >
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
+                    <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                      {brand.logoPath ? (
+                        <Image
+                          src={brand.logoPath}
+                          alt={brand.name}
+                          width={20}
+                          height={20}
+                          className="object-contain"
+                          style={{ width: 'auto', height: 'auto', maxWidth: 20, maxHeight: 20 }}
+                        />
+                      ) : (
+                        <Brandmark size={20} />
+                      )}
+                    </div>
+                    <span className="text-base font-medium text-fg-primary truncate">
+                      {brand.name}
+                    </span>
+                  </div>
+                  {selectedBrandId === brand.id && (
+                    <Check className="w-5 h-5 text-brand-aperol flex-shrink-0 ml-2" />
+                  )}
+                </button>
+              ))}
+
+              {/* Add Brand Button */}
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  setShowAddModal(true);
+                }}
+                className="
+                  w-full flex items-center space-x-3
+                  px-3.5 py-2.5 mt-2 rounded-lg
+                  border border-border-secondary
+                  hover:bg-bg-tertiary
+                  hover:border-brand-aperol/50
+                  transition-all duration-200
+                "
+              >
+                <Plus className="w-5 h-5 text-brand-aperol" />
+                <span className="text-base font-medium text-brand-aperol">
+                  Add New Brand
+                </span>
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Add Brand Modal */}
+      {showAddModal && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[70] flex items-center justify-center p-4"
+          onClick={() => {
+            setShowAddModal(false);
+            setNewBrandName('');
+            setNewCompanyName('');
+            setUploadedFiles([]);
+          }}
+        >
+          <div
+            className="
+              bg-bg-secondary rounded-lg border border-border-secondary
+              shadow-lg w-full max-w-md p-6
+              max-h-[90vh] overflow-y-auto
+            "
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-lg font-semibold text-fg-primary mb-4">
+              Add New Brand
+            </h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-fg-secondary mb-2">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  value={newBrandName}
+                  onChange={(e) => setNewBrandName(e.target.value)}
+                  placeholder="Enter your name"
+                  className="
+                    w-full px-3 py-2
+                    bg-bg-tertiary border border-border-secondary
+                    rounded-lg text-fg-primary
+                    focus:outline-hidden focus:ring-1 focus:ring-brand focus:shadow-focus-ring
+                    placeholder:text-fg-secondary
+                  "
+                  autoFocus
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-fg-secondary mb-2">
+                  Company Name
+                </label>
+                <input
+                  type="text"
+                  value={newCompanyName}
+                  onChange={(e) => setNewCompanyName(e.target.value)}
+                  placeholder="Enter company name"
+                  className="
+                    w-full px-3 py-2
+                    bg-bg-tertiary border border-border-secondary
+                    rounded-lg text-fg-primary
+                    focus:outline-hidden focus:ring-1 focus:ring-brand focus:shadow-focus-ring
+                    placeholder:text-fg-secondary
+                  "
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-fg-secondary mb-2">
+                  Upload Assets
+                </label>
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="
+                    w-full
+                    border-2 border-dashed border-border-secondary
+                    rounded-lg p-6
+                    bg-bg-tertiary
+                    hover:border-brand-aperol/50
+                    hover:bg-bg-tertiary-hover
+                    transition-all duration-200
+                    cursor-pointer
+                    flex flex-col items-center justify-center
+                    text-center
+                  "
+                >
+                  <Upload01 className="w-8 h-8 text-fg-secondary mb-2" />
+                  <p className="text-sm text-fg-primary mb-1">
+                    Click to upload or drag and drop
+                  </p>
+                  <p className="text-xs text-fg-secondary">
+                    SVG, PNG, JPG (max 10MB)
+                  </p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*,.svg"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </div>
+                
+                {/* Uploaded Files List */}
+                {uploadedFiles.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    {uploadedFiles.map((file, index) => (
+                      <div
+                        key={index}
+                        className="
+                          flex items-center justify-between
+                          px-3 py-2
+                          bg-bg-tertiary rounded-lg
+                          border border-border-secondary
+                        "
+                      >
+                        <div className="flex items-center space-x-2 flex-1 min-w-0">
+                          <Image01 className="w-4 h-4 text-fg-secondary flex-shrink-0" />
+                          <span className="text-sm text-fg-primary truncate">
+                            {file.name}
+                          </span>
+                          <span className="text-xs text-fg-secondary">
+                            ({(file.size / 1024).toFixed(1)} KB)
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => handleRemoveFile(index)}
+                          className="
+                            ml-2 p-1
+                            text-fg-secondary
+                            hover:text-fg-primary
+                            transition-colors
+                          "
+                        >
+                          <XClose className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Recommended Assets */}
+                <div className="mt-4 pt-4 border-t border-border-secondary">
+                  <p className="text-xs font-medium text-fg-secondary mb-3 uppercase tracking-wider">
+                    Recommended Assets
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center space-x-2 px-3 py-2 bg-bg-tertiary rounded-lg border border-border-secondary">
+                      <File01 className="w-4 h-4 text-fg-secondary" />
+                      <span className="text-xs text-fg-secondary">Brand Guidelines</span>
+                    </div>
+                    <div className="flex items-center space-x-2 px-3 py-2 bg-bg-tertiary rounded-lg border border-border-secondary">
+                      <Image01 className="w-4 h-4 text-fg-secondary" />
+                      <span className="text-xs text-fg-secondary">Logos</span>
+                    </div>
+                    <div className="flex items-center space-x-2 px-3 py-2 bg-bg-tertiary rounded-lg border border-border-secondary">
+                      <Palette className="w-4 h-4 text-fg-secondary" />
+                      <span className="text-xs text-fg-secondary">Design Tokens</span>
+                    </div>
+                    <div className="flex items-center space-x-2 px-3 py-2 bg-bg-tertiary rounded-lg border border-border-secondary">
+                      <File01 className="w-4 h-4 text-fg-secondary" />
+                      <span className="text-xs text-fg-secondary">Typography</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end space-x-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowAddModal(false);
+                  setNewBrandName('');
+                  setNewCompanyName('');
+                  setUploadedFiles([]);
+                }}
+                className="
+                  px-4 py-2 rounded-lg
+                  text-fg-secondary
+                  hover:text-fg-primary
+                  hover:bg-bg-tertiary
+                  transition-colors duration-200
+                "
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAddBrand}
+                className="
+                  px-4 py-2 rounded-lg
+                  bg-brand-aperol text-white
+                  hover:bg-brand-aperol/90
+                  transition-colors duration-200
+                  font-medium
+                "
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+

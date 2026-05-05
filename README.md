@@ -149,15 +149,23 @@ Key files:
 
 ## Component Synchronization
 
-Components are **symlinked** to BOS-3.0 to prevent drift:
+Components are **automatically synced** from BOS-3.0 via GitHub Actions:
 
-```bash
-tokens/components/base/   → ../../../BOS-3.0/components/base   # UUI base
-tokens/components/custom/ → ../../../BOS-3.0/components/custom # OS custom
-tokens/components/ds/     → ../../../BOS-3.0/components/ds     # DS transforms
+```
+BOS-3.0 push → GitHub Actions → os_design_system commit
 ```
 
-BOS-3.0 is the **single source of truth** for production components.
+| Directory | Source | Files |
+|-----------|--------|-------|
+| `tokens/components/base/` | UUI base components | ~110 |
+| `tokens/components/custom/` | Open Session custom | ~309 |
+| `tokens/components/ds/` | Design system transforms | ~33 |
+
+BOS-3.0 is the **single source of truth** — edits here will be overwritten.
+
+**Manual sync:** `./scripts/sync-components.sh`
+
+See `tokens/components/SYNC.md` for details.
 
 ---
 

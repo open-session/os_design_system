@@ -1,0 +1,1162 @@
+'use client';
+
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import {
+  Check,
+  ChevronDown,
+  Download01,
+  Image01 as ImageIcon,
+  Loading01,
+  Pencil01,
+  Plus,
+  PresentationChart01,
+  Trash01,
+  Upload01,
+  User01,
+  XClose,
+} from '@untitledui-pro/icons/line';
+import { useBrandArtDirection } from '@/hooks/useBrandArtDirection';
+import type { BrandArtImage, BrandArtImageMetadata, ArtDirectionCategory } from '@/lib/supabase/types';
+import { ART_DIRECTION_CATEGORIES } from '@/lib/supabase/brand-art-service';
+import { ConfirmDialog } from './BrandHubSettingsModal';
+import { devProps } from '@/lib/utils/dev-props';
+
+// ============================================
+// STATIC ART DIRECTION IMAGES (Pre-populated from brand assets)
+// ============================================
+
+interface StaticArtImage {
+  id: string;
+  name: string;
+  category: ArtDirectionCategory;
+  tags: string[];
+  path: string;
+  format: 'png' | 'jpg' | 'webp';
+}
+
+// Supabase storage URL helper
+function getImageUrl(filename: string): string {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  return `${supabaseUrl}/storage/v1/object/public/brand-assets/open-session/images/${filename}`;
+}
+
+const STATIC_ART_IMAGES: StaticArtImage[] = [
+  // Auto category
+  {
+    id: 'auto-audi-quattro',
+    name: 'Audi Quattro Urban Portrait',
+    category: 'Auto',
+    tags: ['urban', 'night', 'precision'],
+    path: getImageUrl('auto-audi-quattro-urban-portrait.png'),
+    format: 'png',
+  },
+  {
+    id: 'auto-bmw-garage',
+    name: 'BMW Convertible Garage Night',
+    category: 'Auto',
+    tags: ['garage', 'night', 'elegance'],
+    path: getImageUrl('auto-bmw-convertible-garage-night.png'),
+    format: 'png',
+  },
+  {
+    id: 'auto-porsche-desert',
+    name: 'Desert Porsche Sunset Drift',
+    category: 'Auto',
+    tags: ['desert', 'sunset', 'speed'],
+    path: getImageUrl('auto-desert-porsche-sunset-drift.png'),
+    format: 'png',
+  },
+  {
+    id: 'auto-night-drive',
+    name: 'Night Drive Motion Blur',
+    category: 'Auto',
+    tags: ['night', 'motion', 'speed'],
+    path: getImageUrl('auto-night-drive-motion-blur.png'),
+    format: 'png',
+  },
+  // Lifestyle category
+  {
+    id: 'lifestyle-street-style',
+    name: 'Confident Street Style',
+    category: 'Lifestyle',
+    tags: ['urban', 'fashion', 'confidence'],
+    path: getImageUrl('lifestyle-confident-street-style.png'),
+    format: 'png',
+  },
+  {
+    id: 'lifestyle-editorial',
+    name: 'Editorial Look Urban',
+    category: 'Lifestyle',
+    tags: ['editorial', 'fashion', 'urban'],
+    path: getImageUrl('lifestyle-editorial-look-urban.png'),
+    format: 'png',
+  },
+  {
+    id: 'lifestyle-modern',
+    name: 'Modern Aesthetic Pose',
+    category: 'Lifestyle',
+    tags: ['modern', 'aesthetic', 'bold'],
+    path: getImageUrl('lifestyle-modern-aesthetic-pose.png'),
+    format: 'png',
+  },
+  // Move category
+  {
+    id: 'move-dance-flow',
+    name: 'Abstract Dance Flow',
+    category: 'Move',
+    tags: ['dance', 'flow', 'energy'],
+    path: getImageUrl('move-abstract-dance-flow.png'),
+    format: 'png',
+  },
+  {
+    id: 'move-athletic',
+    name: 'Athletic Motion Energy',
+    category: 'Move',
+    tags: ['athletic', 'motion', 'energy'],
+    path: getImageUrl('move-athletic-motion-energy.png'),
+    format: 'png',
+  },
+  {
+    id: 'move-kinetic',
+    name: 'Kinetic Energy Motion',
+    category: 'Move',
+    tags: ['kinetic', 'energy', 'momentum'],
+    path: getImageUrl('move-kinetic-energy-motion.png'),
+    format: 'png',
+  },
+  // Escape category
+  {
+    id: 'escape-astronaut',
+    name: 'Astronaut Sparkle Floating',
+    category: 'Escape',
+    tags: ['surreal', 'dreams', 'wonder'],
+    path: getImageUrl('escape-astronaut-sparkle-floating.png'),
+    format: 'png',
+  },
+  {
+    id: 'escape-cliffside',
+    name: 'Cliffside Workspace Ocean View',
+    category: 'Escape',
+    tags: ['remote', 'freedom', 'adventure'],
+    path: getImageUrl('escape-cliffside-workspace-ocean-view.png'),
+    format: 'png',
+  },
+  {
+    id: 'escape-desert',
+    name: 'Desert Silhouette Wanderer',
+    category: 'Escape',
+    tags: ['desert', 'freedom', 'remote'],
+    path: getImageUrl('escape-desert-silhouette-wanderer.png'),
+    format: 'png',
+  },
+  // Work category
+  {
+    id: 'work-presentation',
+    name: 'Business PresentationChart01',
+    category: 'Work',
+    tags: ['leadership', 'collaboration', 'purpose'],
+    path: getImageUrl('work-business-presentation.png'),
+    format: 'png',
+  },
+  {
+    id: 'work-collaboration',
+    name: 'Professional Collaboration',
+    category: 'Work',
+    tags: ['collaboration', 'innovation', 'growth'],
+    path: getImageUrl('work-professional-collaboration.png'),
+    format: 'png',
+  },
+  {
+    id: 'work-meeting',
+    name: 'Team Meeting Discussion',
+    category: 'Work',
+    tags: ['collaboration', 'focus', 'purpose'],
+    path: getImageUrl('work-team-meeting-discussion.png'),
+    format: 'png',
+  },
+  // Feel category
+  {
+    id: 'feel-abstract',
+    name: 'Abstract Figure Warm Tones',
+    category: 'Feel',
+    tags: ['abstract', 'warmth', 'intimacy'],
+    path: getImageUrl('feel-abstract-figure-warm-tones.png'),
+    format: 'png',
+  },
+  {
+    id: 'feel-ethereal',
+    name: 'Ethereal Portrait Softness',
+    category: 'Feel',
+    tags: ['softness', 'poetic', 'intimacy'],
+    path: getImageUrl('feel-ethereal-portrait-softness.png'),
+    format: 'png',
+  },
+  {
+    id: 'feel-flowing',
+    name: 'Flowing Fabric Grace',
+    category: 'Feel',
+    tags: ['texture', 'grace', 'poetic'],
+    path: getImageUrl('feel-flowing-fabric-grace.png'),
+    format: 'png',
+  },
+];
+
+interface ArtDirectionSettingsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+// ============================================
+// CATEGORY SELECT DROPDOWN (with Add New option)
+// ============================================
+
+// Default categories + any custom ones the user adds
+const DEFAULT_CATEGORIES: string[] = ['Auto', 'Lifestyle', 'Move', 'Escape', 'Work', 'Feel'];
+
+interface CategorySelectProps {
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+  customCategories?: string[];
+  onAddCategory?: (category: string) => void;
+}
+
+function CategorySelect({ value, onChange, disabled, customCategories = [], onAddCategory }: CategorySelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isAddingNew, setIsAddingNew] = useState(false);
+  const [newValue, setNewValue] = useState('');
+  const [dropdownPosition, setDropdownPosition] = useState<'bottom' | 'top'>('bottom');
+  const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Combine default and custom categories
+  const allCategories = [...DEFAULT_CATEGORIES, ...customCategories.filter(c => !DEFAULT_CATEGORIES.includes(c))];
+
+  // Calculate dropdown position based on available space
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const spaceBelow = viewportHeight - buttonRect.bottom;
+      const dropdownHeight = 280;
+      
+      if (spaceBelow < dropdownHeight && buttonRect.top > spaceBelow) {
+        setDropdownPosition('top');
+      } else {
+        setDropdownPosition('bottom');
+      }
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+        setIsAddingNew(false);
+        setNewValue('');
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (isAddingNew && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isAddingNew]);
+
+  const handleAddNew = () => {
+    if (newValue.trim()) {
+      const formattedValue = newValue.trim();
+      onChange(formattedValue);
+      onAddCategory?.(formattedValue);
+      setNewValue('');
+      setIsAddingNew(false);
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <div {...devProps('CategorySelect')} ref={containerRef} className="relative">
+      <button
+        ref={buttonRef}
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        disabled={disabled}
+        className={`flex items-center gap-1.5 px-2 py-1 text-xs rounded-md border border-border-primary bg-bg-secondary transition-colors min-w-[80px] ${
+          disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-bg-tertiary'
+        }`}
+      >
+        <span className="text-fg-primary truncate">{value}</span>
+        <ChevronDown className={`w-3 h-3 text-fg-tertiary flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      <AnimatePresence>
+        {isOpen && !disabled && (
+          <motion.div
+            initial={{ opacity: 0, y: dropdownPosition === 'bottom' ? -4 : 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: dropdownPosition === 'bottom' ? -4 : 4 }}
+            className={`absolute left-0 z-[100] py-1 min-w-[160px] max-h-[260px] overflow-auto rounded-lg border border-border-primary bg-bg-primary shadow-xl ${
+              dropdownPosition === 'bottom' 
+                ? 'top-full mt-1' 
+                : 'bottom-full mb-1'
+            }`}
+          >
+            {allCategories.map((category) => (
+              <button
+                key={category}
+                onClick={() => {
+                  onChange(category);
+                  setIsOpen(false);
+                }}
+                className={`w-full flex items-center gap-2 px-3 py-1.5 text-xs hover:bg-bg-secondary transition-colors text-left ${
+                  value === category ? 'text-fg-brand-primary' : 'text-fg-primary'
+                }`}
+              >
+                <span>{category}</span>
+                {value === category && <Check className="w-3 h-3 ml-auto" />}
+              </button>
+            ))}
+            
+            {/* Add new category option */}
+            <div className="border-t border-border-secondary my-1" />
+            {isAddingNew ? (
+              <div className="px-2 py-1.5 flex items-center gap-1">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={newValue}
+                  onChange={(e) => setNewValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleAddNew();
+                    if (e.key === 'Escape') {
+                      setIsAddingNew(false);
+                      setNewValue('');
+                    }
+                  }}
+                  placeholder="Category name..."
+                  className="flex-1 px-2 py-1 text-xs rounded border border-border-primary bg-bg-secondary text-fg-primary focus:outline-hidden focus:border-border-brand"
+                />
+                <button
+                  onClick={handleAddNew}
+                  disabled={!newValue.trim()}
+                  className="p-1 rounded hover:bg-bg-tertiary text-fg-brand-primary disabled:opacity-50"
+                  title="Save"
+                >
+                  <Check className="w-3 h-3" />
+                </button>
+                <button
+                  onClick={() => {
+                    setIsAddingNew(false);
+                    setNewValue('');
+                  }}
+                  className="p-1 rounded hover:bg-bg-tertiary text-fg-tertiary hover:text-fg-primary"
+                  title="Cancel"
+                >
+                  <XClose className="w-3 h-3" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setIsAddingNew(true)}
+                className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-fg-brand-primary hover:bg-bg-secondary transition-colors"
+              >
+                <Plus className="w-3 h-3" />
+                <span>Add new</span>
+              </button>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ============================================
+// STATIC ART IMAGE ROW (Pre-populated images)
+// ============================================
+
+interface StaticArtImageRowProps {
+  image: StaticArtImage;
+  onDownload: (path: string, name: string) => void;
+}
+
+function StaticArtImageRow({ image, onDownload }: StaticArtImageRowProps) {
+  return (
+    <tr {...devProps('StaticArtImageRow')} className="group border-b border-border-secondary hover:bg-bg-tertiary transition-colors">
+      {/* Preview */}
+      <td className="py-2 px-2 sm:px-3">
+        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-bg-tertiary border border-border-primary flex items-center justify-center overflow-hidden flex-shrink-0">
+          <img 
+            src={image.path} 
+            alt={image.name} 
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </td>
+
+      {/* Name */}
+      <td className="py-2 px-2 sm:px-3">
+        <span className="text-xs sm:text-sm font-medium text-fg-primary truncate block max-w-[120px] sm:max-w-none">
+          {image.name}
+        </span>
+      </td>
+
+      {/* Category */}
+      <td className="py-2 px-2 sm:px-3">
+        <span className="inline-flex px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-medium rounded bg-bg-tertiary text-fg-secondary">
+          {image.category}
+        </span>
+      </td>
+
+      {/* Tags - hidden on mobile */}
+      <td className="py-2 px-2 sm:px-3 hidden sm:table-cell">
+        <span className="text-[10px] text-fg-muted truncate block max-w-[100px]" title={image.tags.join(', ')}>
+          {image.tags.slice(0, 3).join(', ')}
+        </span>
+      </td>
+
+      {/* Format - hidden on mobile */}
+      <td className="py-2 px-2 sm:px-3 hidden sm:table-cell">
+        <span className="text-[10px] font-mono text-fg-muted uppercase">
+          {image.format}
+        </span>
+      </td>
+
+      {/* Actions */}
+      <td className="py-2 px-2 sm:px-3">
+        <div className="flex items-center justify-end">
+          <button
+            onClick={() => onDownload(image.path, `${image.id}.${image.format}`)}
+            className="p-1 sm:p-1.5 rounded-lg hover:bg-bg-tertiary text-fg-tertiary hover:text-fg-primary sm:opacity-0 sm:group-hover:opacity-100 transition-all"
+            title="Download"
+          >
+            <Download01 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+// ============================================
+// DYNAMIC ART IMAGE ROW (User-added images)
+// ============================================
+
+interface EditingArtImage {
+  name: string;
+  category: string;
+  tags: string;
+  altText: string;
+}
+
+interface ArtImageRowProps {
+  image: BrandArtImage;
+  isEditing: boolean;
+  editValues: EditingArtImage | null;
+  onStartEdit: () => void;
+  onCancelEdit: () => void;
+  onUpdateField: <K extends keyof EditingArtImage>(field: K, value: EditingArtImage[K]) => void;
+  onSave: () => void;
+  onDelete: () => void;
+  onDownload: (image: BrandArtImage) => void;
+  isSaving: boolean;
+  customCategories: string[];
+  onAddCategory: (category: string) => void;
+}
+
+function ArtImageRow({
+  image,
+  isEditing,
+  editValues,
+  onStartEdit,
+  onCancelEdit,
+  onUpdateField,
+  onSave,
+  onDelete,
+  onDownload,
+  isSaving,
+  customCategories,
+  onAddCategory,
+}: ArtImageRowProps) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isHoveringConfirm, setIsHoveringConfirm] = useState(false);
+
+  // Editing is disabled until authentication is set up
+  const EDITING_DISABLED = true;
+
+  const meta = image.metadata as BrandArtImageMetadata;
+  const category = meta.artCategory || 'Auto';
+  const tags = meta.tags || [];
+  const format = image.mimeType?.split('/')[1] || 'png';
+
+  return (
+    <>
+      <tr {...devProps('ArtImageRow')} className={`group border-b border-border-secondary hover:bg-bg-tertiary transition-colors ${
+        isEditing ? 'bg-bg-secondary' : ''
+      }`}>
+        {/* Preview */}
+        <td className="py-2 px-2 sm:px-3">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-bg-tertiary border border-border-primary flex items-center justify-center overflow-hidden flex-shrink-0">
+            {image.publicUrl ? (
+              <img 
+                src={image.publicUrl} 
+                alt={image.name} 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5 text-fg-muted" />
+            )}
+          </div>
+        </td>
+
+        {/* Name */}
+        <td className="py-2 px-2 sm:px-3">
+          {isEditing && editValues ? (
+            <input
+              type="text"
+              value={editValues.name}
+              onChange={(e) => onUpdateField('name', e.target.value)}
+              disabled={EDITING_DISABLED}
+              className="w-full px-2 py-1 text-xs sm:text-sm rounded border border-border-primary bg-bg-primary text-fg-primary focus:border-border-brand focus:outline-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+          ) : (
+            <span className="text-xs sm:text-sm font-medium text-fg-primary truncate block max-w-[120px] sm:max-w-none">
+              {image.name}
+            </span>
+          )}
+        </td>
+
+        {/* Category */}
+        <td className="py-2 px-2 sm:px-3">
+          {isEditing && editValues ? (
+            <CategorySelect
+              value={editValues.category}
+              onChange={(value) => onUpdateField('category', value)}
+              disabled={EDITING_DISABLED}
+              customCategories={customCategories}
+              onAddCategory={onAddCategory}
+            />
+          ) : (
+            <span className="inline-flex px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] font-medium rounded bg-bg-tertiary text-fg-secondary">
+              {category}
+            </span>
+          )}
+        </td>
+
+        {/* Tags - hidden on mobile */}
+        <td className="py-2 px-2 sm:px-3 hidden sm:table-cell">
+          {isEditing && editValues ? (
+            <input
+              type="text"
+              value={editValues.tags}
+              onChange={(e) => onUpdateField('tags', e.target.value)}
+              disabled={EDITING_DISABLED}
+              placeholder="tag1, tag2, tag3"
+              className="w-full px-2 py-1 text-xs rounded border border-border-primary bg-bg-primary text-fg-muted focus:border-border-brand focus:outline-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+          ) : (
+            <span className="text-[10px] text-fg-muted truncate block max-w-[100px]" title={tags.join(', ')}>
+              {tags.length > 0 ? tags.slice(0, 3).join(', ') : '—'}
+            </span>
+          )}
+        </td>
+
+        {/* Format - hidden on mobile */}
+        <td className="py-2 px-2 sm:px-3 hidden sm:table-cell">
+          <span className="text-[10px] font-mono text-fg-muted uppercase">
+            {format}
+          </span>
+        </td>
+
+        {/* Actions */}
+        <td className="py-2 px-2 sm:px-3">
+          <div className="flex items-center justify-end gap-0.5 sm:gap-1">
+            {isEditing ? (
+              <>
+                <button
+                  onClick={onSave}
+                  disabled={isSaving || EDITING_DISABLED}
+                  onMouseEnter={() => setIsHoveringConfirm(true)}
+                  onMouseLeave={() => setIsHoveringConfirm(false)}
+                  className={`p-1 sm:p-1.5 rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                    isHoveringConfirm 
+                      ? 'bg-bg-brand-solid border-bg-brand-solid text-white' 
+                      : 'border-fg-brand-primary text-fg-brand-primary bg-transparent'
+                  }`}
+                  title="Save"
+                >
+                  {isSaving ? (
+                    <Loading01 className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin" />
+                  ) : (
+                    <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  )}
+                </button>
+                <button
+                  onClick={onCancelEdit}
+                  className="p-1 sm:p-1.5 rounded-lg hover:bg-bg-tertiary text-fg-tertiary hover:text-fg-primary transition-colors"
+                  title="Cancel"
+                >
+                  <XClose className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => onDownload(image)}
+                  className="p-1 sm:p-1.5 rounded-lg hover:bg-bg-tertiary text-fg-tertiary hover:text-fg-primary sm:opacity-0 sm:group-hover:opacity-100 transition-all"
+                  title="Download"
+                >
+                  <Download01 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                </button>
+                <button
+                  onClick={onStartEdit}
+                  disabled={EDITING_DISABLED}
+                  className="p-1 sm:p-1.5 rounded-lg hover:bg-bg-tertiary text-fg-tertiary hover:text-fg-primary sm:opacity-0 sm:group-hover:opacity-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed sm:group-hover:disabled:opacity-30"
+                  title={EDITING_DISABLED ? "Editing disabled" : "Edit"}
+                >
+                  <Pencil01 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  disabled={EDITING_DISABLED}
+                  className="p-1 sm:p-1.5 rounded-lg hover:bg-red-500/10 text-fg-tertiary hover:text-red-500 sm:opacity-0 sm:group-hover:opacity-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed sm:group-hover:disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-fg-tertiary"
+                  title={EDITING_DISABLED ? "Deleting disabled" : "Delete"}
+                >
+                  <Trash01 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                </button>
+              </>
+            )}
+          </div>
+        </td>
+      </tr>
+
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        onConfirm={() => {
+          onDelete();
+          setShowDeleteConfirm(false);
+        }}
+        title="Delete Image"
+        message={`Are you sure you want to delete "${image.name}"? This action cannot be undone.`}
+        confirmLabel="Delete"
+        variant="danger"
+      />
+    </>
+  );
+}
+
+// ============================================
+// ADD ART IMAGE ROW
+// ============================================
+
+interface AddArtImageRowProps {
+  onAdd: (data: {
+    file: File;
+    name: string;
+    category: string;
+    tags: string;
+    altText: string;
+  }) => void;
+  onCancel: () => void;
+  isAdding: boolean;
+  customCategories: string[];
+  onAddCategory: (category: string) => void;
+}
+
+function AddArtImageRow({ onAdd, onCancel, isAdding, customCategories, onAddCategory }: AddArtImageRowProps) {
+  const [file, setFile] = useState<File | null>(null);
+  const [name, setName] = useState('');
+  const [category, setCategory] = useState<string>('Auto');
+  const [tags, setTags] = useState('');
+  const [altText, setAltText] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const [isHoveringConfirm, setIsHoveringConfirm] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile && droppedFile.type.startsWith('image/')) {
+      processFile(droppedFile);
+    }
+  }, []);
+
+  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      processFile(selectedFile);
+    }
+  }, []);
+
+  const processFile = (selectedFile: File) => {
+    setFile(selectedFile);
+    
+    // Create preview URL
+    const url = URL.createObjectURL(selectedFile);
+    setPreviewUrl(url);
+    
+    // Auto-populate name from filename
+    if (!name) {
+      const nameWithoutExt = selectedFile.name.replace(/\.[^/.]+$/, '');
+      const cleanName = nameWithoutExt.replace(/[-_]/g, ' ');
+      setName(cleanName);
+      
+      // Try to detect category from filename
+      const lowerName = nameWithoutExt.toLowerCase();
+      if (lowerName.includes('auto') || lowerName.includes('car') || lowerName.includes('porsche') || lowerName.includes('bmw') || lowerName.includes('audi')) {
+        setCategory('Auto');
+      } else if (lowerName.includes('lifestyle') || lowerName.includes('fashion') || lowerName.includes('street')) {
+        setCategory('Lifestyle');
+      } else if (lowerName.includes('move') || lowerName.includes('dance') || lowerName.includes('athletic') || lowerName.includes('motion')) {
+        setCategory('Move');
+      } else if (lowerName.includes('escape') || lowerName.includes('travel') || lowerName.includes('adventure')) {
+        setCategory('Escape');
+      } else if (lowerName.includes('work') || lowerName.includes('office') || lowerName.includes('business')) {
+        setCategory('Work');
+      } else if (lowerName.includes('feel') || lowerName.includes('abstract') || lowerName.includes('texture')) {
+        setCategory('Feel');
+      }
+    }
+  };
+
+  // Cleanup preview URL on unmount
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  const handleSubmit = () => {
+    if (!file || !name.trim()) return;
+    onAdd({
+      file,
+      name: name.trim(),
+      category,
+      tags: tags.trim(),
+      altText: altText.trim(),
+    });
+  };
+
+  const isValid = file && name.trim();
+
+  return (
+    <tr {...devProps('AddArtImageRow')} className="border-b border-border-brand bg-bg-brand-solid/10">
+      {/* File Upload */}
+      <td className="py-2 sm:py-3 px-2 sm:px-3">
+        <label
+          onDrop={handleDrop}
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center cursor-pointer border-2 border-dashed transition-colors overflow-hidden flex-shrink-0 ${
+            isDragging
+              ? 'border-border-brand bg-bg-brand-primary'
+              : file
+                ? 'border-border-brand bg-bg-secondary'
+                : 'border-border-primary bg-bg-secondary hover:border-border-brand'
+          }`}
+        >
+          {previewUrl ? (
+            <img 
+              src={previewUrl} 
+              alt="Preview" 
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <Upload01 className="w-4 h-4 sm:w-5 sm:h-5 text-fg-tertiary" />
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+        </label>
+      </td>
+
+      {/* Name */}
+      <td className="py-2 sm:py-3 px-2 sm:px-3">
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Image name"
+          autoFocus
+          className="w-full px-2 py-1 text-xs sm:text-sm rounded border border-border-brand bg-bg-primary text-fg-primary focus:outline-hidden"
+        />
+      </td>
+
+      {/* Category */}
+      <td className="py-2 sm:py-3 px-2 sm:px-3">
+        <CategorySelect
+          value={category}
+          onChange={setCategory}
+          customCategories={customCategories}
+          onAddCategory={onAddCategory}
+        />
+      </td>
+
+      {/* Tags - hidden on mobile */}
+      <td className="py-2 sm:py-3 px-2 sm:px-3 hidden sm:table-cell">
+        <input
+          type="text"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          placeholder="tag1, tag2, tag3"
+          className="w-full px-2 py-1 text-xs rounded border border-border-brand bg-bg-primary text-fg-muted focus:outline-hidden"
+        />
+      </td>
+
+      {/* Format - hidden on mobile */}
+      <td className="py-2 sm:py-3 px-2 sm:px-3 hidden sm:table-cell">
+        <span className="text-[10px] font-mono text-fg-muted uppercase">
+          {file ? file.type.split('/')[1] : '—'}
+        </span>
+      </td>
+
+      {/* Actions */}
+      <td className="py-2 sm:py-3 px-2 sm:px-3">
+        <div className="flex items-center justify-end gap-0.5 sm:gap-1">
+          <button
+            onClick={handleSubmit}
+            disabled={isAdding || !isValid}
+            onMouseEnter={() => setIsHoveringConfirm(true)}
+            onMouseLeave={() => setIsHoveringConfirm(false)}
+            className={`p-1 sm:p-1.5 rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+              isHoveringConfirm && isValid
+                ? 'bg-bg-brand-solid border-bg-brand-solid text-white' 
+                : 'border-fg-brand-primary text-fg-brand-primary bg-transparent'
+            }`}
+            title="Add image"
+          >
+            {isAdding ? (
+              <Loading01 className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin" />
+            ) : (
+              <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            )}
+          </button>
+          <button
+            onClick={onCancel}
+            className="p-1 sm:p-1.5 rounded-lg hover:bg-bg-tertiary text-fg-tertiary hover:text-fg-primary transition-colors"
+            title="Cancel"
+          >
+            <XClose className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
+// ============================================
+// MAIN MODAL COMPONENT
+// ============================================
+
+export function ArtDirectionSettingsModal({ isOpen, onClose }: ArtDirectionSettingsModalProps) {
+  const {
+    images,
+    isLoading,
+    uploadImageFile,
+    editImage,
+    removeImage,
+  } = useBrandArtDirection();
+
+  const [isAddingNew, setIsAddingNew] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editValues, setEditValues] = useState<EditingArtImage | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [customCategories, setCustomCategories] = useState<string[]>([]);
+
+  const handleAddCategory = useCallback((category: string) => {
+    if (!customCategories.includes(category) && !DEFAULT_CATEGORIES.includes(category)) {
+      setCustomCategories(prev => [...prev, category]);
+    }
+  }, [customCategories]);
+
+  const handleStartEdit = useCallback((image: BrandArtImage) => {
+    const meta = image.metadata as BrandArtImageMetadata;
+    setEditingId(image.id);
+    setEditValues({
+      name: image.name,
+      category: meta.artCategory || 'Auto',
+      tags: meta.tags?.join(', ') || '',
+      altText: meta.altText || '',
+    });
+  }, []);
+
+  const handleCancelEdit = useCallback(() => {
+    setEditingId(null);
+    setEditValues(null);
+  }, []);
+
+  const handleUpdateField = useCallback(<K extends keyof EditingArtImage>(
+    field: K,
+    value: EditingArtImage[K]
+  ) => {
+    setEditValues(prev => prev ? { ...prev, [field]: value } : null);
+  }, []);
+
+  const handleSaveEdit = useCallback(async () => {
+    if (!editingId || !editValues) return;
+
+    setIsSaving(true);
+    setError(null);
+    try {
+      await editImage(editingId, {
+        name: editValues.name,
+        metadata: {
+          artCategory: editValues.category as ArtDirectionCategory,
+          tags: editValues.tags ? editValues.tags.split(',').map(t => t.trim()).filter(Boolean) : undefined,
+          altText: editValues.altText || undefined,
+        },
+      });
+      setEditingId(null);
+      setEditValues(null);
+    } catch (err) {
+      console.error('Error saving image:', err);
+      setError(err instanceof Error ? err.message : 'Failed to save image');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [editingId, editValues, editImage]);
+
+  const handleDelete = useCallback(async (id: string) => {
+    setIsSaving(true);
+    setError(null);
+    try {
+      await removeImage(id);
+    } catch (err) {
+      console.error('Error deleting image:', err);
+      setError(err instanceof Error ? err.message : 'Failed to delete image');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [removeImage]);
+
+  const handleAddImage = useCallback(async (data: {
+    file: File;
+    name: string;
+    category: string;
+    tags: string;
+    altText: string;
+  }) => {
+    setIsSaving(true);
+    setError(null);
+    try {
+      const metadata: BrandArtImageMetadata = {
+        artCategory: data.category as ArtDirectionCategory,
+        tags: data.tags ? data.tags.split(',').map(t => t.trim()).filter(Boolean) : undefined,
+        altText: data.altText || undefined,
+      };
+
+      await uploadImageFile(data.file, data.name, metadata);
+      setIsAddingNew(false);
+    } catch (err) {
+      console.error('Error adding image:', err);
+      setError(err instanceof Error ? err.message : 'Failed to add image');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [uploadImageFile]);
+
+  const handleDownloadImage = useCallback((image: BrandArtImage) => {
+    if (image.publicUrl) {
+      const link = document.createElement('a');
+      link.href = image.publicUrl;
+      link.download = image.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }, []);
+
+  const handleDownloadStaticImage = useCallback((path: string, filename: string) => {
+    const link = document.createElement('a');
+    link.href = path;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, []);
+
+  // Sort images by category, then by name
+  const sortedImages = [...images].sort((a, b) => {
+    const metaA = a.metadata as BrandArtImageMetadata;
+    const metaB = b.metadata as BrandArtImageMetadata;
+    const categoryOrder = ['Auto', 'Lifestyle', 'Move', 'Escape', 'Work', 'Feel'];
+    const catA = categoryOrder.indexOf(metaA.artCategory || 'Auto');
+    const catB = categoryOrder.indexOf(metaB.artCategory || 'Auto');
+    
+    if (catA !== catB) {
+      return catA - catB;
+    }
+    return a.name.localeCompare(b.name);
+  });
+
+  // Total count includes both static and dynamic images
+  const totalImageCount = STATIC_ART_IMAGES.length + images.length;
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            onClick={onClose}
+          />
+
+          {/* Modal container - Full screen flex for centering */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-8 lg:p-12 pointer-events-none">
+            <motion.div
+              {...devProps('ArtDirectionSettingsModal')}
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.2 }}
+              className="w-full max-w-2xl max-h-[65vh] overflow-hidden rounded-2xl bg-bg-primary border border-border-primary shadow-2xl flex flex-col pointer-events-auto"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 sm:p-5 border-b border-border-primary shrink-0">
+                <div>
+                  <h2 className="text-base sm:text-lg font-display font-bold text-fg-primary">
+                    Manage Art Direction
+                  </h2>
+                  <p className="text-xs sm:text-sm text-fg-tertiary">
+                    {totalImageCount} image{totalImageCount !== 1 ? 's' : ''} in your art direction library
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  {/* Add Image Button */}
+                  <motion.button
+                    onClick={() => setIsAddingNew(true)}
+                    disabled={isAddingNew}
+                    className="p-2 sm:p-2.5 rounded-xl bg-bg-secondary hover:bg-bg-brand-primary border border-border-primary hover:border-border-brand transition-colors group disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Add new image"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Plus className="w-4 h-4 text-fg-tertiary group-hover:text-fg-brand-primary transition-colors" />
+                  </motion.button>
+                  
+                  {/* Close button */}
+                  <button
+                    onClick={onClose}
+                    className="p-1.5 sm:p-2 rounded-lg hover:bg-bg-tertiary text-fg-tertiary hover:text-fg-primary transition-colors"
+                    title="Close"
+                  >
+                    <XClose className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="mx-4 sm:mx-5 mt-4 px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm">
+                  {error}
+                </div>
+              )}
+
+              {/* Table Content - Scrollable area */}
+              <div className="flex-1 overflow-y-auto min-h-0">
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-16 gap-3">
+                    <Loading01 className="w-5 h-5 animate-spin text-fg-brand-primary" />
+                    <span className="text-fg-tertiary">Loading images...</span>
+                  </div>
+                ) : (
+                  <table className="w-full table-fixed">
+                    <thead className="sticky top-0 bg-bg-primary border-b border-border-secondary z-10">
+                      <tr>
+                        <th className="py-2.5 px-2 sm:px-3 text-left text-[10px] font-semibold text-fg-tertiary uppercase tracking-wider w-[56px] sm:w-[68px]">
+                          
+                        </th>
+                        <th className="py-2.5 px-2 sm:px-3 text-left text-[10px] font-semibold text-fg-tertiary uppercase tracking-wider">
+                          Name
+                        </th>
+                        <th className="py-2.5 px-2 sm:px-3 text-left text-[10px] font-semibold text-fg-tertiary uppercase tracking-wider w-[90px] sm:w-[100px]">
+                          Category
+                        </th>
+                        <th className="py-2.5 px-2 sm:px-3 text-left text-[10px] font-semibold text-fg-tertiary uppercase tracking-wider w-[100px] hidden sm:table-cell">
+                          Tags
+                        </th>
+                        <th className="py-2.5 px-2 sm:px-3 text-left text-[10px] font-semibold text-fg-tertiary uppercase tracking-wider w-[50px] hidden sm:table-cell">
+                          Format
+                        </th>
+                        <th className="py-2.5 px-2 sm:px-3 text-right text-[10px] font-semibold text-fg-tertiary uppercase tracking-wider w-[44px] sm:w-[52px]">
+                          
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* Add new image row (when active) */}
+                      {isAddingNew && (
+                        <AddArtImageRow
+                          onAdd={handleAddImage}
+                          onCancel={() => setIsAddingNew(false)}
+                          isAdding={isSaving}
+                          customCategories={customCategories}
+                          onAddCategory={handleAddCategory}
+                        />
+                      )}
+                      
+                      {/* Static pre-populated images */}
+                      {STATIC_ART_IMAGES.map((image) => (
+                        <StaticArtImageRow
+                          key={`static-${image.id}`}
+                          image={image}
+                          onDownload={handleDownloadStaticImage}
+                        />
+                      ))}
+                      
+                      {/* Dynamic user-added images from Supabase */}
+                      {sortedImages.map((image) => (
+                        <ArtImageRow
+                          key={image.id}
+                          image={image}
+                          isEditing={editingId === image.id}
+                          editValues={editingId === image.id ? editValues : null}
+                          onStartEdit={() => handleStartEdit(image)}
+                          onCancelEdit={handleCancelEdit}
+                          onUpdateField={handleUpdateField}
+                          onSave={handleSaveEdit}
+                          onDelete={() => handleDelete(image.id)}
+                          onDownload={handleDownloadImage}
+                          isSaving={isSaving}
+                          customCategories={customCategories}
+                          onAddCategory={handleAddCategory}
+                        />
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+
+              {/* Footer info */}
+              <div className="p-3 sm:p-4 border-t border-border-primary bg-bg-tertiary shrink-0">
+                <p className="text-[10px] sm:text-xs text-fg-muted">
+                  <span className="hidden sm:inline">Upload art direction images using the + button. Supported formats: JPEG, PNG, WebP.</span>
+                  <span className="sm:hidden">Use + to add new images.</span>
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}

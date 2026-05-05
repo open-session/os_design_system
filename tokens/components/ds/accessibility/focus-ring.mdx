@@ -1,0 +1,142 @@
+---
+title: "Focus Ring Transform"
+rule: 2
+scope: ["ring-2", "ring-offset-2", "ring-brand-500/30", "focus:", "focus-visible:"]
+author: "@karim"
+last-updated: "2026-04-26"
+---
+
+# Rule 2 — Focus Ring Transform
+
+## Rule Summary
+
+Replace UUI's stock focus ring (`ring-2 ring-offset-2`) with BOS's tighter, shadow-glow pattern (`ring-1 shadow-focus-ring`). Replace the opacity-ambiguous `ring-brand-500/30` with the semantic `ring-ring-brand` token. BOS's visual density requires a subtler ring — the `ring-2` default is too visually heavy and competes with content. The `shadow-focus-ring` adds a soft glow via `box-shadow` that matches BOS's visual language without the weight of a thick ring outline.
+
+**Coverage:** Applied to 6 UUI files in commit `60e70381`.
+
+---
+
+## Scope
+
+This rule applies to:
+
+- `ring-2` → `ring-1` (ring width reduction)
+- `ring-offset-2` → removed (shadow-based ring does not need offset)
+- `shadow-focus-ring` → added alongside `ring-1`
+- `ring-brand-500/30` → `ring-ring-brand` (semantic token replaces opacity-ambiguous raw color)
+
+**Both prefix variants are in scope:**
+
+- `focus:ring-2` → `focus:ring-1 focus:shadow-focus-ring`
+- `focus-visible:ring-2` → `focus-visible:ring-1 focus-visible:shadow-focus-ring`
+
+**This rule does NOT apply to:**
+
+- React Aria data-attribute focus management (see Edge Cases)
+- Error focus rings (`ring-error-300`, `shadow-focus-ring-error`) — these are correct and must not be converted
+- Custom focus outlines (`outline-focus-ring`, `focus-visible:outline-2`) — separate token, not converted here
+
+---
+
+## Before / After Table
+
+| Before (UUI stock) | After (BOS) | Notes |
+| --- | --- | --- |
+| `ring-2 ring-offset-2` | `ring-1 shadow-focus-ring` | Removes offset; adds shadow glow |
+| `focus:ring-2 focus:ring-offset-2` | `focus:ring-1 focus:shadow-focus-ring` | `focus:` prefix variant |
+| `focus-visible:ring-2 focus-visible:ring-offset-2` | `focus-visible:ring-1 focus-visible:shadow-focus-ring` | `focus-visible:` prefix variant |
+| `ring-brand-500/30` | `ring-ring-brand` | Removes opacity ambiguity |
+| `focus-visible:ring-brand-500/30` | `focus-visible:ring-ring-brand` | Prefix variant |
+
+**Token source:** `tailwind.config.ts:337-340` defines `shadow-focus-ring`. `ring-ring-brand` is defined in `ds/brand.css` and bridges to `--focus-ring`.
+
+---
+
+## Examples
+
+### Example 1 — Button: `focus-visible:ring-2 focus-visible:ring-offset-2` (most common UUI pattern)
+
+```tsx
+// BEFORE (UUI stock):
+"focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-500/30"
+
+// AFTER (BOS — applied correctly):
+"focus-visible:ring-1 focus-visible:shadow-focus-ring focus-visible:ring-ring-brand"
+```
+
+**File:** `components/ds/buttons/button.tsx` — transform applied correctly.
+
+Visual reference: see Storybook DS/Button — Default story. The `ring-1 + shadow-focus-ring` pattern is the subtle glow visible on keyboard focus. Compare against the UUI Figma baseline — BOS's ring is intentionally narrower.
+
+---
+
+### Example 2 — Input: `focus:ring-2` pattern
+
+```tsx
+// BEFORE (UUI stock):
+"focus:ring-2 focus:ring-offset-2"
+
+// AFTER (BOS):
+"focus:ring-1 focus:shadow-focus-ring"
+```
+
+**File:** `components/ds/input/input.tsx` — applied in commit `60e70381`.
+
+---
+
+### Example 3 — What the rule does NOT apply to
+
+```tsx
+// This is an error focus ring — leave as-is:
+"focus:ring-error-300 focus:shadow-focus-ring-error"
+
+// This is a custom outline (not a ring) — leave as-is:
+"focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
+```
+
+These patterns use the error ring or outline system, not the brand ring system. Converting them would break the semantic distinction between error states and default focus states.
+
+---
+
+## Edge Cases
+
+### React Aria data-attribute focus management
+
+Some UUI components manage focus through React Aria's data attributes rather than CSS classes. For example:
+
+```tsx
+// React Aria focus via data attribute — NOT in scope for Rule 2:
+"data-focused:ring-2"   // data-focused is set by React Aria
+"data-focus-visible:outline-2"  // React Aria keyboard-only focus
+```
+
+React Aria's `data-focused`, `data-focus-visible`, and `data-hovered` attributes are set programmatically. The CSS-class-based Rule 2 applies only to Tailwind's `focus:` and `focus-visible:` pseudo-class variants, not to `data-[focused]:` or `data-[focus-visible]:` variants. Inspect the component before applying to confirm which focus mechanism it uses.
+
+---
+
+### `ring-brand-500/30` opacity ambiguity
+
+The original `ring-brand-500/30` attempts to use Tailwind's opacity modifier on a semantic color class. Unlike `bg-[var(--token)]/30` (which silently fails — see Rule 4 — Token Syntax), `ring-brand-500/30` technically works because `ring-brand-500` is a raw Tailwind color scale class with known RGB channel values. However:
+
+1. The `/30` opacity makes the ring partially transparent in a way that the `ring-ring-brand` token already handles correctly (the token is pre-configured with the intended alpha)
+2. `ring-ring-brand` eliminates the ambiguity and makes the intent explicit
+3. Dark mode: the semantic token correctly adapts; the raw `/30` modifier does not adapt to dark mode token overrides
+
+**Convert `ring-brand-500/30` → `ring-ring-brand`** regardless of the ring mechanism (class or data attribute).
+
+---
+
+### `shadow-focus-ring` definition
+
+For readers who want to verify the token value:
+
+```typescript
+// tailwind.config.ts:337-340:
+boxShadow: {
+  'focus-ring': '0 0 0 3px var(--focus-ring-shadow)',
+  'focus-ring-elevated': 'var(--shadow-xs), 0 0 0 3px var(--focus-ring-shadow)',
+  // ...
+}
+```
+
+The `--focus-ring-shadow` variable is defined in `ds/brand.css` and resolves to a brand-colored semi-transparent glow. In dark mode, the glow adapts via the `.dark {}` override block.

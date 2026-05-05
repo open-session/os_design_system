@@ -50,7 +50,7 @@ cp -R .claude/core/karimo your-project/.claude/plugins/karimo
 | Token JSON | `tokens/exports/tokens.json` | Programmatic token access |
 | Asset Manifest | `assets/manifest.json` | Asset paths and metadata |
 | CSS Tokens | `tokens/ds/brand.css` | Source of truth (787 lines) |
-| Components | `tokens/components/` | Symlinked to BOS-3.0 |
+| Components | `tokens/components/` | Synced from BOS-3.0 via GitHub Actions |
 
 ---
 

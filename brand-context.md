@@ -143,12 +143,14 @@ Path: `assets/logos/stamps/stamp-{color}-{1-6}.png`
 
 ## Component Reference
 
-Components are symlinked from BOS-3.0:
+Components are automatically synced from BOS-3.0 via GitHub Actions:
 ```
-tokens/components/base/    → UUI base components
-tokens/components/custom/  → Open Session custom components
-tokens/components/ds/      → Design system transforms
+tokens/components/base/    → UUI base components (~110 files)
+tokens/components/custom/  → Open Session custom components (~309 files)
+tokens/components/ds/      → Design system transforms (~33 files)
 ```
+
+**Note:** BOS-3.0 is source of truth. Edits here will be overwritten.
 
 ---
 
@@ -200,7 +202,7 @@ hover:bg-bg-tertiary
 | Logo SVGs | `assets/logos/main/svg/` |
 | Illustrations | `assets/illustrations/` |
 | Fonts (Web) | `assets/fonts/*/Web/` |
-| Components | `tokens/components/` (symlinked to BOS-3.0) |
+| Components | `tokens/components/` (synced from BOS-3.0) |
 
 ---
 

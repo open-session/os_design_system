@@ -1,0 +1,155 @@
+---
+title: "Disabled State Transform"
+rule: 3
+scope: ["disabled:bg-gray-*", "disabled:text-gray-*", "disabled:border-gray-*"]
+author: "@karim"
+last-updated: "2026-04-26"
+---
+
+# Rule 3 — Disabled State Transform
+
+## Rule Summary
+
+Replace raw gray utility classes in `disabled:` pseudo-class variants with BOS semantic disabled-state tokens. Raw gray values (`bg-gray-100`, `text-gray-400`, `border-gray-200`) are **dark-mode fragile**: they use hardcoded light-mode values that do not invert correctly when the `.dark` class is applied. Semantic disabled tokens (`bg-bg-disabled_subtle`, `text-fg-disabled`, `border-border-disabled`) resolve through the token system and correctly adapt in both light and dark mode.
+
+This rule also covers the UUI v7 → v8 migration: UUI v8 renamed and removed several disabled-state tokens. BOS applied semantic replacements across all affected files. Any component still carrying UUI v7 disabled tokens is a migration gap, not intentional customization.
+
+**Coverage:** Applied to 13 files in commit `a6b0b5ac`.
+
+---
+
+## Scope
+
+This rule applies to `disabled:` Tailwind pseudo-class variants on background, text, and border utilities that use raw gray color scale classes:
+
+```bash
+# Detection command — find Rule 3 violations:
+grep -rn "disabled:bg-gray-\|disabled:text-gray-\|disabled:border-gray-" components/ds/ components/uui/
+```
+
+**In scope:**
+
+- `disabled:bg-gray-100` → `disabled:bg-bg-disabled_subtle`
+- `disabled:text-gray-400` → `disabled:text-fg-disabled`
+- `disabled:border-gray-200` → `disabled:border-border-disabled`
+- Any other `disabled:*-gray-*` pattern using a raw gray color scale
+
+**NOT in scope (see Edge Cases):**
+
+- `placeholder:text-gray-*` — placeholder text (not a disabled state)
+- `text-gray-*` without `disabled:` prefix — muted/secondary text (use Rule 4 instead)
+- JavaScript-conditional disabled (`className={isDisabled ? "opacity-50" : ""}`) — outside CSS pseudo-class scope
+
+---
+
+## Before / After Table
+
+| Before (raw gray) | After (BOS semantic) | Token source |
+| --- | --- | --- |
+| `disabled:bg-gray-100` | `disabled:bg-bg-disabled_subtle` | `ds/brand.css` → `--bg-disabled_subtle` |
+| `disabled:text-gray-400` | `disabled:text-fg-disabled` | `ds/brand.css` → `--fg-disabled` |
+| `disabled:text-gray-300` | `disabled:text-fg-disabled` | `ds/brand.css` → `--fg-disabled` |
+| `disabled:border-gray-200` | `disabled:border-border-disabled` | `ds/brand.css` → `--border-disabled` |
+| `disabled:border-gray-300` | `disabled:border-border-disabled` | `ds/brand.css` → `--border-disabled` |
+
+**Verify token availability:** All three tokens (`--bg-disabled_subtle`, `--fg-disabled`, `--border-disabled`) must exist in `ds/brand.css` before applying this transform. If a token is missing, surface to the team before converting — do not substitute a different gray.
+
+---
+
+## Examples
+
+### Example 1 — Avatar Add Button: known stale instance (NOT yet fixed)
+
+This is the primary real-world violation in the current codebase, documented in `docs/design-system/uui-transformation-rules.md` §Known stale deviations:
+
+```tsx
+// BEFORE (stale — components/ds/avatar/base-components/avatar-add-button.tsx:28):
+"flex cursor-pointer items-center justify-center rounded-full border border-dashed
+border-primary bg-primary text-fg-quaternary outline-focus-ring transition duration-100
+ease-linear hover:bg-primary_hover hover:text-fg-quaternary_hover
+focus-visible:outline-2 focus-visible:outline-offset-2
+disabled:border-gray-200 disabled:bg-secondary disabled:text-gray-200"
+
+// AFTER (correct BOS):
+"...
+disabled:border-border-disabled disabled:bg-bg-disabled_subtle disabled:text-fg-disabled"
+```
+
+This instance will be fixed in task 6c when the avatar primitive is migrated. It is documented here as a reference for what Rule 3 violations look like in the actual codebase.
+
+---
+
+### Example 2 — Correctly applied: disabled state using opacity instead of gray
+
+Some BOS components use `disabled:opacity-50` rather than background/text color switching. This is NOT a Rule 3 violation — it is an intentional pattern for components where only opacity is changed, not color:
+
+```tsx
+// Correct — button.tsx (not a Rule 3 violation):
+"disabled:cursor-not-allowed disabled:opacity-50"
+```
+
+Rule 3 applies only when raw gray color classes appear in `disabled:` context. Opacity-only disabled states are correct.
+
+---
+
+### Example 3 — What does NOT trigger this rule
+
+```tsx
+// Muted text — NOT a disabled state:
+"text-gray-400"  // Should use text-fg-tertiary via Rule 4, but NOT Rule 3
+
+// Placeholder text — NOT a disabled state:
+"placeholder:text-gray-400"  // See Edge Cases — out of scope
+
+// Non-disabled background — NOT a disabled state:
+"bg-gray-50"  // Should use bg-bg-secondary via Rule 4, but NOT Rule 3
+```
+
+---
+
+## Edge Cases
+
+### Placeholder text gray — NOT a disabled state
+
+```tsx
+// Do NOT convert with Rule 3:
+"placeholder:text-gray-400"
+"placeholder:text-gray-500"
+```
+
+Placeholder text is not a disabled state — it is the hint text shown when an input is empty. Use Rule 4 (token-syntax) to convert these to semantic tokens (`placeholder:text-fg-placeholder`), but do NOT apply the `disabled:` semantic tokens here. The distinction matters: a placeholder can appear in both enabled and disabled inputs.
+
+---
+
+### JavaScript-conditional disabled styling
+
+```tsx
+// Out of scope for this rule:
+className={isDisabled ? "bg-gray-100 text-gray-400" : "bg-white text-black"}
+```
+
+Rule 3 applies to CSS `disabled:` pseudo-class variants in static class strings. When disabled styling is applied via JavaScript conditional class logic, the same semantic tokens should be used (replace `bg-gray-100` with `bg-bg-disabled_subtle`), but the CSS pseudo-class rule does not apply. Apply the same substitution for correctness.
+
+---
+
+### UUI v7 removed tokens
+
+UUI v8 removed several disabled-state tokens that were present in v7 (e.g., `button-secondary-fg_disabled`, `button-tertiary-fg_disabled`). If you encounter these legacy token names in a component:
+
+1. Do NOT keep the v7 token name — the token no longer exists
+2. Apply the semantic equivalent from the table above
+3. Test in both light and dark mode after the substitution
+
+The 13-file batch migration (commit `a6b0b5ac`) handled the known instances. Any remaining v7 tokens are migration gaps, not intentional customization.
+
+---
+
+### Dark mode verification
+
+After applying Rule 3, verify the disabled state in dark mode. The semantic tokens (`bg-bg-disabled_subtle`, `fg-disabled`, `border-disabled`) have dark-mode overrides in `ds/brand.css`'s `.dark {}` block. The raw gray values do not. A quick sanity check:
+
+```javascript
+// In browser console on any page using the converted component:
+document.documentElement.classList.add('dark');
+// Inspect the disabled element — it should adapt correctly in dark mode
+```

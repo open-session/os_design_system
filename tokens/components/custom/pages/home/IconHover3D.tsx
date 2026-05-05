@@ -1,0 +1,80 @@
+'use client';
+
+import { useState, type FC, type SVGProps } from 'react';
+import { motion } from 'motion/react';
+import { devProps } from '@/lib/utils/dev-props';
+
+interface IconHover3DProps {
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  title: string;
+  description: string;
+  onClick?: () => void;
+}
+
+export function IconHover3D({
+  icon: Icon,
+  title,
+  description,
+  onClick,
+}: IconHover3DProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.button
+      {...devProps('IconHover3D')}
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="group relative w-full h-full rounded-2xl bg-bg-secondary border border-border-primary p-4 cursor-pointer text-left transition-all duration-300 hover:border-border-brand hover:shadow-lg hover:shadow-black/10"
+      whileTap={{ scale: 0.98 }}
+      transition={{
+        type: 'spring',
+        stiffness: 400,
+        damping: 25,
+      }}
+    >
+      <div className="flex flex-col h-full">
+        {/* Text Content - TOP */}
+        <div className="mb-3">
+          {/* Title - vanilla by default, aperol on hover */}
+          <h3 
+            className="text-sm font-semibold mb-0.5 transition-colors duration-300"
+            style={{ color: isHovered ? 'var(--fg-brand-primary)' : 'var(--fg-primary)' }}
+          >
+            {title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-xs text-fg-tertiary line-clamp-2">
+            {description}
+          </p>
+        </div>
+
+        {/* Spacer to push icon to bottom */}
+        <div className="flex-1" />
+
+        {/* Icon Container - BOTTOM - icon stays neutral, no hover color change */}
+        <motion.div
+          className="w-10 h-10 rounded-lg bg-bg-tertiary flex items-center justify-center"
+          animate={{
+            scale: isHovered ? 1.05 : 1,
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 400,
+            damping: 25,
+          }}
+        >
+          <Icon 
+            className="w-5 h-5"
+            style={{
+              stroke: 'var(--fg-tertiary)',
+              strokeWidth: 1.5,
+              fill: 'none',
+            }}
+          />
+        </motion.div>
+      </div>
+    </motion.button>
+  );
+}
