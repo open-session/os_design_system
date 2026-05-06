@@ -5,8 +5,13 @@ void Tab;
 void TabList;
 void TabPanel;
 
+/**
+ * Vendor-pristine UUI Pro Tabs — what `bun run uui:add tabs` produces.
+ * Use for vendor-swap auditing only. Product code uses `@/components/base` Tabs
+ * (which re-exports `components/ds/tabs/tabs.tsx` — Layer 4 wrapper, Shape C fork).
+ */
 const meta: Meta = {
-  title: 'Base/Application/Tabs',
+  title: 'Base (Upstream UUI)/Application/Tabs',
   tags: ['autodocs'],
 };
 

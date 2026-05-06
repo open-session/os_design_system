@@ -112,7 +112,8 @@ export { SlideoutMenu } from "./application/slideout-menus/slideout-menu";
 
 export { TableRowActionsDropdown } from "./application/table/table";
 
-export { Tab, TabList, TabPanel, Tabs } from "./application/tabs/tabs";
+// Tabs lifted to ds/ (Shape C wrapper) so brand variant overrides survive UUI re-pulls.
+export { Tab, TabList, TabPanel, Tabs } from "@/components/ds/tabs/tabs";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // foundations/ — building-block primitives
@@ -120,7 +121,8 @@ export { Tab, TabList, TabPanel, Tabs } from "./application/tabs/tabs";
 
 export { Dot } from "./foundations/dot-icon";
 
-export { FeaturedIcon } from "./foundations/featured-icon/featured-icon";
+// FeaturedIcon lifted to ds/ (Shape C wrapper) for vendor-survival.
+export { FeaturedIcon } from "@/components/ds/featured-icon/featured-icon";
 
 // payment-icons/index.tsx is already a sub-barrel; re-export everything from it
 export * from "./foundations/payment-icons";

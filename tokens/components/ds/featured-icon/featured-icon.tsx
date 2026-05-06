@@ -1,19 +1,32 @@
 /**
- * Vendor-pristine UUI Pro FeaturedIcon (5-axis mechanical transforms applied).
- * BOS brand-variant overrides live in `components/ds/featured-icon/featured-icon.tsx`.
+ * BOS FeaturedIcon — Wrapper shape: C (full fork).
  *
- * @ds-wrapper components/ds/featured-icon/featured-icon.tsx
- * @upstream-flow `bun run uui:add featured-icon` regenerates this file from UUI Pro.
+ * @upstream-base components/base/foundations/featured-icon/featured-icon.tsx (UUI Pro vendor source, mechanically transformed only)
+ * @history components/ds/_history/featured-icon.md (created in Phase B)
+ *
+ * Brand decisions (delta from upstream UUI Pro):
+ *   - `iconsSizes.sm` drops `*:data-icon:stroke-[2.25px]` (upstream adds heavier stroke).
+ *   - `outline.base` drops `ring-primary` (kept just `ring-1 ring-inset`).
+ *   - `outline.colors.{brand,error,warning,success}` are intentionally empty —
+ *     gray remains `text-fg-secondary ring-primary`. Upstream populates each color
+ *     with `text-fg-{brand,error,warning,success}-primary`. The audit's open question §5
+ *     about `text-featured-icon-light-fg-*` tokens is resolved: those tokens ARE defined
+ *     in components/ds/brand.css (lines 220–224 light, 540–544 dark) — not a leak.
+ *
+ * Wrapper shape rationale (Shape C — full fork): same as Button/Tabs — object-style
+ * styles constant not parameterizable from props. Forking is correct.
+ *
+ * Consumer entry point: `import { FeaturedIcon } from '@/components/base'`.
  */
 
 import type { FC, ReactNode, Ref } from "react";
 import { isValidElement } from "react";
 import { cx, sortCx } from "@/utils/cx";
 import { isReactComponent } from "@/utils/is-react-component";
-import { devProps } from '@/lib/utils/dev-props';
+import { devProps } from "@/lib/utils/dev-props";
 
 const iconsSizes = {
-    sm: "*:data-icon:size-4 *:data-icon:stroke-[2.25px]",
+    sm: "*:data-icon:size-4",
     md: "*:data-icon:size-5",
     lg: "*:data-icon:size-6",
     xl: "*:data-icon:size-7",
@@ -72,7 +85,7 @@ const styles = sortCx({
     },
 
     modern: {
-        base: "bg-primary shadow-xs-skeuomorphic ring-1 ring-primary ring-inset",
+        base: "bg-primary shadow-xs-skeuomorphic ring-1 ring-inset",
         sizes: {
             sm: "size-8 rounded-md",
             md: "size-10 rounded-lg",
@@ -80,11 +93,11 @@ const styles = sortCx({
             xl: "size-14 rounded-xl",
         },
         colors: {
-            brand: "text-fg-brand-primary",
-            gray: "text-fg-secondary",
-            error: "text-fg-error-primary",
-            warning: "text-fg-warning-primary",
-            success: "text-fg-success-primary",
+            brand: "",
+            gray: "text-fg-secondary ring-primary",
+            error: "",
+            warning: "",
+            success: "",
         },
     },
     "modern-neue": {
@@ -141,7 +154,7 @@ export const FeaturedIcon = (props: FeaturedIconProps) => {
 
     return (
         <div
-      {...devProps('FeaturedIcon')}
+            {...devProps('FeaturedIcon')}
             {...otherProps}
             data-featured-icon
             className={cx(

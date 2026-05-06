@@ -9,7 +9,7 @@ import { devProps } from '@/lib/utils/dev-props';
 import { Button } from '@/components/ds/buttons/button';
 import { TextArea } from '@/components/base/base/textarea/textarea';
 import { NativeSelect } from '@/components/base/base/select/select-native';
-import { Tabs, TabList, TabPanel } from '@/components/base/application/tabs/tabs';
+import { Tabs, TabList, TabPanel } from '@/components/ds/tabs/tabs';
 import { InviteByLinkTab } from './InviteByLinkModal';
 
 // ============================================================
