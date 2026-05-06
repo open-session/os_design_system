@@ -1,20 +1,29 @@
 "use client";
 
 /**
- * Vendor-pristine UUI Pro Button.
+ * BOS Button — Wrapper shape: C (full fork).
  *
- * This file contains UPSTREAM UUI source PLUS the 5-axis mechanical transforms
- * (motion, focus-ring, disabled-state, token-syntax, devProps) applied via
- * `scripts/uui-apply-transformations.ts`. It MUST NOT contain BOS brand-variant
- * overrides — those live in `components/ds/buttons/button.tsx` (Shape C fork).
+ * @upstream-base components/base/base/buttons/button.tsx (UUI Pro vendor source, mechanically transformed only)
+ * @history components/ds/_history/button.md
  *
- * The barrel at `components/base/index.ts` re-exports `Button` from `ds/buttons/button.tsx`,
- * NOT from this file. Consumers get the BOS-branded button through the barrel; this
- * file is preserved as the pristine baseline for `bun run uui:add button` re-pulls.
+ * Brand decisions (delta from upstream UUI Pro):
+ *   - colors.primary.root → neutral-secondary instead of UUI's `bg-brand-solid` orange CTA.
+ *     Decision #2 (ds/_exceptions.md): BOS primary buttons are calm/contained;
+ *     hover reveals the brand accent (`hover:bg-bg-brand-primary`).
+ *   - sizes.xs.root → smaller padding/text + smaller icon-only padding (UUI uses sm-equivalent).
+ *   - sizes.{sm,md,lg,xl}.linkRoot → drops UUI's `*:data-text:underline-offset-3/4` additions.
+ *   - colors.{secondary,primary-destructive,secondary-destructive}.root → adds `disabled:*` classes.
+ *   - colors.{link-gray,link-color}.root → use `*:data-text:underline-offset-2 hover:decoration-current`
+ *     instead of UUI's `hover:decoration-fg-quaternary` / `hover:decoration-fg-brand-secondary_alt`.
+ *   - styles.common.root → uses `ease-motion-out` (BOS) instead of `ease-linear` (UUI stock).
  *
- * @ds-wrapper components/ds/buttons/button.tsx
- * @upstream-flow `bun run uui:add button` regenerates this file from UUI Pro.
- * @brand-decisions See ds/_exceptions.md (Decision #2) and ds/buttons/button.tsx JSDoc.
+ * Wrapper shape rationale (Shape C — full fork): the primitive uses an object-style
+ * `sortCx` constant read from module scope, not props. Runtime override would require
+ * monkey-patching or re-implementation. Forking is cleaner and survives `bun run uui:add`
+ * re-pulls predictably — the fresh upstream lands in base/ untouched, the BOS fork stays here.
+ *
+ * Consumer entry point: `import { Button } from '@/components/base'`. The barrel
+ * (components/base/index.ts) re-exports from this file, NOT from base/base/buttons/button.tsx.
  */
 
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, DetailedHTMLProps, FC, ReactNode } from "react";
@@ -23,16 +32,16 @@ import type { ButtonProps as AriaButtonProps, LinkProps as AriaLinkProps } from 
 import { Button as AriaButton, Link as AriaLink } from "react-aria-components";
 import { cx, sortCx } from "@/utils/cx";
 import { isReactComponent } from "@/utils/is-react-component";
-import { devProps } from '@/lib/utils/dev-props';
+import { devProps } from "@/lib/utils/dev-props";
 
 export const styles = sortCx({
     common: {
         root: [
-            "group relative inline-flex h-max cursor-pointer items-center justify-center whitespace-nowrap outline-brand transition duration-micro ease-linear before:absolute focus-visible:outline-2 focus-visible:outline-offset-2",
+            "group relative inline-flex h-max cursor-pointer items-center justify-center whitespace-nowrap outline-brand transition duration-micro ease-motion-out before:absolute focus-visible:outline-2 focus-visible:outline-offset-2",
             // When button is used within `InputGroup`
             "in-data-input-wrapper:shadow-xs in-data-input-wrapper:focus:!z-50 in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-r-none in-data-input-wrapper:in-data-leading:before:rounded-r-none in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-l-none in-data-input-wrapper:in-data-trailing:before:rounded-l-none",
             // Disabled styles
-            "disabled:cursor-not-allowed disabled:opacity-50 in-data-input-wrapper:disabled:opacity-100",
+            "disabled:cursor-not-allowed disabled:opacity-50",
             // Same as `icon` but for SSR icons that cannot be passed to the client as functions.
             "*:data-icon:pointer-events-none *:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:transition-inherit-all",
         ].join(" "),
@@ -41,49 +50,54 @@ export const styles = sortCx({
     sizes: {
         xs: {
             root: [
-                "gap-1 rounded-lg px-2.5 py-1.5 text-sm font-semibold before:rounded-[7px] data-icon-only:p-2",
-                "in-data-input-wrapper:px-3.5 in-data-input-wrapper:py-2.5 in-data-input-wrapper:data-icon-only:p-2.5",
-                "*:data-icon:size-4 *:data-icon:stroke-[2.25px]",
+                "gap-1 rounded-md px-2.5 py-1.5 text-xs font-semibold before:rounded-[5px] data-icon-only:p-1.5",
+                "in-data-input-wrapper:px-3 in-data-input-wrapper:py-2 in-data-input-wrapper:data-icon-only:p-2",
             ].join(" "),
-            linkRoot: "gap-1 *:data-text:underline-offset-3",
+            linkRoot: "gap-1",
         },
         sm: {
             root: [
                 "gap-1 rounded-lg px-3 py-2 text-sm font-semibold before:rounded-[7px] data-icon-only:p-2",
                 "in-data-input-wrapper:px-3.5 in-data-input-wrapper:py-2.5 in-data-input-wrapper:data-icon-only:p-2.5",
             ].join(" "),
-            linkRoot: "gap-1 *:data-text:underline-offset-3",
+            linkRoot: "gap-1",
         },
         md: {
             root: [
                 "gap-1 rounded-lg px-3.5 py-2.5 text-sm font-semibold before:rounded-[7px] data-icon-only:p-2.5",
                 "in-data-input-wrapper:gap-1.5 in-data-input-wrapper:px-4 in-data-input-wrapper:text-md in-data-input-wrapper:data-icon-only:p-3",
             ].join(" "),
-            linkRoot: "gap-1 *:data-text:underline-offset-4",
+            linkRoot: "gap-1",
         },
         lg: {
             root: "gap-1.5 rounded-lg px-4 py-2.5 text-md font-semibold before:rounded-[7px] data-icon-only:p-3",
-            linkRoot: "gap-1.5 *:data-text:underline-offset-4",
+            linkRoot: "gap-1.5",
         },
         xl: {
             root: "gap-1.5 rounded-lg px-4.5 py-3 text-md font-semibold before:rounded-[7px] data-icon-only:p-3.5",
-            linkRoot: "gap-1.5 *:data-text:underline-offset-4",
+            linkRoot: "gap-1.5",
         },
     },
 
     colors: {
         primary: {
             root: [
-                "bg-brand-solid text-white shadow-xs-skeuomorphic ring-1 ring-transparent ring-inset hover:bg-brand-solid_hover data-loading:bg-brand-solid_hover",
-                // Inner border gradient
-                "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
+                // BOS brand override (Decision #2 — ds/_exceptions.md): calm/contained primary,
+                // not UUI orange CTA. Hover reveals brand accent.
+                "bg-bg-secondary text-fg-primary shadow-xs ring-1 ring-border-primary ring-inset",
+                "hover:bg-bg-brand-primary hover:text-fg-brand-primary hover:ring-border-brand-solid",
+                "data-loading:bg-bg-brand-primary",
+                // Disabled styles
+                "disabled:opacity-50 disabled:shadow-xs",
                 // Icon styles
-                "*:data-icon:text-white/60 hover:*:data-icon:text-white/70",
+                "*:data-icon:text-fg-tertiary hover:*:data-icon:text-fg-brand-primary",
             ].join(" "),
         },
         secondary: {
             root: [
                 "bg-primary text-secondary shadow-xs-skeuomorphic ring-1 ring-primary ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover",
+                // Disabled styles
+                "disabled:shadow-xs disabled:opacity-50",
                 // Icon styles
                 "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
             ].join(" "),
@@ -95,22 +109,22 @@ export const styles = sortCx({
                 "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
             ].join(" "),
         },
-        "link-color": {
-            root: [
-                "justify-normal rounded p-0! text-brand-secondary hover:text-brand-secondary_hover",
-                // Inner text underline
-                "*:data-text:underline *:data-text:decoration-transparent hover:*:data-text:decoration-fg-brand-secondary_alt",
-                // Icon styles
-                "*:data-icon:text-fg-brand-secondary_alt hover:*:data-icon:text-fg-brand-secondary_hover",
-            ].join(" "),
-        },
         "link-gray": {
             root: [
                 "justify-normal rounded p-0! text-tertiary hover:text-tertiary_hover",
                 // Inner text underline
-                "*:data-text:underline *:data-text:decoration-transparent hover:*:data-text:decoration-fg-quaternary",
+                "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
                 // Icon styles
                 "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
+            ].join(" "),
+        },
+        "link-color": {
+            root: [
+                "justify-normal rounded p-0! text-brand-secondary hover:text-brand-secondary_hover",
+                // Inner text underline
+                "*:data-text:underline *:data-text:decoration-transparent *:data-text:underline-offset-2 hover:*:data-text:decoration-current",
+                // Icon styles
+                "*:data-icon:text-fg-brand-secondary_alt hover:*:data-icon:text-fg-brand-secondary_hover",
             ].join(" "),
         },
         "primary-destructive": {
@@ -118,6 +132,8 @@ export const styles = sortCx({
                 "bg-error-solid text-white shadow-xs-skeuomorphic ring-1 ring-transparent outline-error ring-inset hover:bg-error-solid_hover data-loading:bg-error-solid_hover",
                 // Inner border gradient
                 "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
+                // Disabled styles
+                "disabled:opacity-50 disabled:shadow-xs",
                 // Icon styles
                 "*:data-icon:text-white/60 hover:*:data-icon:text-white/70",
             ].join(" "),
@@ -125,6 +141,8 @@ export const styles = sortCx({
         "secondary-destructive": {
             root: [
                 "bg-primary text-error-primary shadow-xs-skeuomorphic ring-1 ring-error_subtle outline-error ring-inset hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
+                // Disabled styles
+                "disabled:bg-primary disabled:shadow-xs disabled:opacity-50",
                 // Icon styles
                 "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
             ].join(" "),
@@ -229,7 +247,7 @@ export const Button = ({
 
     return (
         <Component
-      {...devProps('Button')}
+            {...devProps('Button')}
             data-loading={loading ? true : undefined}
             data-icon-only={isIcon ? true : undefined}
             {...props}

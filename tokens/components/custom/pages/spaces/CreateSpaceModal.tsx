@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Modal } from '@/components/custom/shared/overlays/Modal';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { Icon } from '@/components/custom/shared/branding/Icon';
 import {
   AlertCircle,

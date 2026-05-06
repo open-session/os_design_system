@@ -129,7 +129,7 @@ import { cx, sortCx } from '@/utils/cx';
 import { devProps } from '@/lib/utils/dev-props';
 
 // Re-export types from base — type contract is shared with vendor source.
-export type { CommonProps, ButtonProps, Props } from '@/components/base/base/buttons/button';
+export type { CommonProps, ButtonProps, Props } from '@/components/ds/buttons/button';
 
 // BOS-branded styles — diverges from base/buttons/button.tsx in:
 //   - colors.primary.root (Decision #2)

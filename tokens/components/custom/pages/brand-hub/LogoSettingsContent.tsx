@@ -16,7 +16,7 @@ import {
   XClose,
 } from '@untitledui-pro/icons/line';
 import { useBrandLogos, DEFAULT_LOGO_TYPES, DEFAULT_VARIANTS, DEFAULT_CATEGORIES } from '@/hooks/useBrandLogos';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { Select } from '@/components/base/base/select/select';
 import type { SelectItemType } from '@/components/base/base/select/select';
 import { devProps } from '@/lib/utils/dev-props';

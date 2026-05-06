@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 import { Plus } from '@untitledui-pro/icons/line';
 import { toast } from 'sonner';
 import { devProps } from '@/lib/utils/dev-props';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { Tabs, TabList, TabPanel } from '@/components/base/application/tabs/tabs';
 import { OPEN_SESSION_ORG } from '@/stores/org-store';
 import { PeopleTable } from './PeopleTable';

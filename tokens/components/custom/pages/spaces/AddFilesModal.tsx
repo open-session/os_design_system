@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Modal } from '@/components/custom/shared/overlays/Modal';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { Upload01, XClose, Image01, FileCode01 as FileCode, AlertCircle, File01 as FileText } from '@untitledui-pro/icons/line';
 import { devProps } from '@/lib/utils/dev-props';
 import { SpaceFile } from '@/types';

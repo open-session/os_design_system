@@ -20,7 +20,7 @@ import {
 import { useBrandGuidelines } from '@/hooks/useBrandGuidelines';
 import type { BrandGuideline, BrandGuidelineType } from '@/lib/supabase/types';
 import { isValidFigmaUrl } from '@/lib/supabase/brand-guidelines-service';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { ConfirmDialog, StatusBadge } from './BrandHubSettingsModal';
 import { devProps } from '@/lib/utils/dev-props';
 

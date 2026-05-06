@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { Dialog, DialogTrigger, Modal, ModalOverlay } from './modal';
 
 const meta: Meta = {

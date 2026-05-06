@@ -16,7 +16,7 @@ import { Badge } from '@/components/base/base/badges/badges';
 import { Select, type SelectItemType } from '@/components/base/base/select/select';
 import { SelectItem } from '@/components/base/base/select/select-item';
 import { Input } from '@/components/base/base/input/input';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { ModalOverlay, Modal, Dialog } from '@/components/base/application/modals/modal';
 import { devProps } from '@/lib/utils/dev-props';
 

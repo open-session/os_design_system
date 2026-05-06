@@ -7,7 +7,7 @@ import { Calendar as CalendarIcon } from "@untitledui/icons";
 import { useDateFormatter } from "react-aria";
 import type { DateRangePickerProps as AriaDateRangePickerProps, DateValue } from "react-aria-components";
 import { DateRangePicker as AriaDateRangePicker, Dialog as AriaDialog, Group as AriaGroup, Popover as AriaPopover, useLocale } from "react-aria-components";
-import { Button } from "@/components/base/base/buttons/button";
+import { Button } from "@/components/ds/buttons/button";
 import { cx } from "@/utils/cx";
 import { devProps } from "@/lib/utils/dev-props";
 import { DateInput } from "./date-input";

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Palette, ChevronDown, ChevronUp, Check, XClose, AlertCircle } from '@untitledui-pro/icons/line';
 import { generateBrandScale, type BrandScaleResult } from '@/lib/color-scale';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { devProps } from '@/lib/utils/dev-props';
 import type { BrandColor } from '@/lib/supabase/types';
 

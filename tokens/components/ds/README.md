@@ -103,7 +103,7 @@ Apply the same four rules. Import `brand.css` after shadcn's base stylesheet. Se
 
 Two ways to import a `base/` primitive:
 
-- **Deep path** (preferred for product code): `import { Button } from '@/components/base/base/buttons/button'` — explicit, tree-shakeable, no surprises.
+- **Deep path** (preferred for product code): `import { Button } from '@/components/ds/buttons/button'` — explicit, tree-shakeable, no surprises.
 - **Barrel** (preferred for tooling): `import { Button } from '@/components/base'` — flat surface for the future `_manifest.json` generator, Storybook indexes, and the Part 2 Generator preview surface that introspects the primitive layer without filesystem walks.
 
 The barrel re-exports public components only. Internal types/constants (`CommonProps`, `sizes`, `styles`) are not re-exported; consume those via deep imports when needed.

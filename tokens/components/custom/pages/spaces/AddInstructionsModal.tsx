@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Modal } from '@/components/custom/shared/overlays/Modal';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { Lightbulb02, Zap } from '@untitledui-pro/icons/line';
 // UUI fallback: Lightbulb02 → Zap (no Lightbulb02 equivalent in UUI; Zap used for tips/hints context)
 import { devProps } from '@/lib/utils/dev-props';

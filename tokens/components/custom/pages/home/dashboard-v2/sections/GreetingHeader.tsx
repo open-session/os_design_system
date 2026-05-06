@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { devProps } from '@/lib/utils/dev-props';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { useLayoutPreferences } from '@/hooks/useLayoutPreferences';
 import { useHomeLayoutStore } from '@/stores/home-layout-store';
 

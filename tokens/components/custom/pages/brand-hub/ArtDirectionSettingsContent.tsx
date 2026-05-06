@@ -20,7 +20,7 @@ import { ART_DIRECTION_CATEGORIES } from '@/lib/supabase/brand-art-service';
 import { ConfirmDialog } from './BrandHubSettingsModal';
 import { Select } from '@/components/base/base/select/select';
 import type { SelectItemType } from '@/components/base/base/select/select';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { devProps } from '@/lib/utils/dev-props';
 
 // ============================================

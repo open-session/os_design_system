@@ -16,7 +16,7 @@ import {
     Heading as AriaHeading,
     useSlottedContext,
 } from "react-aria-components";
-import { Button } from "@/components/base/base/buttons/button";
+import { Button } from "@/components/ds/buttons/button";
 import { cx } from "@/utils/cx";
 import { devProps } from "@/lib/utils/dev-props";
 import { CalendarCell } from "./cell";

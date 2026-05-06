@@ -15,14 +15,32 @@ Component-specific deviations that cannot be expressed as universal transform ru
 **Description:** The `ds/button.tsx` primary variant uses a neutral-secondary style instead of UUI's default orange CTA (`bg-brand-solid text-white`). This is an intentional BOS brand decision recorded as Decision #2 (2026-04-23): BOS's primary button expresses "contained but calm" rather than the high-contrast orange that UUI ships. The deviation is NOT a result of applying any of the 4 transform rules — it predates the architecture revamp and was applied as a manual design decision.
 **Why not a rule:** The change is specific to the button primary variant. No general "replace all orange CTAs with neutral-secondary" rule can be derived — other primitives may correctly use UUI's orange when semantically appropriate (e.g., accent badges). Extracting a universal rule would cause false positives on non-button surfaces.
 
-**Status:** Resolved — Wave 30 (task 6f, 2026-04-27).
+**Status:** Re-resolved — Phase B (2026-05-05). Supersedes Wave 30 (task 6f, 2026-04-27) and W2-8a (2026-04-28).
 
-**Resolution:** `ds/buttons/button.tsx` retained as a full implementation (NOT converted to a re-export shim).
-Rule 1 motion token fix applied: `duration-100 ease-linear` → `duration-micro ease-motion-out`.
-The neutral-secondary primary variant is preserved as the BOS brand default.
-`ds/defaults/button.ts` documents the CVA config with `buttonPrimaryDefaults` for the neutral-secondary primary.
-The UUI base/base/ button (orange CTA) remains the upstream source; ds/ overrides primary for brand alignment.
-See `ds/_history/button.md` for the full before/after snapshot.
+**Resolution (Phase B, current):** `components/ds/buttons/button.tsx` exists as a Shape C
+full-fork wrapper per `components/ds/_wrapper-template.md`. It holds ALL BOS deltas:
+
+- `colors.primary.root` — neutral-secondary (Decision #2, calm/contained primary).
+- `sizes.xs.root` — shrunk vs upstream UUI.
+- `sizes.{sm,md,lg,xl}.linkRoot` — drops UUI's underline-offset additions.
+- `colors.{secondary,primary-destructive,secondary-destructive}.root` — adds disabled states.
+- `colors.{link-gray,link-color}.root` — BOS underline-offset-2 + decoration-current.
+- `styles.common.root` — uses `ease-motion-out` instead of UUI stock `ease-linear`.
+
+`components/base/base/buttons/button.tsx` is now vendor-pristine UUI Pro source plus the
+5-axis mechanical transforms (motion duration, focus-ring, disabled-state, token-syntax,
+devProps). `bun run uui:add button` re-generates that file from upstream without
+disturbing the `ds/` wrapper.
+
+The barrel `components/base/index.ts` re-exports `Button` from `@/components/ds/buttons/button`,
+not from base. Consumer code uses the deep path `@/components/ds/buttons/button` (or the barrel);
+all 38 prior consumers of the `base/` deep path were migrated in Phase B.
+
+**Round-trip history:** See `ds/_history/button.md` for the Wave-30 → W2-8a → Phase-B sequence.
+
+**Why this is the right end state:** The May 5 vision spike (§3.2.1) frames the test:
+"the architecture survives a vendor update with no manual archaeology." Decision #2 inside
+`base/` is silently overwritten on every UUI re-pull; Decision #2 inside `ds/` survives.
 
 ---
 

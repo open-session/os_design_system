@@ -16,7 +16,7 @@ import {
 } from '@untitledui-pro/icons/line';
 import { Select } from '@/components/base/base/select/select';
 import { SelectItem } from '@/components/base/base/select/select-item';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { devProps } from '@/lib/utils/dev-props';
 import { useBrandTextures } from '@/hooks/useBrandTextures';
 import { BrandAssetUploadModal } from './BrandAssetUploadModal';

@@ -16,7 +16,7 @@ import {
     RangeCalendarStateContext,
     useSlottedContext,
 } from "react-aria-components";
-import { Button } from "@/components/base/base/buttons/button";
+import { Button } from "@/components/ds/buttons/button";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { devProps } from "@/lib/utils/dev-props";
 import { CalendarCell } from "./cell";

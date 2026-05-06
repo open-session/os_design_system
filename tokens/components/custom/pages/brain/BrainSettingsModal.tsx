@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { XClose, BookOpen01 as BookOpen, PenTool01 as PenTool, Check, ArrowRight, Zap } from '@untitledui-pro/icons/line';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { devProps } from '@/lib/utils/dev-props';
 
 export type BrainSection = 'architecture' | 'guidelines' | 'writing' | 'skills' | 'agents' | 'plugins';

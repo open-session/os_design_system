@@ -6,7 +6,7 @@ import { useBrandColors } from '@/hooks/useBrandColors';
 import type { BrandColor, BrandColorRole } from '@/lib/supabase/types';
 import { ConfirmDialog } from './BrandHubSettingsModal';
 import { Badge } from '@/components/base/base/badges/badges';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 import { Table, TableCard } from '@/components/base/application/table/table';
 import { Select } from '@/components/base/base/select/select';
 import type { SelectItemType } from '@/components/base/base/select/select';

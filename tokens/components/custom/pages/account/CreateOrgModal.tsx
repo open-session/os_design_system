@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { XClose } from '@untitledui-pro/icons/line';
 import { toast } from 'sonner';
 import { devProps } from '@/lib/utils/dev-props';
-import { Button } from '@/components/base/base/buttons/button';
+import { Button } from '@/components/ds/buttons/button';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

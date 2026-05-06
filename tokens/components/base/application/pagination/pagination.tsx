@@ -2,7 +2,7 @@
 
 import { ArrowLeft, ArrowRight } from "@untitledui/icons";
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/base/button-group/button-group";
-import { Button } from "@/components/base/base/buttons/button";
+import { Button } from "@/components/ds/buttons/button";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { cx } from "@/utils/cx";
 import { devProps } from "@/lib/utils/dev-props";
