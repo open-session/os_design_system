@@ -23,13 +23,24 @@ The four MDX transform rules were previously in `transforms/` (now a redirect st
 
 ## Root Contents
 
-| Item             | Purpose                                                                           |
-| ---------------- | --------------------------------------------------------------------------------- |
-| `brand.css`      | `@theme` token definitions — single source of truth for all CSS custom properties |
-| `defaults/`      | CVA `defaultVariants` wiring per primitive — one `.ts` file per component         |
-| `_history/`      | Decision log — immutable record of brand-override decisions per component         |
-| `_exceptions.md` | Component-specific deviations not expressible as universal rules                  |
-| `transforms/`    | Deprecated redirect stub — points to the category folders above                   |
+| Item                   | Purpose                                                                           |
+| ---------------------- | --------------------------------------------------------------------------------- |
+| `brand.css`            | `@theme` token definitions — single source of truth for all CSS custom properties |
+| `defaults/`            | CVA `defaultVariants` wiring per primitive — one `.ts` file per component         |
+| `_history/`            | Decision log — immutable record of brand-override decisions per component         |
+| `_exceptions.md`       | Component-specific deviations not expressible as universal rules                  |
+| `_wrapper-template.md` | How to write a Layer-4 wrapper (decision tree, three shapes, migration checklist) |
+| `_swap-guide.md`       | Vendor-swap procedure — replacing the primitive layer in `components/base/`       |
+| `transforms/`          | Deprecated redirect stub — points to the category folders above                   |
+| `<primitive>/`         | Layer-4 wrappers (one folder per primitive that diverges structurally from UUI)   |
+
+---
+
+## Layer 4 wrappers
+
+`ds/<primitive>/<primitive>.tsx` files contain BOS brand-variant overrides that have been **lifted out of `components/base/`** so the vendor file can be re-pulled (`bun run uui:add <name>`) without losing brand customizations. See [`_wrapper-template.md`](./_wrapper-template.md) for the decision tree (when to wrap), the three shapes (A behavioral, B cva-override, C full-fork), and the per-primitive migration checklist.
+
+The audit at [`docs/audits/2026-05/009-layer4-primitive-classification.md`](../../docs/audits/2026-05/009-layer4-primitive-classification.md) inventories which primitives need wrappers; each row is updated with the wrapper path and shape on resolution.
 
 ---
 
