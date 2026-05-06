@@ -1,4 +1,4 @@
-# Open Session Design System
+# open session design system
 
 > The "coding CMS" for Open Session — brand assets, design tokens, and AI-ready context in one canonical source.
 
