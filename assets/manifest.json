@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "1.0.0",
-  "lastUpdated": "2025-05-04",
+  "lastUpdated": "2025-05-05",
   "description": "Open Session brand assets manifest for AI and tooling consumption",
   "repository": "os_design_system",
 
@@ -139,46 +139,121 @@
   },
 
   "illustrations": {
-    "library": "Goodle",
-    "description": "Minimalist line-art illustrations for various contexts",
-    "categories": {
-      "avatars": {
-        "count": 99,
-        "description": "Character head/face illustrations for user avatars and profiles",
-        "style": "Simple line-art faces with various hairstyles, accessories, and expressions",
-        "path": "assets/illustrations/avatars/{name}.svg"
+    "goodle": {
+      "library": "Goodle",
+      "description": "Minimalist line-art illustrations for various contexts",
+      "categories": {
+        "avatars": {
+          "count": 99,
+          "description": "Character head/face illustrations for user avatars and profiles",
+          "style": "Simple line-art faces with various hairstyles, accessories, and expressions",
+          "path": "assets/illustrations/goodle/avatars/{name}.svg"
+        },
+        "hobby": {
+          "count": 25,
+          "description": "People engaged in leisure and recreational activities",
+          "examples": ["camping", "fishing", "skateboarding", "yoga"],
+          "path": "assets/illustrations/goodle/hobby/{name}.svg"
+        },
+        "life": {
+          "count": 25,
+          "description": "Everyday life situations and accessibility scenarios",
+          "examples": ["transit", "parachute", "wheelchair", "rollerblading"],
+          "path": "assets/illustrations/goodle/life/{name}.svg"
+        },
+        "tech": {
+          "count": 25,
+          "description": "Technology, AI, and digital life scenarios",
+          "examples": ["debugging", "ai-art", "robot-interaction", "vr"],
+          "path": "assets/illustrations/goodle/tech/{name}.svg"
+        },
+        "work": {
+          "count": 49,
+          "description": "Professional, business, and productivity scenarios",
+          "examples": ["brainstorming", "coffee-break", "leadership", "rocket-launch"],
+          "path": "assets/illustrations/goodle/work/{name}.svg"
+        }
       },
-      "hobby": {
-        "count": 25,
-        "description": "People engaged in leisure and recreational activities",
-        "examples": ["camping", "fishing", "skateboarding", "yoga"],
-        "path": "assets/illustrations/hobby/{name}.svg"
-      },
-      "life": {
-        "count": 25,
-        "description": "Everyday life situations and accessibility scenarios",
-        "examples": ["transit", "parachute", "wheelchair", "rollerblading"],
-        "path": "assets/illustrations/life/{name}.svg"
-      },
-      "tech": {
-        "count": 25,
-        "description": "Technology, AI, and digital life scenarios",
-        "examples": ["debugging", "ai-art", "robot-interaction", "vr"],
-        "path": "assets/illustrations/tech/{name}.svg"
-      },
-      "work": {
-        "count": 49,
-        "description": "Professional, business, and productivity scenarios",
-        "examples": ["brainstorming", "coffee-break", "leadership", "rocket-launch"],
-        "path": "assets/illustrations/work/{name}.svg"
+      "totalCount": 223,
+      "style": {
+        "strokeWidth": "2px",
+        "colors": "Single color (adapts to CSS currentColor)",
+        "format": "SVG with inline styles"
       }
     },
-    "totalCount": 223,
-    "style": {
-      "strokeWidth": "2px",
-      "colors": "Single color (adapts to CSS currentColor)",
-      "format": "SVG with inline styles"
+    "counterfeit": {
+      "library": "Counterfeit",
+      "description": "Abstract geometric shapes and patterns for decorative use",
+      "categories": {
+        "circular": {
+          "count": 20,
+          "description": "Shapes with circular or radial symmetry",
+          "examples": ["blob", "target", "yin-yang", "peace", "vortex", "globe"],
+          "path": "assets/illustrations/counterfeit/circular/{name}.svg"
+        },
+        "square": {
+          "count": 11,
+          "description": "Shapes with square, grid, or orthogonal structure",
+          "examples": ["dots", "tic-tac-toe", "expand", "plus", "capture"],
+          "path": "assets/illustrations/counterfeit/square/{name}.svg"
+        },
+        "triangular": {
+          "count": 4,
+          "description": "Shapes with triangular composition",
+          "examples": ["atari", "recycle", "pills", "chart-1"],
+          "path": "assets/illustrations/counterfeit/triangular/{name}.svg"
+        }
+      },
+      "totalCount": 35,
+      "style": {
+        "colors": "Single color (Vanilla #FFFAEE fill)",
+        "format": "SVG with path fills"
+      }
     }
+  },
+
+  "creativeTerritories": {
+    "description": "Visual reference imagery organized by creative territory",
+    "categories": {
+      "analog-details": {
+        "count": 6,
+        "description": "Retro technology and analog artifacts",
+        "examples": ["cassette-tape", "walkman", "film-negatives", "vintage-television"],
+        "path": "assets/creative-territories/analog-details/{name}.jpg"
+      },
+      "code-in-life": {
+        "count": 6,
+        "description": "Digital elements merged with natural/human scenes",
+        "examples": ["desktop-workspace-digital-nebula", "person-desert-data-aurora"],
+        "path": "assets/creative-territories/code-in-life/{name}.jpg"
+      },
+      "dreamscape": {
+        "count": 6,
+        "description": "Surreal and cosmic visual compositions",
+        "examples": ["retro-computer-cosmic-grid", "computer-desk-mars-landscape"],
+        "path": "assets/creative-territories/dreamscape/{name}.jpg"
+      },
+      "productive-outdoors": {
+        "count": 6,
+        "description": "Work and productivity in natural settings",
+        "examples": ["laptop-wildflower-meadow", "desk-cliff-edge-coastline"],
+        "path": "assets/creative-territories/productive-outdoors/{name}.jpg"
+      },
+      "reality-on-film": {
+        "count": 6,
+        "description": "Authentic candid moments with film photography aesthetic",
+        "examples": ["taco-night-kitchen", "couple-portrait-evening-flash"],
+        "path": "assets/creative-territories/reality-on-film/{name}.jpg"
+      },
+      "the-work": {
+        "count": 6,
+        "description": "Design process, collaboration, and portfolio work",
+        "examples": ["brand-platform-ui-collage", "figma-portfolio-components"],
+        "path": "assets/creative-territories/the-work/{name}.jpg"
+      }
+    },
+    "totalCount": 36,
+    "format": "JPEG"
   },
 
   "externalAssets": {
