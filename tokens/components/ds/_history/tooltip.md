@@ -28,16 +28,16 @@ The file was 110 lines — a standard UUI compound component built on React Aria
 
 ### Transforms Applied
 
-| Transform               | Status | Evidence |
-| ----------------------- | ------ | -------- |
+| Transform               | Status                                                                        | Evidence         |
+| ----------------------- | ----------------------------------------------------------------------------- | ---------------- |
 | Motion tokens (Rule 1)  | **Not applied** — zero motion token classes present in file at migration time | Phase 1 findings |
-| Focus ring (Rule 2)     | **Not applied** — no `ring-*` / `ring-offset-*` classes in tooltip source | Phase 1 findings |
-| Disabled state (Rule 3) | **Not applied** — tooltip has no disabled interactive state | Phase 1 findings |
-| Token syntax (Rule 4)   | **Not applied** — no Style 1 bracket notation in tooltip source | Phase 1 findings |
+| Focus ring (Rule 2)     | **Not applied** — no `ring-*` / `ring-offset-*` classes in tooltip source     | Phase 1 findings |
+| Disabled state (Rule 3) | **Not applied** — tooltip has no disabled interactive state                   | Phase 1 findings |
+| Token syntax (Rule 4)   | **Not applied** — no Style 1 bracket notation in tooltip source               | Phase 1 findings |
 
 **Edge case noted during Phase 1:** `ease-out animate-in` and `ease-in animate-out` compound classes appear on lines 66 and 75–77 of the pre-migration source. Rule 1 does NOT apply to these instances — they are `tailwindcss-animate` animation easing presets, not standalone `transition-timing-function` utilities. This exception is documented in `ds/_exceptions.md` and `ds/transforms/motion.mdx`.
 
-See: `docs/spikes/ds-architecture-migration-phase1-findings.md` §6 and §7 for the full Phase 1 diff analysis confirming zero applicable transforms.
+See: `docs/spikes/design-system/2026-04-25-architecture-migration-phase1-findings.md` §6 and §7 for the full Phase 1 diff analysis confirming zero applicable transforms.
 
 ### Defaults Codified (Phase 4)
 
@@ -53,12 +53,12 @@ z-50 flex max-w-xs origin-(--trigger-anchor-point) flex-col items-start gap-1 ro
 
 **Non-CVA behavioral defaults** (via `TOOLTIP_BEHAVIORAL_DEFAULTS` in `ds/defaults/tooltip.ts`):
 
-| Prop         | UUI default | BOS default | Override? |
-| ------------ | ----------- | ----------- | --------- |
-| `delay`      | 300         | 300         | No — matches UUI |
-| `closeDelay` | 0           | 0           | No — matches UUI |
-| `placement`  | "top"       | "top"       | No — matches UUI |
-| `offset`     | 6           | 6           | No — matches UUI |
+| Prop         | UUI default | BOS default | Override?                               |
+| ------------ | ----------- | ----------- | --------------------------------------- |
+| `delay`      | 300         | 300         | No — matches UUI                        |
+| `closeDelay` | 0           | 0           | No — matches UUI                        |
+| `placement`  | "top"       | "top"       | No — matches UUI                        |
+| `offset`     | 6           | 6           | No — matches UUI                        |
 | `arrow`      | false       | false       | No — BOS does not use arrows by default |
 
 All behavioral defaults match UUI's own defaults. The `TOOLTIP_BEHAVIORAL_DEFAULTS` object documents the canonical BOS intent; it contains no overrides at this time.

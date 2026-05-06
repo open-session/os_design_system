@@ -24,7 +24,7 @@
  *
  * @see components/uui/base/tooltip/tooltip.tsx — UUI source of truth
  * @see ds/transforms/motion.mdx — edge case: ease-out in animate-in compound
- * @see docs/spikes/ds-architecture-migration-phase1-findings.md — Phase 1 proof
+ * @see docs/spikes/design-system/2026-04-25-architecture-migration-phase1-findings.md — Phase 1 proof
  */
 
 import { cva } from "class-variance-authority";

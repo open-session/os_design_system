@@ -1,0 +1,179 @@
+---
+title: "Shape Token Transform"
+rule: 5
+scope: ["rounded-*", "border-*", "border-width", "border-color"]
+author: "@karim"
+last-updated: "2026-05-05"
+---
+
+# Rule 5 — Shape Token Transform
+
+## Rule Summary
+
+BOS owns its shape language via two narrow interventions:
+
+1. **Border colors must use Style-2 mapped semantic tokens** (`border-border-secondary`, `border-border-primary`) — never raw Tailwind grays (`border-gray-200`) and never CSS-var brackets (`border-[var(--border-secondary)]`). Two ESLint rules cover this surface today: [`bos-local/no-hardcoded-colors`](../../../eslint-rules/no-hardcoded-colors.js) blocks raw grays, and [`bos-local/prefer-mapped-tokens`](../../../eslint-rules/prefer-mapped-tokens.js) blocks CSS-var brackets in favour of Style-2 mapped classes.
+
+2. **Border widths above `1px` are forbidden by convention.** Use the default `border` (1px) on container elements; never `border-2` or thicker. Visual emphasis comes from color shift, ring, or shadow — not from thicker strokes. This rule is documented in `.claude/CLAUDE.md` ("Forbidden Elements") and enforced by the `/design-review` slash command, which scans staged diffs for `border-2`+ violations and returns FAIL. _Aspirational follow-up:_ promote to a dedicated `bos-local/no-border-2` ESLint rule alongside the existing color/token rules.
+
+A third axis — **brand-radius** — exists only at the brand-surface level (logos, hero cards, primary CTAs that read as "this is the BOS brand"). General primitive radius continues to use stock Tailwind `rounded-{sm,md,lg,xl,full}`. This is intentional: BOS does not run a deep radius taxonomy at the primitive layer because UUI Pro's stock per-size radius scale already lands close to brand intent.
+
+**Coverage:** Border-color rule applied across all `base/` primitives via Style-2 migration (PRD 016). Border-width rule landed via `bos-local/no-border-2` ESLint rule (PRD 016 task 7c).
+
+---
+
+## Scope
+
+This rule applies to the following Tailwind utility class prefixes when they appear on BOS surfaces (`components/base/`, `components/custom/`, `components/ds/`):
+
+- `border-{color}` — border color utilities (must be Style-2 mapped semantic tokens)
+- `border-{width}` — border width utilities (must be `border` only; never `border-2` or thicker)
+- `rounded-brand` / `rounded-brand-lg` — brand-surface radius (12px / 16px)
+- `rounded-{sm,md,lg,xl,2xl,full}` — stock Tailwind radius (used for non-brand primitive surfaces)
+
+**This rule does NOT apply to:**
+
+- `outline-*` utilities — those are governed by `accessibility/focus-ring.mdx`.
+- `ring-*` utilities — those are governed by `accessibility/focus-ring.mdx`.
+- `before:rounded-[Npx]` arbitrary-radius arms inside `cva()` size variants — UUI's button/badge primitives use a slightly-smaller inner radius for the focus-ring overlay (e.g. `rounded-lg` outer + `before:rounded-[7px]` inner). This pattern stays as-is; converting it to a token would break the visual offset.
+- Custom illustrations and decorative shapes under `components/base/shared-assets/` — those are SVG, not Tailwind-bordered.
+
+---
+
+## Before / After Table
+
+### 5a. Border color (Style 2 mapped)
+
+| Before (UUI stock or Style 1) | After (BOS) | BOS utility | CSS variable |
+| --- | --- | --- | --- |
+| `border-gray-200` | `border-border-secondary` | `border-border-secondary` | `--border-secondary` |
+| `border-gray-300` | `border-border-primary` | `border-border-primary` | `--border-primary` |
+| `border-gray-100` | `border-border-tertiary` | `border-border-tertiary` | `--border-tertiary` |
+| `border-[var(--border-primary)]` | `border-border-primary` | `border-border-primary` | `--border-primary` |
+| `border-brand-500` | `border-border-brand-solid` | `border-border-brand-solid` | `--border-brand-solid` |
+| `border-error-300` | `border-border-error` | `border-border-error` | `--border-error` |
+
+**Token source:** `components/ds/brand.css` lines 318–329 (light) and 633–644 (dark) — see `--border-{primary,secondary,tertiary,brand,brand_alt,brand-solid,brand-solid_alt,error,error-solid,warning,success}`.
+
+### 5b. Border width
+
+| Before (UUI stock) | After (BOS) | Notes |
+| --- | --- | --- |
+| `border-2` | `border` (1px) | Use color shift or `ring-1 shadow-focus-ring` for emphasis instead. |
+| `border-4` / `border-8` | `border` (1px) | Same. Heavy borders fight the BOS visual density. |
+| `border-2 border-brand-500` (highlight pattern) | `ring-1 ring-ring-brand` | Convert thick borders to ring tokens. See `accessibility/focus-ring.mdx`. |
+
+**Why:** UUI Pro defaults are often `border` (1px) already; the rule exists to catch one-off violations during component imports or product-code drafts. Today's enforcement is the `/design-review` pre-commit slash command + manual code review — see the convention in `.claude/CLAUDE.md` "Forbidden Elements". A dedicated ESLint rule is on the follow-up list (alongside the existing color/token rules).
+
+### 5c. Radius
+
+| Surface type | Convention | Example |
+| --- | --- | --- |
+| Brand surfaces (hero, primary CTA panel, logo plate) | `rounded-brand` (12px) or `rounded-brand-lg` (16px) | The login surface in `app/globals.css:445` uses `border-radius: var(--radius-brand)`. |
+| Stock primitives (button, badge, input, modal) | Stock Tailwind `rounded-{md,lg,xl,full}` | UUI Pro per-size scale; `button.tsx` size variants use `rounded-md` (xs/sm), `rounded-lg` (md/lg/xl). |
+| Pills and avatars | `rounded-full` | Stock Tailwind. |
+
+**Token source:** `tailwind.config.ts:380-383` defines `rounded-brand` (12px) and `rounded-brand-lg` (16px). Standard Tailwind radius tokens are not overridden.
+
+**Intentional minimalism:** BOS does NOT redefine `rounded-md` / `rounded-lg` etc. to BOS-specific radii. UUI Pro's per-primitive radius choices are accepted as-is. This keeps the primitive surface vendor-portable: a future swap to shadcn or Radix inherits each library's native radius taxonomy without conflicting with BOS brand radii.
+
+---
+
+## Examples
+
+### Example 1 — Container border (correct)
+
+```tsx
+// CORRECT (BOS):
+<div className="rounded-lg border border-border-secondary bg-bg-primary p-4">
+  …
+</div>
+```
+
+The container uses 1px `border` with the semantic `border-border-secondary` color. Stock `rounded-lg` for the corner — no need for `rounded-brand` here because this is a generic surface, not a brand-flagging surface.
+
+---
+
+### Example 2 — Brand CTA panel (uses brand radius)
+
+```tsx
+// CORRECT (BOS):
+<div className="rounded-brand bg-bg-brand-primary p-6 text-fg-brand-primary">
+  Welcome to BOS
+</div>
+```
+
+`rounded-brand` (12px) signals "this is a brand-flagging surface." Use sparingly — at most one or two per page.
+
+---
+
+### Example 3 — Highlight pattern: convert `border-2` to ring
+
+```tsx
+// BEFORE (UUI stock — common pattern for "selected" or "active" emphasis):
+<button className="rounded-lg border-2 border-brand-500 bg-bg-primary p-3">
+
+// AFTER (BOS):
+<button className="rounded-lg border border-border-secondary bg-bg-primary p-3 ring-1 ring-ring-brand">
+```
+
+The 1px outer border preserves layout (no shift between active/inactive states), and the inner `ring-1 ring-ring-brand` provides the brand-coloured emphasis. See `accessibility/focus-ring.mdx` for the full ring grammar.
+
+---
+
+### Example 4 — Stale gray border (the bug to clean up)
+
+```tsx
+// STALE (raw Tailwind, no semantic mapping):
+<div className="rounded-md border border-gray-200 p-2">
+
+// CORRECT (BOS):
+<div className="rounded-md border border-border-secondary p-2">
+```
+
+Stale `border-gray-{100,200,300}` patterns are caught by the `bos-local/require-semantic-tokens` ESLint rule (see `eslint.config.mjs`) and by the `/design-review` slash command's pre-commit gate.
+
+---
+
+## Edge Cases
+
+### `before:rounded-[Npx]` arbitrary inner radii — DO NOT CONVERT
+
+UUI primitives layer a `before:` pseudo-element to render the focus-ring overlay. The pseudo-element uses an inner radius slightly smaller than the outer one to stay visually concentric:
+
+```tsx
+// FROM components/base/base/buttons/button.tsx:34
+"gap-1 rounded-lg px-3 py-2 text-sm font-semibold before:rounded-[7px] data-icon-only:p-2"
+```
+
+Outer `rounded-lg` (8px) + inner `before:rounded-[7px]` is intentional. Tokenising the `7px` would either drift visually or require maintaining a parallel "inner" radius taxonomy. **Leave as-is.** This is a primitive-internal implementation detail, not a BOS shape-language statement.
+
+**Detection heuristic:** any `before:rounded-[Npx]` inside a `cva()` size arm inside `components/base/` is exempt.
+
+---
+
+### `rounded-full` for icon buttons and avatars
+
+`rounded-full` is the correct radius for circular surfaces (avatars, dot indicators, chip-style icon buttons). Do not replace with `rounded-brand` even on brand-flagging buttons — the geometry is the brand statement, not the radius value.
+
+---
+
+### Decorative `before:border-2` / `after:border-2` rings — exempt
+
+`components/base/foundations/featured-icon/featured-icon.tsx:104` uses `before:border-2` and `after:border-2` to render decorative concentric rings around the icon. This is a **decorative composition pattern**, not a layout border. The `bos-local/no-border-2` rule exempts pseudo-element borders matching `^(before:|after:)border-(2|4|8)`.
+
+If you find yourself reaching for `border-2` on a real DOM element, stop and reach for `ring-1 shadow-focus-ring` or a color-shift instead.
+
+---
+
+## Why This Rule Is Narrow
+
+UUI Pro's stock primitives already make sensible per-size radius decisions and use `border` (1px) almost everywhere. BOS's interventions are:
+
+- **Color tokens** (semantic mapping) — protects against gray-drift and enables dark-mode swap via CSS-variable resolution.
+- **Width cap** (1px max) — protects against visual-density drift.
+- **Brand radius** (single optional token) — gives brand surfaces a recognisable corner shape without overhauling the whole radius scale.
+
+Sizing (widths, heights, paddings, margins) is **deliberately not a transform axis**. BOS uses standard Tailwind spacing units throughout `base/` and `custom/`. Adopting a BOS-specific spacing scale would require touching every primitive on every vendor swap and would offer no brand value — sizing is a per-primitive ergonomic choice, not a brand signal.
+
+This minimalism is the point: when Part 2's Generator surface re-skins UUI in a customer's brand, the customer mostly tweaks colors and motion. The shape spec stays nearly stationary.

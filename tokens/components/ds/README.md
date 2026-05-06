@@ -10,12 +10,12 @@ Three-folder rule: `base/` (vendor primitives) · `custom/` (product composition
 
 Transform rules are organized into four formula-category subfolders. Each subfolder represents a distinct design dimension:
 
-| Category | Scope | Current files |
-|---|---|---|
-| `motion/` | Duration, easing, transitions, animation tokens | `motion.mdx` |
-| `shape/` | Radius, border, sizing tokens | _(placeholder — future spec content)_ |
-| `accessibility/` | Focus rings, ARIA patterns, keyboard rules | `focus-ring.mdx`, `disabled-state.mdx` |
-| `code-quality/` | devProps, naming, imports, Tailwind conventions | `token-syntax.mdx` |
+| Category         | Scope                                           | Current files                          |
+| ---------------- | ----------------------------------------------- | -------------------------------------- |
+| `motion/`        | Duration, easing, transitions, animation tokens | `motion.mdx`                           |
+| `shape/`         | Radius, border, border-width tokens             | `shape.mdx`                            |
+| `accessibility/` | Focus rings, ARIA patterns, keyboard rules      | `focus-ring.mdx`, `disabled-state.mdx` |
+| `code-quality/`  | devProps, naming, imports, Tailwind conventions | `token-syntax.mdx`                     |
 
 The four MDX transform rules were previously in `transforms/` (now a redirect stub). Use the category folders directly.
 
@@ -23,13 +23,13 @@ The four MDX transform rules were previously in `transforms/` (now a redirect st
 
 ## Root Contents
 
-| Item | Purpose |
-|---|---|
-| `brand.css` | `@theme` token definitions — single source of truth for all CSS custom properties |
-| `defaults/` | CVA `defaultVariants` wiring per primitive — one `.ts` file per component |
-| `_history/` | Decision log — immutable record of brand-override decisions per component |
-| `_exceptions.md` | Component-specific deviations not expressible as universal rules |
-| `transforms/` | Deprecated redirect stub — points to the category folders above |
+| Item             | Purpose                                                                           |
+| ---------------- | --------------------------------------------------------------------------------- |
+| `brand.css`      | `@theme` token definitions — single source of truth for all CSS custom properties |
+| `defaults/`      | CVA `defaultVariants` wiring per primitive — one `.ts` file per component         |
+| `_history/`      | Decision log — immutable record of brand-override decisions per component         |
+| `_exceptions.md` | Component-specific deviations not expressible as universal rules                  |
+| `transforms/`    | Deprecated redirect stub — points to the category folders above                   |
 
 ---
 
@@ -57,7 +57,7 @@ Consumed by `components/base/base/<primitive>/with-defaults.tsx` wrappers. This 
 
 ---
 
-## _history/
+## \_history/
 
 One Markdown file per component recording brand-override decisions made during PRD 016. Immutable — do not edit existing entries. Append new entries when decisions change.
 
@@ -88,8 +88,20 @@ Apply the same four rules. Import `brand.css` after shadcn's base stylesheet. Se
 
 ---
 
+## Primitive entry points
+
+Two ways to import a `base/` primitive:
+
+- **Deep path** (preferred for product code): `import { Button } from '@/components/base/base/buttons/button'` — explicit, tree-shakeable, no surprises.
+- **Barrel** (preferred for tooling): `import { Button } from '@/components/base'` — flat surface for the future `_manifest.json` generator, Storybook indexes, and the Part 2 Generator preview surface that introspects the primitive layer without filesystem walks.
+
+The barrel re-exports public components only. Internal types/constants (`CommonProps`, `sizes`, `styles`) are not re-exported; consume those via deep imports when needed.
+
+---
+
 ## Links
 
 - Top-level decision guide: [`../README.md`](../README.md)
 - Product compositions: [`../custom/README.md`](../custom/README.md)
 - Vendor primitives: [`../base/`](../base/)
+- Barrel: [`../base/index.ts`](../base/index.ts)

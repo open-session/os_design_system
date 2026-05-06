@@ -62,9 +62,9 @@ directly without suppression.
 
 1. Do NOT run Rule 1 on lines that co-occur with `animate-(in|out)`.
 2. DO run Rule 1 on all other `ease-(out|in|in-out|linear)` uses on standalone `transition` chains in the same file.
-3. Append any new primitive-specific findings to `docs/spikes/ds-architecture-migration-phase1-findings.md` §8.
+3. Append any new primitive-specific findings to `docs/spikes/design-system/2026-04-25-architecture-migration-phase1-findings.md` §8.
 
-**Source:** Phase 1 empirical proof, task 1c — `docs/spikes/ds-architecture-migration-phase1-findings.md` §6.1 and §7.3.
+**Source:** Phase 1 empirical proof, task 1c — `docs/spikes/design-system/2026-04-25-architecture-migration-phase1-findings.md` §6.1 and §7.3.
 
 ---
 

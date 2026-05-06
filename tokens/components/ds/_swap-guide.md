@@ -266,5 +266,5 @@ and research tracks (13a Settings > Theme runtime swap, 13b
 - [`components/ds/README.md`](./README.md) — formula spec architecture
 - [`components/custom/README.md`](../custom/README.md) — pages-vs-shared taxonomy
 - [`docs/design-system/uui-transformation-rules.md`](../../docs/design-system/uui-transformation-rules.md) — the four transform rules
-- [`docs/spikes/ds-architecture-migration.md`](../../docs/spikes/ds-architecture-migration.md) — the spike that informed PRD 016/017
+- [`docs/spikes/design-system/2026-04-23-architecture-migration.md`](../../docs/spikes/design-system/2026-04-23-architecture-migration.md) — the spike that informed PRD 016/017
 - [`.karimo/prds/017_design-system-architecture-revamp-part-2/`](../../.karimo/prds/017_design-system-architecture-revamp-part-2/) — PRD 017 artifacts
