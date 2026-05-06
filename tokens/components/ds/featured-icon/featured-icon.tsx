@@ -1,17 +1,40 @@
 /**
  * BOS FeaturedIcon — Wrapper shape: C (full fork).
  *
- * @upstream-base components/base/foundations/featured-icon/featured-icon.tsx (UUI Pro vendor source, mechanically transformed only)
- * @history components/ds/_history/featured-icon.md (created in Phase B)
+ * @upstream-base components/base/foundations/featured-icon/featured-icon.tsx (UUI Pro v8 vendor source, mechanically transformed only)
+ * @history components/ds/_history/featured-icon.md
  *
- * Brand decisions (delta from upstream UUI Pro):
- *   - `iconsSizes.sm` drops `*:data-icon:stroke-[2.25px]` (upstream adds heavier stroke).
- *   - `outline.base` drops `ring-primary` (kept just `ring-1 ring-inset`).
- *   - `outline.colors.{brand,error,warning,success}` are intentionally empty —
- *     gray remains `text-fg-secondary ring-primary`. Upstream populates each color
- *     with `text-fg-{brand,error,warning,success}-primary`. The audit's open question §5
- *     about `text-featured-icon-light-fg-*` tokens is resolved: those tokens ARE defined
- *     in components/ds/brand.css (lines 220–224 light, 540–544 dark) — not a leak.
+ * Brand decisions (rebased against UUI v8, Phase C Wave 1, 2026-05-06):
+ *
+ *   1. `iconsSizes.sm` drops `*:data-icon:stroke-[2.25px]`.
+ *      v8 ships heavier 2.25px icon stroke for sm-sized featured icons. BOS keeps
+ *      the default stroke for visual consistency with the rest of the icon set.
+ *      Type 3.
+ *
+ *   2. `modern.base` drops `ring-primary` from the base (keeps just `ring-1 ring-inset`).
+ *      Combined with #3 below, this enables the BOS "fluid ring" pattern: the ring
+ *      color matches whatever text color the variant resolves to, including parent
+ *      context. v8 always renders modern with ring-primary regardless of color.
+ *      Type 3.
+ *
+ *   3. `modern.colors.{brand,error,warning,success}` are intentionally empty;
+ *      `modern.colors.gray` retains `text-fg-secondary ring-primary` explicitly.
+ *      BOS's brand intent: in modern theme, non-gray variants inherit color from
+ *      parent context rather than baking in a brand-color override per variant.
+ *      v8 ships full per-color overrides. Type 3 (deliberate brand simplification).
+ *
+ * Resolved on rebase:
+ *
+ *   - The pre-rebase JSDoc claimed these deltas were in `outline`. Re-confirmed
+ *     against v8: `outline` is byte-identical between BOS wrapper and v8 sidecar.
+ *     The actual deltas are in `modern` (which the audit's open question §5 about
+ *     `text-featured-icon-light-fg-*` was investigating). JSDoc corrected.
+ *   - The `text-featured-icon-light-fg-*` tokens ARE defined in components/ds/brand.css
+ *     (lines 220–224 light, 540–544 dark). Not a Layer 4 leak.
+ *
+ * Adopted from v8 in Wave 1: nothing — the wrapper was already structurally aligned
+ * with v8 (the `light/gradient/dark/modern/modern-neue/outline` theme set is the
+ * same set v8 ships, and only the modern + sm-icon-stroke deltas above differ).
  *
  * Wrapper shape rationale (Shape C — full fork): same as Button/Tabs — object-style
  * styles constant not parameterizable from props. Forking is correct.

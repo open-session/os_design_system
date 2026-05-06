@@ -109,3 +109,48 @@ direction: brand-variant overrides inside `base/` get silently overwritten by
 **Known follow-up (B1.6):** the codemod does not yet transform `ease-linear` → `ease-motion-out`.
 Either expand Rule 1 to cover it, or accept that base/ uses `ease-linear` while the BOS render path
 goes through `ds/` which uses `ease-motion-out`. The latter is the current state.
+
+---
+
+## Phase C Wave 1 — UUI v8 rebase (2026-05-06)
+
+**Wave:** Phase C, Wave 1 (combined C1 + C1.5).
+**Trigger:** Rebase the wrapper against fresh UUI v8 upstream to confirm which
+"brand decisions" are still Type 3 (BOS deliberately wants different than v8 ships)
+vs. Type 2 (vendor evolution BOS hadn't pulled and should now adopt) vs. redundant.
+
+**Methodology:** three-way diff between (a) the wrapper at `components/ds/buttons/button.tsx`,
+(b) the existing `components/base/base/buttons/button.tsx`, and (c) the v8 sidecar at
+`components/base/base/buttons/button.tsx.uui-fresh` produced by `bun run uui:add button`.
+For each delta in the wrapper, classify as Type 3 / Type 2 / redundant.
+
+### Result: wrapper survives. All 6 BOS brand decisions confirmed as Type 3.
+
+| Wrapper delta                                                                                    | v8 ships                                                       | Classification | Action                   |
+| ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | -------------- | ------------------------ |
+| `colors.primary.root` calm-primary (Decision #2)                                                 | `bg-brand-solid` + skeuomorphic depth + inner-border gradient  | Type 3         | Keep                     |
+| `sizes.xs.root` tiny xs (text-xs, rounded-md, p-1.5 icon)                                        | xs at 32px (text-sm, rounded-lg, p-2 icon) — different default | Type 3         | Keep                     |
+| `sizes.{sm,md,lg,xl}.linkRoot` no underline-offset-3/4                                           | per-size underline-offsets                                     | Type 3         | Keep                     |
+| `colors.{primary,secondary,primary-destructive,secondary-destructive}.root` `disabled:shadow-xs` | no override (skeuomorphic stays when disabled)                 | Type 3         | Keep                     |
+| `colors.{link-gray,link-color}.root` `decoration-current` + `underline-offset-2`                 | per-color decoration tokens                                    | Type 3         | Keep                     |
+| `styles.common.root` `ease-motion-out`                                                           | `ease-linear`                                                  | Type 3         | Keep (codemod gap noted) |
+
+### Adopted from v8 (Type 2)
+
+- `styles.common.root`: added `in-data-input-wrapper:disabled:opacity-100`. v8 introduced this so disabled buttons inside an `InputGroup` don't double-dim (the group handles disabled visually itself).
+- `sizes.xs.root`: added `*:data-icon:size-4`. v8 added per-size icon scaling; BOS xs is even smaller than v8's, so size-4 icons fit the proportions better than the size-5 default. Stroke-styling (`stroke-[2.25px]`) NOT adopted — BOS keeps its default icon stroke.
+
+### Cleanup (redundant)
+
+- `disabled:opacity-50` removed from per-arm cva entries (`primary`, `secondary`, `primary-destructive`, `secondary-destructive`). The `disabled:opacity-50` in `styles.common.root` already applies to all variants. The duplicates were dead weight.
+
+### Out of scope for Wave 1
+
+- `base/base/buttons/button.tsx` refresh against v8: byte-identical to v8 sidecar EXCEPT for the BOS-injected JSDoc header + `{...devProps('Button')}` spread + devProps import. Both BOS additions are correct architectural artifacts; sidecar lacks them only because the codemod's axis5 (devProps injection) skips files that don't end in `.tsx` (sidecars are `.tsx.uui-fresh`). Known pipeline gap; surfaced again here. base/ stays as-is.
+- Decision #2 wording in `ds/_exceptions.md`: unchanged. Re-evaluation confirmed v8 didn't shift the brand intent.
+
+### Acceptance
+
+- `bun run typecheck` — clean.
+- `bun run storybook:build` — exits 0 (no story render regressions).
+- Manual visual diff against the C0 baseline screenshots: pending (Karim sign-off).

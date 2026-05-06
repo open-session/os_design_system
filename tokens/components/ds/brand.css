@@ -1,19 +1,45 @@
 /**
  * BOS 3.0 Theme - Untitled UI Integration
- * 
+ *
  * Brand Color Strategy: "Warm Neutrals"
  * Instead of standard grays, we use Charcoal and Vanilla as the foundation
  * for the entire neutral scale, giving the UI warmth and brand recognition.
- * 
+ *
  * Brand Colors:
  * - Aperol (#FE5102) - Primary brand color for CTAs, links, accents
  * - Charcoal (#191919) - Warm dark neutral, replaces pure black
  * - Vanilla (#FFFAEE) - Warm light neutral, replaces pure white
- * 
+ *
  * Accessibility:
  * - Vanilla on Charcoal: 18.5:1 (AAA)
  * - Charcoal on Vanilla: 18.5:1 (AAA)
  * - Aperol on Charcoal: 5.5:1 (AA large text)
+ *
+ * ============================================
+ * UUI v8 ALIGNMENT STATUS (Phase C0, 2026-05-06)
+ * ============================================
+ * BOS is on tailwindcss@^4.2.1; the v8 palette switch is already done.
+ * All v8 utility-color renames are applied (utility-error→red,
+ * utility-warning→yellow, utility-success→green, utility-gray-blue→slate,
+ * utility-blue-light→sky, shadow-skeumorphic→shadow-skeuomorphic).
+ *
+ * What stays in @theme intentionally (counter to v8's vendor stance):
+ *   --color-{error,warning,success,gray}-* primitives are kept here as
+ *   upstream sources for BOS's --color-utility-{red,yellow,green,neutral}-*
+ *   and for semantic tokens (--bg-error-*, --fg-error-*, --border-error*,
+ *   button error tokens, etc.). v8's vendor @theme drops these; BOS's @theme
+ *   retains them because BOS sources its semantic vocabulary from them.
+ *   The 1,093→657 reduction in v8 vendor source does NOT translate to a
+ *   436-token deletion here.
+ *
+ * What is deferred to wave-by-wave primitive pulls:
+ *   - Disabled-state aliases. Only one base/ file (avatar-add-button.tsx)
+ *     references the v7 dedicated disabled tokens (--text-fg-disabled,
+ *     --border-disabled). v8 consolidates these to disabled:opacity-50.
+ *     Resolved in C2 (Avatar wave) when that file is pulled fresh.
+ *
+ * See docs/spikes/design-system/2026-05-06-uui-v8-campaign-prework.md
+ * for the full C0 token vocabulary diff and rationale.
  */
 
 /* Tokens kept in :root (not @theme):

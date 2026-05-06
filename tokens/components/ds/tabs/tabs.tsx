@@ -3,32 +3,49 @@
 /**
  * BOS Tabs — Wrapper shape: C (full fork).
  *
- * @upstream-base components/base/application/tabs/tabs.tsx (UUI Pro vendor source, mechanically transformed only)
- * @history components/ds/_history/tabs.md (created in Phase B)
+ * @upstream-base components/base/application/tabs/tabs.tsx (UUI Pro v8 vendor source, mechanically transformed only)
+ * @history components/ds/_history/tabs.md
  *
- * Brand decisions (delta from upstream UUI Pro):
- *   - Six variant arms (button-brand, button-gray, button-border, button-minimal, underline, line)
- *     redefine the `*:data-icon:` token classes on hover/selected/border states.
- *   - Sizing scale restructured: BOS factors out `text-sm font-semibold gap-1 *:data-icon:size-4`
- *     into a shared `base` row per size (sm/md). Upstream repeats the typography per variant.
- *   - `Fragment`/`createContext` import (uses Fragment for non-orientation rendering).
- *   - `motion duration` uses `ease-motion-out` instead of upstream `ease-linear`.
+ * Brand decisions (rebased against UUI v8, Phase C Wave 1, 2026-05-06):
+ *   - The single remaining Type 3 delta is `ease-motion-out` instead of v8's
+ *     `ease-linear` on the Tab transition. ease-linear feels mechanical for
+ *     tab-state changes; BOS prefers the cubic-bezier curve. The codemod
+ *     (axis 1b) does not yet rewrite ease-linear → ease-motion-out
+ *     automatically (known gap); this wrapper carries the swap until it does.
+ *
+ * Reclassified from "BOS brand intent" to v8 Type 2 vendor evolution
+ * (adopted in this rebase, no longer overrides):
+ *   - Six variant arms with `*:data-icon:` color overrides — v8 added these.
+ *     BOS's previous wrapper LACKED them, which the audit misread as a brand
+ *     decision; in fact base/tabs was frozen at v7. Now adopted.
+ *   - Sizing scale "restructure" — v8 factored typography into a `base` row
+ *     per size. BOS's previous wrapper repeated typography per variant
+ *     (verbose, not a brand decision). Now adopted.
+ *   - `Tab` accepts an `icon` prop (v8 addition).
+ *   - Badge type differentiation by tab type (`underline`/`line`/`button-brand`
+ *     get pill-color, others get `modern`) — v8 logic.
+ *   - `TabList` defensive items handling.
+ *   - `TabListProps` extends `Omit<AriaTabListProps<T>, "items">`.
+ *
+ * If a future codemod expansion handles `ease-linear` → `ease-motion-out`,
+ * this wrapper has no remaining Type 3 deltas and CAN BE DELETED with the
+ * barrel re-pointed at `./application/tabs/tabs`. Track in spike §7.
  *
  * Wrapper shape rationale (Shape C — full fork): the primitive uses an object-style
- * `sortCx` constant read from module scope, not props. Forking is cleaner than runtime
- * override and survives `bun run uui:add` re-pulls predictably.
+ * styles constant read from module scope, not props. Forking is correct.
  *
  * Consumer entry point: `import { Tabs } from '@/components/base'`. The barrel
- * (components/base/index.ts) re-exports from this file, NOT from base/application/tabs/tabs.tsx.
+ * (components/base/index.ts) re-exports from this file, NOT from
+ * components/base/application/tabs/tabs.tsx.
  */
 
-import type { ComponentPropsWithRef, ReactNode } from "react";
-import { Fragment, createContext, useContext } from "react";
+import type { ComponentPropsWithRef, FC, ReactNode } from "react";
+import { createContext, isValidElement, useContext } from "react";
 import type { TabListProps as AriaTabListProps, TabProps as AriaTabProps, TabRenderProps as AriaTabRenderProps } from "react-aria-components";
 import { Tab as AriaTab, TabList as AriaTabList, TabPanel as AriaTabPanel, Tabs as AriaTabs, TabsContext, useSlottedContext } from "react-aria-components";
-import type { BadgeColors } from "@/components/base/base/badges/badge-types";
 import { Badge } from "@/components/base/base/badges/badges";
 import { cx } from "@/utils/cx";
+import { isReactComponent } from "@/utils/is-react-component";
 import { devProps } from "@/lib/utils/dev-props";
 
 type Orientation = "horizontal" | "vertical";
@@ -41,55 +58,56 @@ type TabTypeColors<T> = T extends "horizontal" ? HorizontalTypes : VerticalTypes
 // Styles for different types of tab
 const getTabStyles = ({ isFocusVisible, isSelected, isHovered }: AriaTabRenderProps) => ({
     "button-brand": cx(
-        "outline-focus-ring",
+        "outline-focus-ring *:data-icon:text-fg-quaternary",
         isFocusVisible && "outline-2 -outline-offset-2",
-        (isSelected || isHovered) && "bg-brand-primary_alt text-brand-secondary",
+        (isSelected || isHovered) && "bg-brand-primary_alt text-brand-secondary *:data-icon:text-fg-brand-secondary_hover",
     ),
     "button-gray": cx(
-        "outline-focus-ring",
-        isHovered && "bg-primary_hover text-secondary",
+        "outline-focus-ring *:data-icon:text-fg-quaternary",
+        isHovered && "bg-primary_hover text-secondary *:data-icon:text-fg-secondary_hover",
         isFocusVisible && "outline-2 -outline-offset-2",
-        isSelected && "bg-primary_hover text-secondary",
+        isSelected && "bg-primary_hover text-secondary *:data-icon:text-fg-secondary_hover",
     ),
     "button-border": cx(
-        "outline-focus-ring",
-        (isSelected || isHovered) && "bg-primary_alt text-secondary shadow-sm",
+        "outline-focus-ring *:data-icon:text-fg-quaternary",
         isFocusVisible && "outline-2 -outline-offset-2",
+        (isSelected || isHovered) && "bg-primary_alt text-secondary shadow-sm *:data-icon:text-fg-secondary_hover",
     ),
     "button-minimal": cx(
-        "rounded-lg outline-focus-ring",
-        isHovered && "text-secondary",
+        "rounded-lg outline-focus-ring *:data-icon:text-fg-quaternary",
         isFocusVisible && "outline-2 -outline-offset-2",
-        isSelected && "bg-primary_alt text-secondary shadow-xs ring-1 ring-primary ring-inset",
+        (isSelected || isHovered) && "bg-primary_alt text-secondary shadow-xs ring-1 ring-primary ring-inset *:data-icon:text-fg-secondary_hover",
     ),
     underline: cx(
-        "rounded-none border-b-2 border-transparent outline-focus-ring",
-        (isSelected || isHovered) && "border-fg-brand-primary_alt text-brand-secondary",
+        "rounded-none border-b-2 border-transparent outline-focus-ring *:data-icon:text-fg-quaternary",
         isFocusVisible && "outline-2 -outline-offset-2",
+        (isSelected || isHovered) && "border-fg-brand-primary_alt text-brand-secondary *:data-icon:text-fg-brand-secondary_hover",
     ),
     line: cx(
-        "rounded-none border-l-2 border-transparent outline-focus-ring",
-        (isSelected || isHovered) && "border-fg-brand-primary_alt text-brand-secondary",
+        "rounded-none border-l-2 border-transparent outline-focus-ring *:data-icon:text-fg-quaternary",
         isFocusVisible && "outline-2 -outline-offset-2",
+        (isSelected || isHovered) && "border-fg-brand-primary_alt text-brand-secondary *:data-icon:text-fg-brand-secondary_hover",
     ),
 });
 
 const sizes = {
     sm: {
-        "button-brand": "text-sm font-semibold py-2 px-3",
-        "button-gray": "text-sm font-semibold py-2 px-3",
-        "button-border": "text-sm font-semibold py-2 px-3",
-        "button-minimal": "text-sm font-semibold py-2 px-3",
-        underline: "text-sm font-semibold px-1 pb-2.5 pt-0",
-        line: "text-sm font-semibold pl-2.5 pr-3 py-0.5",
+        base: "text-sm font-semibold gap-1 *:data-icon:size-4",
+        "button-brand": "py-2 px-2.5",
+        "button-gray": "py-2 px-2.5",
+        "button-border": "py-2 px-2.5",
+        "button-minimal": "py-2 px-2.5",
+        underline: "px-0.5 pb-2.5 pt-0",
+        line: "pl-2.5 pr-3 py-0.5",
     },
     md: {
-        "button-brand": "text-md font-semibold py-2.5 px-3",
-        "button-gray": "text-md font-semibold py-2.5 px-3",
-        "button-border": "text-md font-semibold py-2.5 px-3",
-        "button-minimal": "text-md font-semibold py-2.5 px-3",
-        underline: "text-md font-semibold px-1 pb-2.5 pt-0",
-        line: "text-md font-semibold pr-3.5 pl-3 py-1",
+        base: "text-md font-semibold gap-1.5 *:data-icon:size-5",
+        "button-brand": "py-2.5 px-2.5",
+        "button-gray": "py-2.5 px-2.5",
+        "button-border": "py-2.5 px-2.5",
+        "button-minimal": "py-2.5 px-2.5",
+        underline: "px-0.5 pb-2.5 pt-0",
+        line: "pr-3.5 pl-3 py-1",
     },
 };
 
@@ -103,24 +121,15 @@ const getHorizontalStyles = ({ size, fullWidth }: { size?: "sm" | "md"; fullWidt
     line: "gap-2",
 });
 
-const getColorStyles = ({ isSelected, isHovered }: Partial<AriaTabRenderProps>) => ({
-    "button-brand": isSelected || isHovered ? "brand" : "gray",
-    "button-gray": "gray",
-    "button-border": "gray",
-    "button-minimal": "gray",
-    underline: isSelected || isHovered ? "brand" : "gray",
-    line: isSelected || isHovered ? "brand" : "gray",
-});
-
-interface TabListComponentProps<T extends object, K extends Orientation> extends AriaTabListProps<T> {
+interface TabListComponentProps<T extends object, K extends Orientation> extends Omit<AriaTabListProps<T>, "items"> {
     /** The size of the tab list. */
     size?: keyof typeof sizes;
     /** The type of the tab list. */
     type?: TabTypeColors<K>;
     /** The orientation of the tab list. */
     orientation?: K;
-    /** The items of the tab list. */
-    items: T[];
+    /** The items of the tab list. When provided, tabs are rendered automatically via the render function in children. */
+    items?: T[];
     /** Whether the tab list is full width. */
     fullWidth?: boolean;
 }
@@ -168,7 +177,7 @@ export const TabList = <T extends Orientation>({
                     )
                 }
             >
-                {children ?? ((item) => <Tab {...item}>{item.children}</Tab>)}
+                {children ?? (otherProps.items ? (item) => <Tab {...item}>{item.children}</Tab> : undefined)}
             </AriaTabList>
         </TabListContext.Provider>
     );
@@ -194,13 +203,16 @@ interface TabComponentProps extends AriaTabProps {
     label?: ReactNode;
     /** The children of the tab. */
     children?: ReactNode | ((props: AriaTabRenderProps) => ReactNode);
+    /** Icon component or element to show before the text */
+    icon?: FC<{ className?: string }> | ReactNode;
     /** The badge displayed next to the label. */
     badge?: number | string;
 }
 
-export const Tab = (props: TabComponentProps) => {
-    const { label, children, badge, ...otherProps } = props;
+export const Tab = ({ label, children, badge, icon: Icon, className, ...otherProps }: TabComponentProps) => {
     const { size = "sm", type = "button-brand", fullWidth } = useContext(TabListContext);
+
+    const showPillColorBadge = type === "underline" || type === "line" || type === "button-brand";
 
     return (
         <AriaTab
@@ -208,29 +220,39 @@ export const Tab = (props: TabComponentProps) => {
             {...otherProps}
             className={(prop) =>
                 cx(
+                    // BOS Type 3: ease-motion-out (cubic-bezier) instead of v8's ease-linear (mechanical).
                     "z-10 flex h-max cursor-pointer items-center justify-center gap-2 rounded-md whitespace-nowrap text-quaternary transition duration-micro ease-motion-out",
                     "group-orientation-vertical:justify-start",
                     fullWidth && "w-full flex-1",
+                    sizes[size].base,
                     sizes[size][type],
                     getTabStyles(prop)[type],
-                    typeof props.className === "function" ? props.className(prop) : props.className,
+                    typeof className === "function" ? className(prop) : className,
                 )
             }
         >
             {(state) => (
-                <Fragment>
-                    {typeof children === "function" ? children(state) : children || label}
-                    {badge && (
-                        <Badge
-                            size={size}
-                            type="pill-color"
-                            color={getColorStyles(state)[type] as BadgeColors}
-                            className={cx("hidden transition-inherit-all md:flex", size === "sm" && "-my-px")}
-                        >
-                            {badge}
-                        </Badge>
-                    )}
-                </Fragment>
+                <>
+                    {/* Icon */}
+                    {isValidElement(Icon) && Icon}
+                    {isReactComponent(Icon) && <Icon data-icon className="transition-inherit-all" />}
+
+                    <span className={cx("flex items-center gap-1.5", type !== "line" && "px-0.5")}>
+                        {typeof children === "function" ? children(state) : children || label}
+
+                        {/* Badge */}
+                        {badge && (
+                            <Badge
+                                size="sm"
+                                type={showPillColorBadge ? "pill-color" : "modern"}
+                                color={showPillColorBadge && (state.isHovered || state.isSelected) ? "brand" : "gray"}
+                                className={cx("hidden transition-inherit-all md:flex", size === "sm" && "-my-px")}
+                            >
+                                {badge}
+                            </Badge>
+                        )}
+                    </span>
+                </>
             )}
         </AriaTab>
     );

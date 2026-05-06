@@ -6,16 +6,40 @@
  * @upstream-base components/base/base/buttons/button.tsx (UUI Pro vendor source, mechanically transformed only)
  * @history components/ds/_history/button.md
  *
- * Brand decisions (delta from upstream UUI Pro):
- *   - colors.primary.root → neutral-secondary instead of UUI's `bg-brand-solid` orange CTA.
- *     Decision #2 (ds/_exceptions.md): BOS primary buttons are calm/contained;
- *     hover reveals the brand accent (`hover:bg-bg-brand-primary`).
- *   - sizes.xs.root → smaller padding/text + smaller icon-only padding (UUI uses sm-equivalent).
- *   - sizes.{sm,md,lg,xl}.linkRoot → drops UUI's `*:data-text:underline-offset-3/4` additions.
- *   - colors.{secondary,primary-destructive,secondary-destructive}.root → adds `disabled:*` classes.
- *   - colors.{link-gray,link-color}.root → use `*:data-text:underline-offset-2 hover:decoration-current`
- *     instead of UUI's `hover:decoration-fg-quaternary` / `hover:decoration-fg-brand-secondary_alt`.
- *   - styles.common.root → uses `ease-motion-out` (BOS) instead of `ease-linear` (UUI stock).
+ * Brand decisions (rebased against UUI v8, Phase C Wave 1, 2026-05-06):
+ *   - colors.primary.root → calm/contained primary (Decision #2, ds/_exceptions.md).
+ *     v8 ships an orange CTA with skeuomorphic depth + inner-border gradient;
+ *     BOS overrides to neutral-secondary surface that reveals the brand accent on
+ *     hover. Type 3 (still BOS brand intent post-v8).
+ *   - sizes.xs.root → smaller than v8's xs. v8 added an xs at 32px height
+ *     (text-sm, rounded-lg, p-2 icon-only). BOS keeps a TIGHTER xs (text-xs,
+ *     rounded-md, p-1.5 icon-only) for compact UI surfaces. Type 3.
+ *   - sizes.{sm,md,lg,xl}.linkRoot → omits v8's `*:data-text:underline-offset-3/4`.
+ *     BOS link buttons use a single `underline-offset-2` (baked into the link
+ *     color arms) for visual consistency across sizes. Type 3.
+ *   - colors.{secondary,primary-destructive,secondary-destructive}.root → adds
+ *     `disabled:shadow-xs`. v8's vendor source doesn't override the disabled
+ *     shadow, so disabled-but-skeuomorphic buttons look "raised" inappropriately.
+ *     BOS forces shadow-xs (flat) when disabled. Type 3.
+ *   - colors.{link-gray,link-color}.root → use `decoration-current` for hover
+ *     underline. v8 uses per-color decoration tokens (`decoration-fg-quaternary`,
+ *     `decoration-fg-brand-secondary_alt`). BOS's "match text color" pattern is
+ *     simpler and brand-consistent. Type 3.
+ *   - styles.common.root → uses `ease-motion-out` instead of v8's `ease-linear`.
+ *     Type 3 (BOS motion preference). Codemod gap: axis1 doesn't transform
+ *     `ease-linear` today, so re-pulls preserve the BOS choice via this wrapper
+ *     until the codemod expands.
+ *
+ * Adopted from v8 in Wave 1 rebase:
+ *   - styles.common.root: added `in-data-input-wrapper:disabled:opacity-100`
+ *     (v8 Type 2 — disabled buttons inside InputGroup don't dim because the
+ *     group handles disabled visually itself).
+ *   - sizes.xs.root: added `*:data-icon:size-4` (v8 Type 2 — smaller icons fit
+ *     the tighter xs button proportions). Stroke-styling not adopted (BOS
+ *     keeps its default icon stroke).
+ *   - colors.{secondary,primary-destructive,secondary-destructive}.root:
+ *     dropped redundant `disabled:opacity-50` (already provided by
+ *     common.root); kept `disabled:shadow-xs`.
  *
  * Wrapper shape rationale (Shape C — full fork): the primitive uses an object-style
  * `sortCx` constant read from module scope, not props. Runtime override would require
@@ -40,8 +64,8 @@ export const styles = sortCx({
             "group relative inline-flex h-max cursor-pointer items-center justify-center whitespace-nowrap outline-brand transition duration-micro ease-motion-out before:absolute focus-visible:outline-2 focus-visible:outline-offset-2",
             // When button is used within `InputGroup`
             "in-data-input-wrapper:shadow-xs in-data-input-wrapper:focus:!z-50 in-data-input-wrapper:in-data-leading:-mr-px in-data-input-wrapper:in-data-leading:rounded-r-none in-data-input-wrapper:in-data-leading:before:rounded-r-none in-data-input-wrapper:in-data-trailing:-ml-px in-data-input-wrapper:in-data-trailing:rounded-l-none in-data-input-wrapper:in-data-trailing:before:rounded-l-none",
-            // Disabled styles
-            "disabled:cursor-not-allowed disabled:opacity-50",
+            // Disabled styles — v8 Type 2 adoption: input-wrapper-scoped buttons skip disabled dim
+            "disabled:cursor-not-allowed disabled:opacity-50 in-data-input-wrapper:disabled:opacity-100",
             // Same as `icon` but for SSR icons that cannot be passed to the client as functions.
             "*:data-icon:pointer-events-none *:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:transition-inherit-all",
         ].join(" "),
@@ -52,6 +76,8 @@ export const styles = sortCx({
             root: [
                 "gap-1 rounded-md px-2.5 py-1.5 text-xs font-semibold before:rounded-[5px] data-icon-only:p-1.5",
                 "in-data-input-wrapper:px-3 in-data-input-wrapper:py-2 in-data-input-wrapper:data-icon-only:p-2",
+                // v8 Type 2 adoption: smaller icons fit the tighter BOS xs proportions
+                "*:data-icon:size-4",
             ].join(" "),
             linkRoot: "gap-1",
         },
@@ -87,8 +113,8 @@ export const styles = sortCx({
                 "bg-bg-secondary text-fg-primary shadow-xs ring-1 ring-border-primary ring-inset",
                 "hover:bg-bg-brand-primary hover:text-fg-brand-primary hover:ring-border-brand-solid",
                 "data-loading:bg-bg-brand-primary",
-                // Disabled styles
-                "disabled:opacity-50 disabled:shadow-xs",
+                // Disabled — opacity-50 from common.root; BOS keeps shadow-xs (override skeuomorphic ancestors)
+                "disabled:shadow-xs",
                 // Icon styles
                 "*:data-icon:text-fg-tertiary hover:*:data-icon:text-fg-brand-primary",
             ].join(" "),
@@ -96,8 +122,8 @@ export const styles = sortCx({
         secondary: {
             root: [
                 "bg-primary text-secondary shadow-xs-skeuomorphic ring-1 ring-primary ring-inset hover:bg-primary_hover hover:text-secondary_hover data-loading:bg-primary_hover",
-                // Disabled styles
-                "disabled:shadow-xs disabled:opacity-50",
+                // Disabled — disabled:opacity-50 already comes from common.root; keep shadow-xs override (BOS Type 3: disabled = no skeuomorphic shadow)
+                "disabled:shadow-xs",
                 // Icon styles
                 "*:data-icon:text-fg-quaternary hover:*:data-icon:text-fg-quaternary_hover",
             ].join(" "),
@@ -132,8 +158,8 @@ export const styles = sortCx({
                 "bg-error-solid text-white shadow-xs-skeuomorphic ring-1 ring-transparent outline-error ring-inset hover:bg-error-solid_hover data-loading:bg-error-solid_hover",
                 // Inner border gradient
                 "before:absolute before:inset-px before:border before:border-white/12 before:mask-b-from-0%",
-                // Disabled styles
-                "disabled:opacity-50 disabled:shadow-xs",
+                // Disabled — opacity-50 from common.root; BOS keeps shadow-xs override
+                "disabled:shadow-xs",
                 // Icon styles
                 "*:data-icon:text-white/60 hover:*:data-icon:text-white/70",
             ].join(" "),
@@ -141,8 +167,8 @@ export const styles = sortCx({
         "secondary-destructive": {
             root: [
                 "bg-primary text-error-primary shadow-xs-skeuomorphic ring-1 ring-error_subtle outline-error ring-inset hover:bg-error-primary hover:text-error-primary_hover data-loading:bg-error-primary",
-                // Disabled styles
-                "disabled:bg-primary disabled:shadow-xs disabled:opacity-50",
+                // Disabled — opacity-50 from common.root; BOS keeps disabled:bg-primary + shadow-xs overrides
+                "disabled:bg-primary disabled:shadow-xs",
                 // Icon styles
                 "*:data-icon:text-fg-error-secondary hover:*:data-icon:text-fg-error-primary",
             ].join(" "),
