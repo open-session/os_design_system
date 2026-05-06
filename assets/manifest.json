@@ -256,6 +256,32 @@
     "format": "JPEG"
   },
 
+  "textures": {
+    "description": "Background textures and patterns for visual depth",
+    "categories": {
+      "ascii": {
+        "count": 6,
+        "description": "ASCII character-based textures with black/white variants",
+        "variants": ["1-black", "1-white", "2-black", "2-white", "3-black", "4-black"],
+        "path": "assets/textures/ascii/ascii-{variant}.jpg"
+      },
+      "halftone": {
+        "count": 4,
+        "description": "Dot-matrix halftone pattern textures",
+        "variants": ["1", "2", "3", "4"],
+        "path": "assets/textures/halftone/halftone-{variant}.jpg"
+      },
+      "recycled-card": {
+        "count": 4,
+        "description": "Paper and cardboard surface textures",
+        "variants": ["1", "2", "3", "4"],
+        "path": "assets/textures/recycled-card/recycled-card-{variant}.jpg"
+      }
+    },
+    "totalCount": 14,
+    "format": "JPEG (compressed 70% quality)"
+  },
+
   "externalAssets": {
     "description": "Large assets not included in repo, available at source location",
     "sourcePath": "~/Desktop/OS BRAND/",
