@@ -44,6 +44,21 @@ The audit at [`docs/audits/2026-05/009-layer4-primitive-classification.md`](../.
 
 ---
 
+## Canonical UUI update flow
+
+`bun run uui:add <name>` is the supported way to add or update a UUI Pro primitive. The pipeline:
+
+1. Snapshots host files the UUI CLI is known to mutate (`package.json`, `bun.lock`, `utils/is-react-component.ts`, `hooks/use-resize-observer.ts`).
+2. Stages `npx untitledui@latest add <name> --path /tmp/...`.
+3. Copies new files into `components/base/`, sidecars existing files as `<name>.tsx.uui-fresh` (gitignored).
+4. Applies the 5-axis transforms via `scripts/uui-apply-transformations.ts`.
+5. Scaffolds a `ds/<folder>/<name>.tsx` wrapper if the audit flags the primitive as Layer 4 and no wrapper exists.
+6. Runs `bun run typecheck`. Persists a JSON report.
+
+See [`scripts/uui-add.ts`](../../scripts/uui-add.ts).
+
+---
+
 ## brand.css
 
 Defines all CSS custom properties via Tailwind v4 `@theme`. Imported by `app/globals.css` as `@import '../components/ds/brand.css'`. This is the single file that makes semantic tokens like `--bg-primary`, `--fg-secondary`, and `--motion-micro` available to all Tailwind mapped classes.

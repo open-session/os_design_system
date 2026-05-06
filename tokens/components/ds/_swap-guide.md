@@ -66,6 +66,18 @@ Before starting a swap, confirm:
 
 Replace `components/base/` contents with the new vendor's primitives.
 
+**For UUI Pro (current, post Phase B):**
+
+```bash
+# `bun run uui:add <name>` is the canonical update flow — applies the 5-axis
+# mechanical transforms automatically, sidecars existing files for inspection,
+# scaffolds Layer 4 wrappers from the audit, and typechecks before exit.
+bun run uui:add button
+bun run uui:add tabs
+bun run uui:add featured-icon
+# See `scripts/uui-add.ts` and `components/ds/_wrapper-template.md`.
+```
+
 **For shadcn/ui:**
 
 ```bash
