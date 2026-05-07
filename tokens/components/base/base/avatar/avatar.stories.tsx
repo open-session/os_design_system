@@ -37,7 +37,6 @@ export const Online: Story = {
 export const Sizes: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-      <Avatar size="xxs" alt="xxs" />
       <Avatar size="xs" alt="xs" />
       <Avatar size="sm" alt="sm" />
       <Avatar size="md" alt="md" />

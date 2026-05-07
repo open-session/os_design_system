@@ -23,7 +23,8 @@
 // base/ — primitives
 // ─────────────────────────────────────────────────────────────────────────────
 
-export { Avatar } from "./base/avatar/avatar";
+export { Avatar, type AvatarProps } from "./base/avatar/avatar";
+export { AvatarCount } from "./base/avatar/base-components/avatar-count";
 export { AvatarLabelGroup } from "./base/avatar/avatar-label-group";
 export { AvatarProfilePhoto } from "./base/avatar/avatar-profile-photo";
 
