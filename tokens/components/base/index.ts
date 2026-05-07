@@ -93,7 +93,10 @@ export { EmptyState } from "./application/empty-state/empty-state";
 
 export { MessageItem, MessageStatus } from "./application/messaging/messaging";
 
-export { Modal, ModalOverlay, Dialog, DialogTrigger } from "./application/modals/modal";
+// Modal/ModalOverlay/Dialog are re-exported from the BOS Layer-4 wrapper (ds/modals/modal.tsx,
+// Shape C) to preserve BOS Dialog surface treatment + slower modal motion. base/ remains
+// vendor-pristine v8. DialogTrigger is re-exported via the wrapper from base/ unchanged.
+export { Modal, ModalOverlay, Dialog, DialogTrigger } from "@/components/ds/modals/modal";
 
 export { Pagination } from "./application/pagination/pagination-base";
 export { PaginationDot } from "./application/pagination/pagination-dot";
