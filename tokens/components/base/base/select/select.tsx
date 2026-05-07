@@ -138,11 +138,30 @@ const Select = ({ placeholder = "Select", icon, size = "md", children, items, la
     );
 };
 
+// Static-property pattern (`Select.ComboBox`, `Select.Item`) consumed by
+// brand-hub's typography/color/contrast/logo settings (~10 call sites).
+// Direct assignment here would read `ComboBox` at module-load time, but
+// combobox.tsx imports back from this file (`CommonProps`, `SelectContext`,
+// `SelectItemType`, `sizes`) — that ESM cycle leaves `ComboBox` in TDZ when
+// select.tsx finishes evaluating, and Vite/Storybook surface it as
+// "Cannot access 'ComboBox' before initialization."
+//
+// Lazy getters defer the read until the property is actually accessed, by
+// which time both modules have finished evaluating. C5's `select-shared.tsx`
+// extraction will eliminate the cycle structurally; this is the bridge.
 const _Select = Select as typeof Select & {
     ComboBox: typeof ComboBox;
     Item: typeof SelectItem;
 };
-_Select.ComboBox = ComboBox;
-_Select.Item = SelectItem;
+Object.defineProperty(_Select, "ComboBox", {
+    get: () => ComboBox,
+    enumerable: true,
+    configurable: true,
+});
+Object.defineProperty(_Select, "Item", {
+    get: () => SelectItem,
+    enumerable: true,
+    configurable: true,
+});
 
 export { _Select as Select };
