@@ -4,23 +4,28 @@ import type { ReactNode, Ref } from "react";
 import type { TextProps as AriaTextProps } from "react-aria-components";
 import { Text as AriaText } from "react-aria-components";
 import { cx } from "@/utils/cx";
-import { devProps } from "@/lib/utils/dev-props";
+import { devProps } from '@/lib/utils/dev-props';
 
 interface HintTextProps extends AriaTextProps {
     /** Indicates that the hint text is an error message. */
     isInvalid?: boolean;
     ref?: Ref<HTMLElement>;
+    size?: "sm" | "md";
     children: ReactNode;
 }
 
-export const HintText = ({ isInvalid, className, ...props }: HintTextProps) => {
+export const HintText = ({ isInvalid, className, size = "md", ...props }: HintTextProps) => {
     return (
         <AriaText
-            {...devProps('HintText')}
+      {...devProps('HintText')}
             {...props}
             slot={isInvalid ? "errorMessage" : "description"}
             className={cx(
                 "text-sm text-tertiary",
+
+                // Size
+                size === "sm" && "text-xs",
+                "in-data-[input-size=sm]:text-xs",
 
                 // Invalid state
                 isInvalid && "text-error-primary",

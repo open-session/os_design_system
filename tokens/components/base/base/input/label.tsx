@@ -6,20 +6,21 @@ import type { LabelProps as AriaLabelProps } from "react-aria-components";
 import { Label as AriaLabel } from "react-aria-components";
 import { Tooltip, TooltipTrigger } from "@/components/base/base/tooltip/tooltip";
 import { cx } from "@/utils/cx";
-import { devProps } from "@/lib/utils/dev-props";
+import { devProps } from '@/lib/utils/dev-props';
 
 interface LabelProps extends AriaLabelProps {
     children: ReactNode;
+    isInvalid?: boolean;
     isRequired?: boolean;
     tooltip?: string;
     tooltipDescription?: string;
     ref?: Ref<HTMLLabelElement>;
 }
 
-export const Label = ({ isRequired, tooltip, tooltipDescription, className, ...props }: LabelProps) => {
+export const Label = ({ isInvalid, isRequired, tooltip, tooltipDescription, className, ...props }: LabelProps) => {
     return (
         <AriaLabel
-            {...devProps('Label')}
+      {...devProps('Label')}
             // Used for conditionally hiding/showing the label element via CSS:
             // <Input label="Visible only on mobile" className="lg:**:data-label:hidden" />
             // or
@@ -30,7 +31,18 @@ export const Label = ({ isRequired, tooltip, tooltipDescription, className, ...p
         >
             {props.children}
 
-            <span className={cx("hidden text-brand-tertiary", isRequired && "block", typeof isRequired === "undefined" && "group-required:block")}>*</span>
+            <span
+                className={cx(
+                    "hidden text-brand-tertiary",
+                    isRequired && "block",
+                    typeof isRequired === "undefined" && "group-required:block",
+
+                    isInvalid && "text-error-primary",
+                    typeof isInvalid === "undefined" && "group-invalid:text-error-primary",
+                )}
+            >
+                *
+            </span>
 
             {tooltip && (
                 <Tooltip title={tooltip} description={tooltipDescription} placement="top">
@@ -39,7 +51,7 @@ export const Label = ({ isRequired, tooltip, tooltipDescription, className, ...p
                         // but we don't that. We want the tooltip be enabled even if the parent
                         // field is disabled.
                         isDisabled={false}
-                        className="cursor-pointer text-fg-quaternary transition duration-standard hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover"
+                        className="cursor-pointer text-fg-quaternary transition duration-micro hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover"
                     >
                         <HelpCircle className="size-4" />
                     </TooltipTrigger>
