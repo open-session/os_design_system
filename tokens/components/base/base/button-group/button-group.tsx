@@ -14,20 +14,20 @@ import { devProps } from "@/lib/utils/dev-props";
 export const styles = sortCx({
     common: {
         root: [
-            "group/button-group inline-flex h-max cursor-pointer items-center bg-primary font-semibold whitespace-nowrap text-secondary shadow-skeuomorphic ring-1 ring-primary outline-brand transition duration-micro ease-motion-out ring-inset",
+            "group/button-group inline-flex h-max cursor-pointer items-center bg-primary font-semibold whitespace-nowrap text-secondary shadow-skeuomorphic ring-1 ring-primary outline-brand transition duration-micro ease-linear ring-inset",
             // Hover and focus styles
             "hover:bg-primary_hover hover:text-secondary_hover focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2",
             // Disabled styles
-            "disabled:cursor-not-allowed disabled:bg-primary disabled:opacity-50",
+            "disabled:cursor-not-allowed disabled:text-secondary/50 disabled:*:opacity-50",
             // Selected styles
-            "selected:bg-primary_hover selected:text-secondary_hover selected:disabled:opacity-50",
+            "selected:bg-primary_hover selected:text-secondary_hover",
         ].join(" "),
-        icon: "pointer-events-none text-fg-quaternary transition-[inherit] group-hover/button-group:text-fg-quaternary_hover group-disabled/button-group:opacity-50",
+        icon: "pointer-events-none text-fg-quaternary transition-[inherit] group-hover/button-group:text-fg-quaternary_hover group-selected/button-group:text-fg-quaternary_hover",
     },
 
     sizes: {
         sm: {
-            root: "gap-1.5 px-3.5 py-2 text-sm not-last:pr-[calc(calc(var(--spacing)*3.5)+1px)] first:rounded-l-lg last:rounded-r-lg data-icon-leading:pl-3 data-icon-only:p-2",
+            root: "gap-1.5 px-3.5 py-2 text-sm not-last:pr-[calc(calc(var(--spacing)*3.5)+1px)] first:rounded-l-lg last:rounded-r-lg data-icon-leading:pl-3 data-icon-only:px-2.5",
             icon: "size-5",
         },
         md: {
@@ -35,7 +35,7 @@ export const styles = sortCx({
             icon: "size-5",
         },
         lg: {
-            root: "gap-2 px-4.5 py-2.5 text-md not-last:pr-[calc(calc(var(--spacing)*4.5)+1px)] first:rounded-l-lg last:rounded-r-lg data-icon-leading:pl-4 data-icon-only:p-3",
+            root: "gap-2 px-4.5 py-2.5 text-md not-last:pr-[calc(calc(var(--spacing)*4.5)+1px)] first:rounded-l-lg last:rounded-r-lg data-icon-leading:pl-4 data-icon-only:px-3.5",
             icon: "size-5",
         },
     },
