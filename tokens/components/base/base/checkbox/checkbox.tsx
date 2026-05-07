@@ -23,6 +23,7 @@ export const CheckboxBase = ({ className, isSelected, isDisabled, isIndeterminat
                 size === "md" && "size-5 rounded-md",
                 (isSelected || isIndeterminate) && "bg-brand-solid ring-brand-solid",
                 isDisabled && "cursor-not-allowed opacity-50",
+                isDisabled && !(isSelected || isIndeterminate) && "bg-tertiary",
                 isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
                 className,
             )}

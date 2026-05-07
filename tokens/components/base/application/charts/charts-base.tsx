@@ -61,7 +61,7 @@ export const ChartLegendContent = ({ reversed, payload, align, layout, className
             )}
         >
             {payload?.map((entry, index) => (
-                <li className="flex items-center gap-2 text-sm text-fg-tertiary" key={index}>
+                <li className="flex items-center gap-2 text-sm text-tertiary" key={index}>
                     <span
                         className={cx(
                             "block size-2 rounded-full bg-current ring-[0.5px] ring-black/10 ring-inset",
@@ -80,7 +80,6 @@ interface ChartTooltipContentProps extends TooltipProps<ValueType, NameType> {
     isPieChart?: boolean;
     label?: string;
     // We have to use `any` here because the `payload` prop is not typed correctly in the `recharts` library.
-     
     payload?: any;
 }
 
@@ -107,8 +106,8 @@ export const ChartTooltipContent = ({ active, payload, label, isRadialChart, isP
     secondaryTitle = isSingleDataPoint && labelFormatter ? labelFormatter(secondaryTitle, payload) : secondaryTitle;
 
     return (
-        <div {...devProps('ChartTooltipContent')} className="flex flex-col gap-0.5 rounded-lg bg-bg-primary px-3 py-2 shadow-lg">
-            <p className="text-xs font-semibold text-fg-primary">{title}</p>
+        <div {...devProps('ChartTooltipContent')} className="flex flex-col gap-0.5 rounded-lg bg-primary-solid px-3 py-2 shadow-lg">
+            <p className="text-xs font-semibold text-white">{title}</p>
 
             {!secondaryTitle ? null : Array.isArray(secondaryTitle) ? (
                 <div>
@@ -127,7 +126,6 @@ export const ChartTooltipContent = ({ active, payload, label, isRadialChart, isP
 
 interface ChartActiveDotProps extends DotProps {
     // We have to use `any` here because the `payload` prop is not typed correctly in the `recharts` library.
-     
     payload?: any;
 }
 

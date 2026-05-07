@@ -96,11 +96,11 @@ interface MessageItemProps extends ComponentPropsWithRef<"li"> {
 
 export const MessageItem = ({ msg, showUserLabel = true, ...props }: MessageItemProps) => {
     const renderActions = () => (
-        <div className="dark-mode absolute right-2 -bottom-5 z-1 flex gap-1.5 rounded-lg bg-primary_alt px-2 py-1.5 opacity-0 shadow-xl transition duration-100 ease-linear group-hover/msg:opacity-100">
+        <div className="dark-mode absolute right-2 -bottom-5 z-1 flex gap-1.5 rounded-lg bg-primary_alt px-2 py-1.5 opacity-0 shadow-xl transition duration-micro ease-linear group-hover/msg:opacity-100">
             <button
                 title="Generate with AI"
                 aria-label="Generate with AI"
-                className="cursor-pointer rounded p-0.5 text-fg-quaternary outline-focus-ring transition duration-100 ease-linear hover:text-fg-quaternary_hover focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="cursor-pointer rounded p-0.5 text-fg-quaternary outline-focus-ring transition duration-micro ease-linear hover:text-fg-quaternary_hover focus-visible:outline-2 focus-visible:outline-offset-2"
             >
                 <Stars02 className="size-4" />
             </button>
@@ -109,7 +109,7 @@ export const MessageItem = ({ msg, showUserLabel = true, ...props }: MessageItem
                 <button
                     title={msg.text ? "Edit message" : "Download"}
                     aria-label={msg.text ? "Edit message" : "Download"}
-                    className="cursor-pointer rounded p-0.5 text-fg-quaternary outline-focus-ring transition duration-100 ease-linear hover:text-fg-quaternary_hover focus-visible:outline-2 focus-visible:outline-offset-2"
+                    className="cursor-pointer rounded p-0.5 text-fg-quaternary outline-focus-ring transition duration-micro ease-linear hover:text-fg-quaternary_hover focus-visible:outline-2 focus-visible:outline-offset-2"
                 >
                     {msg.text ? <Edit04 className="size-4" /> : <DownloadCloud02 className="size-4" />}
                 </button>
@@ -118,14 +118,14 @@ export const MessageItem = ({ msg, showUserLabel = true, ...props }: MessageItem
             <button
                 title="Reply"
                 aria-label="Reply"
-                className="cursor-pointer rounded p-0.5 text-fg-quaternary outline-focus-ring transition duration-100 ease-linear hover:text-fg-quaternary_hover focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="cursor-pointer rounded p-0.5 text-fg-quaternary outline-focus-ring transition duration-micro ease-linear hover:text-fg-quaternary_hover focus-visible:outline-2 focus-visible:outline-offset-2"
             >
                 <RefreshCcw02 className="size-4" />
             </button>
             <button
                 title="Copy"
                 aria-label="Copy"
-                className="cursor-pointer rounded p-0.5 text-fg-quaternary outline-focus-ring transition duration-100 ease-linear hover:text-fg-quaternary_hover focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="cursor-pointer rounded p-0.5 text-fg-quaternary outline-focus-ring transition duration-micro ease-linear hover:text-fg-quaternary_hover focus-visible:outline-2 focus-visible:outline-offset-2"
             >
                 <Copy01 className="size-4" />
             </button>
@@ -134,7 +134,7 @@ export const MessageItem = ({ msg, showUserLabel = true, ...props }: MessageItem
 
     return (
         <li key={msg.id} {...devProps('MessageItem')} {...props} className={cx("relative flex items-start gap-3", msg.user?.me ? "self-end pl-10" : "pr-8 lg:pr-10", props.className)}>
-            {msg.user && !msg.user.me && <Avatar src={msg.user.avatarUrl} alt={msg.user.name!} size="md" status={msg.user.status} />}
+            {msg.user && !msg.user.me && <Avatar src={msg.user.avatarUrl} alt={msg.user.name!} size="sm" status={msg.user.status} />}
 
             <article className="flex min-w-0 flex-1 flex-col gap-1.5">
                 {((msg.user && showUserLabel) || msg.sentAt || msg.status) && (
@@ -145,7 +145,7 @@ export const MessageItem = ({ msg, showUserLabel = true, ...props }: MessageItem
                         )}
 
                         {/* Sent at and status */}
-                        {(msg.sentAt || msg.status) && (
+                        {!msg.typing && (msg.sentAt || msg.status) && (
                             <div className="flex items-center gap-0.5">
                                 {msg.sentAt && (
                                     <time className="text-xs text-tertiary" dateTime={msg.sentAt}>
@@ -161,10 +161,10 @@ export const MessageItem = ({ msg, showUserLabel = true, ...props }: MessageItem
                 {msg.text ? (
                     <div
                         className={cx(
-                            "group/msg relative rounded-lg px-3 py-2 text-md text-primary ring-1 ring-secondary ring-inset",
+                            "group/msg relative rounded-lg px-3 py-2 text-md wrap-break-word text-primary ring-1 ring-secondary ring-inset",
                             msg.user?.me ? "rounded-tr-none bg-primary pr-4" : "rounded-tl-none bg-secondary",
                             // Link styles
-                            "[&_a]:rounded-xs [&_a]:text-brand-secondary [&_a]:underline [&_a]:underline-offset-2 [&_a]:outline-focus-ring [&_a]:transition [&_a]:duration-100 [&_a]:ease-linear [&_a]:hover:text-brand-secondary_hover [&_a]:focus-visible:outline-2 [&_a]:focus-visible:outline-offset-2",
+                            "[&_a]:rounded-xs [&_a]:text-brand-secondary [&_a]:underline [&_a]:underline-offset-2 [&_a]:outline-focus-ring [&_a]:transition [&_a]:duration-micro [&_a]:ease-linear [&_a]:hover:text-brand-secondary_hover [&_a]:focus-visible:outline-2 [&_a]:focus-visible:outline-offset-2",
                         )}
                     >
                         {msg.reply && (

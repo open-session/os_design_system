@@ -46,13 +46,13 @@ export const ToggleBase = ({ className, isHovered, isDisabled, isFocusVisible, i
         <div
             {...devProps('ToggleBase')}
             className={cx(
-                "cursor-pointer rounded-full bg-tertiary outline-focus-ring transition duration-quick ease-motion-out",
+                "cursor-pointer rounded-full bg-tertiary ring-[0.5px] ring-secondary outline-focus-ring transition duration-micro ease-linear ring-inset",
                 isSelected && "bg-brand-solid",
                 isSelected && isHovered && "bg-brand-solid_hover",
                 isDisabled && "cursor-not-allowed opacity-50",
                 isFocusVisible && "outline-2 outline-offset-2",
 
-                slim && "ring-1 ring-secondary ring-inset",
+                slim && "ring-1",
                 slim && isSelected && "ring-transparent",
                 classes.root,
                 className,
@@ -60,10 +60,11 @@ export const ToggleBase = ({ className, isHovered, isDisabled, isFocusVisible, i
         >
             <div
                 style={{
-                    transition: "transform var(--duration-quick) var(--ease-in-out), translate var(--duration-quick) var(--ease-in-out), border-color var(--duration-micro) linear, background-color var(--duration-micro) linear",
+                    transition: "transform 0.15s ease-motion-inout, translate 0.15s ease-motion-inout, border-color 0.1s linear, background-color 0.1s linear",
                 }}
                 className={cx(
                     "rounded-full bg-fg-white shadow-sm",
+
                     slim && "shadow-xs",
                     slim && "border border-toggle-border",
                     slim && isSelected && "border-toggle-slim-border_pressed",
@@ -76,6 +77,21 @@ export const ToggleBase = ({ className, isHovered, isDisabled, isFocusVisible, i
     );
 };
 
+const styles = {
+    sm: {
+        root: "gap-2",
+        textWrapper: "",
+        label: "text-sm font-medium",
+        hint: "text-sm",
+    },
+    md: {
+        root: "gap-3",
+        textWrapper: "gap-0.5",
+        label: "text-md font-medium",
+        hint: "text-md",
+    },
+};
+
 interface ToggleProps extends AriaSwitchProps {
     size?: "sm" | "md";
     label?: string;
@@ -84,31 +100,16 @@ interface ToggleProps extends AriaSwitchProps {
 }
 
 export const Toggle = ({ label, hint, className, size = "sm", slim, ...ariaSwitchProps }: ToggleProps) => {
-    const sizes = {
-        sm: {
-            root: "gap-2",
-            textWrapper: "",
-            label: "text-sm font-medium",
-            hint: "text-sm",
-        },
-        md: {
-            root: "gap-3",
-            textWrapper: "gap-0.5",
-            label: "text-md font-medium",
-            hint: "text-md",
-        },
-    };
-
     return (
         <AriaSwitch
             {...devProps('Toggle')}
             {...ariaSwitchProps}
-            className={(renderProps) =>
+            className={(state) =>
                 cx(
                     "flex w-max items-start",
-                    renderProps.isDisabled && "cursor-not-allowed",
-                    sizes[size].root,
-                    typeof className === "function" ? className(renderProps) : className,
+                    state.isDisabled && "cursor-not-allowed",
+                    styles[size].root,
+                    typeof className === "function" ? className(state) : className,
                 )
             }
         >
@@ -125,10 +126,10 @@ export const Toggle = ({ label, hint, className, size = "sm", slim, ...ariaSwitc
                     />
 
                     {(label || hint) && (
-                        <div className={cx("flex flex-col", sizes[size].textWrapper)}>
-                            {label && <p className={cx("text-secondary select-none", sizes[size].label)}>{label}</p>}
+                        <div className={cx("flex flex-col", styles[size].textWrapper)}>
+                            {label && <p className={cx("text-secondary select-none", styles[size].label)}>{label}</p>}
                             {hint && (
-                                <span className={cx("text-tertiary", sizes[size].hint)} onClick={(event) => event.stopPropagation()}>
+                                <span className={cx("text-tertiary", styles[size].hint)} onClick={(event) => event.stopPropagation()}>
                                     {hint}
                                 </span>
                             )}
