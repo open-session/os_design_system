@@ -85,11 +85,10 @@ export {
 
 export { Calendar, CalendarContextProvider } from "./application/date-picker/calendar";
 export { CalendarCell } from "./application/date-picker/cell";
-export { DateInput } from "./application/date-picker/date-input";
+export { InputDate, InputDateBase } from "./base/input/input-date";
 export { DatePicker } from "./application/date-picker/date-picker";
 export { DateRangePicker } from "./application/date-picker/date-range-picker";
-export { RangeCalendar, RangeCalendarContextProvider } from "./application/date-picker/range-calendar";
-export { RangePresetButton } from "./application/date-picker/range-preset";
+export { RangeCalendar, RangeCalendarContextProvider, RangePresetButton } from "./application/date-picker/range-calendar";
 
 export { EmptyState } from "./application/empty-state/empty-state";
 

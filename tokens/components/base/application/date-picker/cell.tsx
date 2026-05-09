@@ -11,9 +11,11 @@ interface CalendarCellProps extends AriaCalendarCellProps {
     isRangeCalendar?: boolean;
     /** Whether the cell is highlighted. */
     isHighlighted?: boolean;
+    /** Whether to show out of range dates. */
+    showOutOfRangeDates?: boolean;
 }
 
-export const CalendarCell = ({ date, isHighlighted, ...props }: CalendarCellProps) => {
+export const CalendarCell = ({ date, isHighlighted, showOutOfRangeDates = false, ...props }: CalendarCellProps) => {
     const { locale } = useLocale();
     const dayOfWeek = getDayOfWeek(date, locale);
     const rangeCalendarContext = useSlottedContext(RangeCalendarContext);
@@ -49,25 +51,26 @@ export const CalendarCell = ({ date, isHighlighted, ...props }: CalendarCellProp
                     "relative size-10 focus:outline-hidden",
                     isRoundedLeft && "rounded-l-full",
                     isRoundedRight && "rounded-r-full",
-                    isInRange && isDisabled && "bg-primary_hover",
-                    isSelected && isRangeCalendar && "bg-primary_hover",
+                    isInRange && isDisabled && "bg-active",
+                    isSelected && isRangeCalendar && "bg-active",
                     isDisabled ? "pointer-events-none" : "cursor-pointer",
                     isFocusVisible ? "z-10" : "z-0",
-                    isRangeCalendar && isOutsideMonth && "hidden",
+                    isOutsideMonth && "opacity-50",
+                    isRangeCalendar && isOutsideMonth && !showOutOfRangeDates && "hidden",
 
                     // Show gradient on last day of month if it's within the selected range.
                     isLastDayOfMonth &&
                         isSelected &&
                         isBeforeEnd &&
                         isRangeCalendar &&
-                        "after:absolute after:inset-0 after:translate-x-full after:bg-gradient-to-l after:from-transparent after:to-bg-primary_hover in-[[role=gridcell]:last-child]:after:hidden",
+                        "after:absolute after:inset-0 after:translate-x-full after:bg-gradient-to-l after:from-transparent after:to-bg-active in-[[role=gridcell]:last-child]:after:hidden",
 
                     // Show gradient on first day of month if it's within the selected range.
                     isFirstDayOfMonth &&
                         isSelected &&
                         isAfterStart &&
                         isRangeCalendar &&
-                        "after:absolute after:inset-0 after:-translate-x-full after:bg-gradient-to-r after:from-transparent after:to-bg-primary_hover in-[[role=gridcell]:first-child]:after:hidden",
+                        "after:absolute after:inset-0 after:-translate-x-full after:bg-gradient-to-r after:from-transparent after:to-bg-active in-[[role=gridcell]:first-child]:after:hidden",
                 );
             }}
         >
@@ -77,9 +80,9 @@ export const CalendarCell = ({ date, isHighlighted, ...props }: CalendarCellProp
                 return (
                     <div
                         className={cx(
-                            "relative flex size-full items-center justify-center rounded-full text-sm",
+                            "relative flex size-full items-center justify-center rounded-full text-sm text-secondary hover:text-secondary_hover",
                             // Disabled state.
-                            !isDisabled && "text-secondary hover:text-secondary_hover",
+                            isDisabled && "text-secondary/50",
                             // Focus ring, visible while the cell has keyboard focus.
                             isFocusVisible ? "outline-2 outline-offset-2 outline-focus-ring" : "",
                             // Hover state for cells in the middle of the range.
@@ -87,7 +90,7 @@ export const CalendarCell = ({ date, isHighlighted, ...props }: CalendarCellProp
                             markedAsSelected && "bg-brand-solid font-medium text-white hover:bg-brand-solid_hover hover:text-white",
                             // Hover state for non-selected cells.
                             !isSelected && !isDisabled ? "hover:bg-primary_hover hover:font-medium!" : "",
-                            !isSelected && isTodayDate ? "bg-primary_hover font-medium hover:bg-secondary_hover" : "",
+                            !isSelected && isTodayDate ? "bg-active font-medium hover:bg-secondary_hover" : "",
                         )}
                     >
                         {formattedDate}
@@ -96,7 +99,8 @@ export const CalendarCell = ({ date, isHighlighted, ...props }: CalendarCellProp
                             <div
                                 className={cx(
                                     "absolute bottom-1 left-1/2 size-1.25 -translate-x-1/2 rounded-full",
-                                    isDisabled ? "bg-fg-disabled" : markedAsSelected ? "bg-fg-white" : "bg-fg-brand-primary",
+                                    markedAsSelected ? "bg-fg-white" : "bg-fg-brand-primary",
+                                    isDisabled && "opacity-50",
                                 )}
                             />
                         )}

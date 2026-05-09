@@ -41,7 +41,7 @@ export const PaginationLine = ({ framed, className, size = "md", ...props }: Pag
                                 )}
                             />
                         ) : (
-                            <Pagination.Ellipsis key={index} {...page} />
+                            <Pagination.Ellipsis key={index} />
                         ),
                     )
                 }

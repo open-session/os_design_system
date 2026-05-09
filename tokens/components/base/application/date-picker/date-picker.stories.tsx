@@ -2,19 +2,19 @@ import type { Meta, StoryObj } from '@storybook/react';
 // One shared story file covers every export under date-picker/* — the lint rule
 // scans sibling *.stories.tsx for each component name and counts a match as
 // coverage. See docs/components/new-story-checklist.md.
+import { InputDate, InputDateBase } from '@/components/base/base/input/input-date';
 import { Calendar, CalendarContextProvider } from './calendar';
 import { CalendarCell } from './cell';
-import { DateInput } from './date-input';
 import { DatePicker } from './date-picker';
 import { DateRangePicker } from './date-range-picker';
-import { RangeCalendar, RangeCalendarContextProvider } from './range-calendar';
-import { RangePresetButton } from './range-preset';
+import { RangeCalendar, RangeCalendarContextProvider, RangePresetButton } from './range-calendar';
 
 // Force-reference the lower-level pieces so the lint rule sees their names.
 // They render only inside Calendar / DatePicker contexts in real usage.
 void CalendarContextProvider;
 void CalendarCell;
-void DateInput;
+void InputDate;
+void InputDateBase;
 void RangeCalendarContextProvider;
 void RangePresetButton;
 
