@@ -19,7 +19,28 @@ import { Meta } from '@storybook/blocks';
 
 # Design System Mental Model
 
-> **One sentence:** Brand expression in BOS flows through **two distinct mechanisms** — tokens (automatic, value-based) and structural variants (explicit, behavior-based). Knowing which one you're touching tells you where to make the change and what survives a vendor update.
+> **One sentence:** Brand expression in BOS flows through **two distinct mechanisms** — tokens (automatic, value-based) and structural variants (explicit, behavior-based). Both live in `components/ds/`. Six transform axes keep them honest at vendor-pull time; six enforcement layers keep them honest at write time. The same architecture is what we'll one day expose to BOS users so they can manage their own brand on top of any vendor.
+
+---
+
+## The Three Folders
+
+```
+components/
+├── base/      ← Vendor primitives (Untitled UI Pro, transformed)
+├── custom/    ← Product compositions BOS authors from scratch
+└── ds/        ← Design system formula spec — both mechanisms live here
+```
+
+The shape is enforced at error level: `.githooks/check-components-folders.sh` (pre-commit) plus `eslint-plugin-import/no-restricted-imports`. Adding a fourth top-level directory under `components/` is impossible.
+
+| Folder | What lives here | Who edits | Source of truth |
+|--------|----------------|----------|-----------------|
+| **`base/`** | Vendor primitives — UUI Pro source files pulled via `bun run uui:add`. Sub-folders match UUI's taxonomy: `base/`, `application/`, `foundations/`, `shared-assets/`. | Codemod pipeline only — humans don't edit `base/` directly. | UUI Pro upstream (transformed). |
+| **`custom/`** | Product compositions BOS authors. `pages/<route>/` (page-scoped) + `shared/<category>/` (cross-page, 9 categories). | Humans (Claude under enforcement). | BOS product code. |
+| **`ds/`** | Design system formula spec. `brand.css` (Mechanism 1) + 5 wrapper files in `<primitive>/<name>.tsx` (Mechanism 2) + `defaults/`, `transforms/`, `code-quality/`, `motion/`, `shape/`, `accessibility/` MDX. | Humans. | BOS brand decisions. |
+
+**Decision rule.** Vendor-derived → `base/`. Brand override → `ds/`. Product feature → `custom/`.
 
 ---
 
@@ -70,6 +91,34 @@ Some brand decisions aren't values — they're behaviors. UUI's Button `primary`
 For these cases, BOS publishes its own version of the primitive at `components/ds/<primitive>/<primitive>.tsx`. The barrel at `components/base/index.ts` re-routes consumers to the BOS version. The vendor's pristine source stays at `components/base/base/<path>/<file>.tsx` as a reference, but no application code routes through it.
 
 **In Figma terms:** think of it as publishing your own variant of someone else's master component. You inherit their structure, override specific properties, and your team links to your variant — not the original.
+
+---
+
+## The Six Transform Axes
+
+Six **transform axes** describe the mechanical edits applied to vendor source on every `bun run uui:add` to align it with BOS conventions. Five of the six are also enforced as ESLint rules at write time in `components/custom/` so developer-authored code can't drift.
+
+| # | Axis | What it does | Codemod fn | ESLint (write-time) | Doc |
+|---|------|-------------|-----------|--------------------|-----|
+| 1 | Motion tokens | `duration-200`/`ease-out` → BOS motion tokens | `applyMotionTokens` | `better-tailwindcss/no-restricted-classes` | [motion.mdx](./transforms/motion.mdx) |
+| 2 | Focus ring | `ring-2 ring-offset-2` → `ring-1 shadow-focus-ring` | `applyFocusRing` | `better-tailwindcss/no-restricted-classes` | [focus-ring.mdx](./transforms/focus-ring.mdx) |
+| 3 | Disabled state | Raw gray classes → `disabled:bg-bg-disabled_subtle` | `applyDisabledStates` | `better-tailwindcss/no-restricted-classes` | [disabled-state.mdx](./transforms/disabled-state.mdx) |
+| 4 | Token syntax (Style 2) | Style 1 brackets → Style 2 mapped | `applyTokenSyntax` | `bos-local/prefer-mapped-tokens` (error) | [token-syntax.mdx](./transforms/token-syntax.mdx) |
+| 5 | devProps | Inject `{...devProps('Name')}` on root DOM | `applyDevProps` | `bos-local/require-dev-props` (error) | [dev-props.mdx](./transforms/dev-props.mdx) |
+| 6 | Vendor-primitive wrapper retention | Preserve cross-imports of `ds/` wrappers across re-pulls (parameterized over `WRAPPED_PRIMITIVES`) | `wrapperImportRetention` | codemod-only — operates on vendor source | [wrapper-import-retention.mdx](./transforms/wrapper-import-retention.mdx) |
+
+All six axes live in `scripts/uui-apply-transformations.ts` and run inside `bun run uui:add`.
+
+### How to add a new axis
+
+The 6-axis design is parameterized — adding a 7th is mechanical:
+
+1. Spec the rule in `components/ds/transforms/<axis-name>.mdx` (typed frontmatter: `type`, `axis`, `detection-command`, `enforcement`, `tags`).
+2. Implement `applyMyAxis(source: string)` in `scripts/uui-apply-transformations.ts` — pure string transform, idempotent.
+3. Register in `transformFile()` orchestrator (respect axis ordering).
+4. Add a write-time enforcement rule (if applicable): configure `better-tailwindcss/no-restricted-classes` for class-name patterns, or write a custom rule at `eslint-rules/<rule-name>.js` and register in `eslint.config.mjs`.
+5. Add unit tests at `tests/unit/scripts/fixtures/<axis-name>-*.ts`. The MDX docs reuse these fixtures as before/after examples.
+6. Update [eslint-coverage.mdx](./code-quality/eslint-coverage.mdx) and this doc.
 
 ---
 
@@ -166,7 +215,24 @@ You deliberately want the primitive to behave differently than the vendor ships.
 
 ---
 
-## Current State (Phase C Shipped, 2026-05-09)
+## Six Enforcement Layers
+
+The architecture only works if no one bypasses it. BOS enforces the two mechanisms + six axes through six layers, each catching different failure modes at different times. The earlier the layer, the cheaper the catch.
+
+| Layer | When it runs | What it catches | How |
+|-------|-------------|----------------|-----|
+| **1. Claude project config** ([.claude/CLAUDE.md](../.claude/CLAUDE.md)) | At generation time | Forbidden patterns (Sparkles, `border-2`, Style 1 brackets, raw grays). Three-folder rule. devProps requirement. UUI Transformation Rules (5 axes). | Loaded into every Claude Code session. Rules are imperatives — Claude won't generate violating code. |
+| **2. Codemod (vendor-pull time)** | At `bun run uui:add` | All 6 transform axes against vendor source. | Runs automatically inside the pipeline. Cannot be skipped. |
+| **3. TypeScript** | Write time + pre-commit | Type errors, missing imports, signature mismatches. | `bun run typecheck` (`tsc --noEmit`). Strict mode. |
+| **4. ESLint (write-time, in `custom/`)** | Write time + pre-commit | 5 of 6 transform axes (Axis 6 codemod-only). Three-folder import boundaries. devProps. Story coverage. | `eslint.config.mjs` — `bos-local/*` plugin + `eslint-plugin-better-tailwindcss/no-restricted-classes`. See [eslint-coverage.mdx](./code-quality/eslint-coverage.mdx). |
+| **5. Git pre-commit hook** | Commit time | Three-folder rule (no new top-level dirs). Secret scanning. Lint-staged subset. | `.githooks/pre-commit` + `.githooks/check-components-folders.sh`. |
+| **6. CI (PR time)** | On every PR | Full lint, typecheck, build, test, Storybook build, Greptile review. | GitHub Actions + Vercel + Greptile. Branch protection on `main`. |
+
+**Why Layer 1 matters.** Catching a `border-2` violation at Layer 1 (Claude doesn't generate it) costs nothing. Catching it at Layer 6 (Greptile flags it on a PR) costs a review round. Catching it at Layer 7 (a designer notices visual drift) costs a bug fix + retro. Every catch we move earlier compounds.
+
+---
+
+## Current State (PRD 020 Shipped, 2026-05-09)
 
 **Mechanism 1:** Fully working but not free. Phase C confirmed that token alignment is earned, not automatic. Token maintenance is required on every major upgrade.
 
@@ -198,6 +264,35 @@ The wrapper-deletion test held end-to-end: every wave applied the three-way diff
 
 ---
 
+## Product Vision — From Internal Architecture to User Feature
+
+This codebase is a working proof of three ideas we want to expose to BOS users.
+
+### Vision 1 — "Switch your UI vendor"
+
+Today BOS as a product is hard-wired to UUI Pro. The architecture lets us swap to ShadCN / Radix / Chakra / Daisy internally with a focused PRD (018 territory). The product vision is to expose that swap as a **user-facing flow**: a tenant chooses a vendor at sign-up (or switches mid-flight), the `WRAPPED_PRIMITIVES` config + axis regex tables become per-vendor mappings stored on the backend, the same `brand.css` token set drives the chosen vendor's primitives, wrapper bodies are re-generated for the new vendor automatically. The user's BOS instance renders against the new vendor with their existing brand intact.
+
+Blocker today: `bun run uui:add` is UUI-CLI-specific. The vendor adapter layer is the work item. Once it lands, "vendor swap" becomes a setting, not a campaign.
+
+### Vision 2 — "Manage a design system inside the product"
+
+Today, designers and developers manage the BOS design system in this repo (file edits + Storybook + PRs). The product vision is to expose **the same surface inside BOS itself** — like Storybook, but for the user's own brand:
+
+- **Tokens UI.** A panel that edits `brand.css` token values live, with previews on every primitive. Drives Mechanism 1 visually. (Mostly already feasible — a managed-agents skill could handle the brand.css mutations under guard rails.)
+- **Wrapper authoring UI.** A panel that takes a primitive + a brand decision ("our primary button is calm with hover-reveal") and generates a Shape A/B/C wrapper file. Drives Mechanism 2 visually. (Harder — needs the codemod + AST tooling exposed as a service.)
+- **Transform-axis recommendations.** When a user pulls a vendor update, the product surfaces "the vendor changed these tokens; here's how to update your brand" — using the Type 1/2/3 framework as the diagnostic.
+- **Theme + token agent.** Anthropic's Managed Agents take a high-level brand brief ("warm, confident, slightly playful") and produce a candidate `brand.css` set the user can iterate on. Cheaper than designing every token from scratch.
+
+Blocker today: codemod and ESLint enforcement are CLI-bound, not service-callable. Wrapper authoring is human-only. The product surface (UI panels) doesn't exist yet. But the underlying architecture is shaped exactly for this.
+
+### Vision 3 — Marketplace (`@opensession/brand-os-spec`)
+
+Once Vision 1 + 2 land, the same spec can ship to other teams as `@opensession/brand-os-spec` — a portable formula spec any team can use against any vendor. BOS becomes the *infrastructure for design-system management*, not just one company's design system.
+
+Blocker today: a second adopter showing up. Premature now; tracked.
+
+---
+
 ## Known Gaps
 
 - **No Type 1 awareness in the pipeline.** `bun run uui:add` doesn't check whether a vendor pull references undefined tokens or leaves orphaned ones.
@@ -211,10 +306,14 @@ The wrapper-deletion test held end-to-end: every wave applied the three-way diff
 ## Related
 
 - [Wrapper Template](./wrapper-template.mdx) — Mechanism 2 wrapper shapes (A / B / C) and migration checklist
-- [Swap Guide](./swap-guide.mdx) — vendor-swap procedure
-- [transforms/](./transforms/motion.mdx) — the 6 transform axes applied on every vendor re-pull
-- Source doc: `docs/design-system/mental-model.md` (legacy Markdown version)
+- [Swap Guide](./swap-guide.mdx) — vendor-swap procedure (engineering steps; Vision 1 above is the product version)
+- [transforms/motion.mdx](./transforms/motion.mdx) — Axis 1
+- [transforms/focus-ring.mdx](./transforms/focus-ring.mdx) — Axis 2
+- [transforms/disabled-state.mdx](./transforms/disabled-state.mdx) — Axis 3
+- [transforms/token-syntax.mdx](./transforms/token-syntax.mdx) — Axis 4
+- [transforms/dev-props.mdx](./transforms/dev-props.mdx) — Axis 5
+- [transforms/wrapper-import-retention.mdx](./transforms/wrapper-import-retention.mdx) — Axis 6
+- [code-quality/eslint-coverage.mdx](./code-quality/eslint-coverage.mdx) — current axis × ESLint enforcement matrix
+- Comprehensive narrative version: `docs/design-system/mental-model.md`
 - Vendor change framework: `docs/spikes/design-system/2026-05-06-vendor-design-system-upgrades.md`
-- Campaign record: `docs/spikes/design-system/2026-05-06-uui-v8-campaign.md`
 - Brand decisions: `components/ds/_exceptions.md`
-- Audit inventory: `docs/audits/2026-05/009-layer4-primitive-classification.md`
