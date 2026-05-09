@@ -32,14 +32,13 @@
  *   The 1,093→657 reduction in v8 vendor source does NOT translate to a
  *   436-token deletion here.
  *
- * What is deferred to wave-by-wave primitive pulls:
- *   - Disabled-state aliases. Only one base/ file (avatar-add-button.tsx)
- *     references the v7 dedicated disabled tokens (--text-fg-disabled,
- *     --border-disabled). v8 consolidates these to disabled:opacity-50.
- *     Resolved in C2 (Avatar wave) when that file is pulled fresh.
+ * Disabled-state token migration (C0 finding 2): the only base/ consumer
+ * (avatar-add-button.tsx) was rewired to v8's disabled:opacity-50 in Wave 2C.
+ * No v7 disabled-state aliases are defined here.
  *
  * See docs/spikes/design-system/2026-05-06-uui-v8-campaign.md
- * for the full C0 token vocabulary diff and rationale.
+ * for the full C0 token vocabulary diff, the Phase C campaign retrospective,
+ * and the deferred follow-up to audit the 483 token definitions for orphans.
  */
 
 /* Tokens kept in :root (not @theme):
