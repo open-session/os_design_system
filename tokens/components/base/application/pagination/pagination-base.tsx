@@ -361,7 +361,7 @@ interface PaginationContextComponentProps {
     children: (pagination: PaginationContextType) => ReactNode;
 }
 
-// eslint-disable-next-line bos-local/require-dev-props
+// eslint-disable-next-line bos-local/require-dev-props -- render-prop component, no DOM root
 const PaginationContextComponent: FC<PaginationContextComponentProps> = ({ children }) => {
     const context = useContext(PaginationContext);
     if (!context) {

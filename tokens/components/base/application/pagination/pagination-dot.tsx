@@ -45,7 +45,7 @@ export const PaginationDot = ({ framed, className, size = "md", isBrand, ...prop
                                 )}
                             ></Pagination.Item>
                         ) : (
-                            <Pagination.Ellipsis key={index} />
+                            <Pagination.Ellipsis key={index} {...page} />
                         ),
                     )
                 }
