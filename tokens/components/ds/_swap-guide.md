@@ -272,6 +272,31 @@ and research tracks (13a Settings > Theme runtime swap, 13b
 
 ---
 
+## Vendor Major-Version Upgrade (Same Vendor)
+
+Different from a vendor swap, but the same instinct — pull v8 of UUI Pro into a code library that's currently on v7. The procedure is documented end-to-end as the Phase C / UUI v7→v8 alignment campaign:
+
+- **[`docs/spikes/design-system/2026-05-06-uui-v8-campaign.md`](../../docs/spikes/design-system/2026-05-06-uui-v8-campaign.md)** — wave-by-wave campaign record. Worked example for any future major version (UUI v9, shadcn major, Radix breaking release, etc.).
+- **[`docs/spikes/design-system/2026-05-06-vendor-design-system-upgrades.md`](../../docs/spikes/design-system/2026-05-06-vendor-design-system-upgrades.md)** — the spike that scoped the campaign and derives the Type 1 / Type 2 / Type 3 framework.
+
+The key methodological moves to lift from the campaign:
+
+1. **The three-way diff per primitive.** For every primitive: pull the v-next sidecar via `bun run uui:add <name>`, then diff three artifacts: existing wrapper / current `base/<file>.tsx` / `<file>.tsx.uui-fresh`. Classify each delta as **Type 1** (token rename — fix in `brand.css`), **Type 2** (vendor evolution we hadn't pulled — adopt and the delta disappears), or **Type 3** (genuine BOS brand decision — wrap, retain, or drop on principle).
+
+2. **The wrapper-deletion test.** After classifying deltas, ask: "Are there ≥1 Type 3 deltas remaining for this primitive?" If yes, wrapper survives. If no, **delete the wrapper** and re-route the barrel. The campaign predicted 7–10 wrappers; actual was 4 because most candidates failed this test.
+
+3. **"Lean into UUI" default.** When a Type 3 candidate surfaces and is recoverable as a small wrapper if product re-asks, default to dropping it on principle. Only retain when product use is currently validated. Over the 8-day campaign this default rejected ~15 wrapper candidates that the audit had flagged.
+
+4. **Validation gate — runtime, not parser.** `storybook:build` is parser-only and shipped a 9-commit-deep latent bug. Add `bunx test-storybook` (Playwright) per-wave for any major-version upgrade. The 30s cost is small relative to a wave's other validation.
+
+5. **Pipeline-gap fix-first cadence.** Run a single primitive end-to-end first (in the campaign: `Button` rebase as Wave 1) and surface what tooling fails. Fix tooling before scaling to the rest. The campaign surfaced 4 pipeline gaps (G1, G2, G3, snapshot/restore race) — fixing G1+G2 mid-campaign and the race at the end saved hours of hand-fixing.
+
+6. **Drain pass at the end.** Run `bun run uui:add <name>` for every primitive. Sidecars should be byte-aligned with `base/` for fully-aligned primitives (post G1+G2 fix). Any sidecar with non-trivial drift is a finding to investigate or a deferred follow-up.
+
+The campaign retrospective documents predictions vs reality, what the framework correctly anticipated, and what it missed. Read it before authoring a successor campaign.
+
+---
+
 ## References
 
 - [`components/README.md`](../README.md) — three-folder decision tree
@@ -279,4 +304,6 @@ and research tracks (13a Settings > Theme runtime swap, 13b
 - [`components/custom/README.md`](../custom/README.md) — pages-vs-shared taxonomy
 - [`docs/design-system/uui-transformation-rules.md`](../../docs/design-system/uui-transformation-rules.md) — the four transform rules
 - [`docs/spikes/design-system/2026-04-23-architecture-migration.md`](../../docs/spikes/design-system/2026-04-23-architecture-migration.md) — the spike that informed PRD 016/017
+- [`docs/spikes/design-system/2026-05-06-uui-v8-campaign.md`](../../docs/spikes/design-system/2026-05-06-uui-v8-campaign.md) — Phase C campaign record (worked example for vendor major-version upgrade)
+- [`docs/spikes/design-system/2026-05-06-vendor-design-system-upgrades.md`](../../docs/spikes/design-system/2026-05-06-vendor-design-system-upgrades.md) — Type 1/2/3 framework
 - [`.karimo/prds/017_design-system-architecture-revamp-part-2/`](../../.karimo/prds/017_design-system-architecture-revamp-part-2/) — PRD 017 artifacts
