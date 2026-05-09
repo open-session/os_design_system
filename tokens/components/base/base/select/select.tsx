@@ -1,7 +1,7 @@
 "use client";
 
 import type { FC, ReactNode, Ref, RefAttributes } from "react";
-import { createContext, isValidElement } from "react";
+import { isValidElement } from "react";
 import { ChevronDown } from "@untitledui/icons";
 import type { SelectProps as AriaSelectProps } from "react-aria-components";
 import { Button as AriaButton, ListBox as AriaListBox, Select as AriaSelect, SelectValue as AriaSelectValue } from "react-aria-components";
@@ -9,30 +9,16 @@ import { Avatar } from "@/components/base/base/avatar/avatar";
 import { HintText } from "@/components/base/base/input/hint-text";
 import { Label } from "@/components/base/base/input/label";
 import { cx } from "@/utils/cx";
-import { isReactComponent } from "@/utils/is-react-component";
 import { devProps } from "@/lib/utils/dev-props";
+import { isReactComponent } from "@/utils/is-react-component";
 import { ComboBox } from "./combobox";
 import { Popover } from "./popover";
 import { SelectItem } from "./select-item";
+import { type CommonProps, SelectContext, type SelectItemType, sizes } from "./select-shared";
 
-export type SelectItemType = {
-    id: string;
-    label?: string;
-    avatarUrl?: string;
-    isDisabled?: boolean;
-    supportingText?: string;
-    icon?: FC | ReactNode;
-};
+export { SelectContext, sizes, type CommonProps, type SelectItemType } from "./select-shared";
 
-export interface CommonProps {
-    hint?: string;
-    label?: string;
-    tooltip?: string;
-    size?: "sm" | "md";
-    placeholder?: string;
-}
-
-interface SelectProps extends Omit<AriaSelectProps<SelectItemType>, "children" | "items">, RefAttributes<HTMLDivElement>, CommonProps {
+export interface SelectProps extends Omit<AriaSelectProps<SelectItemType>, "children" | "items">, RefAttributes<HTMLDivElement>, CommonProps {
     items?: SelectItemType[];
     popoverClassName?: string;
     icon?: FC | ReactNode;
@@ -41,7 +27,7 @@ interface SelectProps extends Omit<AriaSelectProps<SelectItemType>, "children" |
 
 interface SelectValueProps {
     isOpen: boolean;
-    size: "sm" | "md";
+    size: "sm" | "md" | "lg";
     isFocused: boolean;
     isDisabled: boolean;
     placeholder?: string;
@@ -49,56 +35,58 @@ interface SelectValueProps {
     icon?: FC | ReactNode;
 }
 
-export const sizes = {
-    sm: { root: "py-2 px-3", shortcut: "pr-2.5" },
-    md: { root: "py-2.5 px-3.5", shortcut: "pr-3" },
-};
-
 const SelectValue = ({ isOpen, isFocused, isDisabled, size, placeholder, icon, ref }: SelectValueProps) => {
     return (
         <AriaButton
             {...devProps('SelectValue')}
             ref={ref}
             className={cx(
-                "relative flex w-full cursor-pointer items-center rounded-lg bg-primary shadow-xs ring-1 ring-primary outline-hidden transition duration-micro ease-motion-out ring-inset",
-                (isFocused || isOpen) && "ring-1 ring-brand shadow-focus-ring-elevated",
+                "relative flex w-full cursor-pointer items-center rounded-lg bg-primary shadow-xs ring-1 ring-primary outline-hidden transition duration-micro ease-linear ring-inset",
+                (isFocused || isOpen) && "ring-2 ring-brand",
                 isDisabled && "cursor-not-allowed opacity-50",
             )}
         >
             <AriaSelectValue<SelectItemType>
-                className={cx(
-                    "flex h-max w-full items-center justify-start gap-2 truncate text-left align-middle",
+                className={(state) =>
+                    cx(
+                        "flex h-max w-full items-center justify-start truncate text-left align-middle",
 
-                    // Icon styles
-                    "*:data-icon:size-5 *:data-icon:shrink-0 *:data-icon:text-fg-quaternary",
+                        sizes[size].root,
 
-                    sizes[size].root,
-                )}
+                        // With icon
+                        (state.selectedItems[0]?.icon || icon) && sizes[size].withIcon,
+
+                        // Icon styles
+                        "*:data-icon:shrink-0 *:data-icon:text-fg-quaternary",
+                    )
+                }
             >
                 {(state) => {
-                    const Icon = state.selectedItem?.icon || icon;
+                    const selectedItem = state.selectedItems[0];
+                    const Icon = selectedItem?.icon || icon;
+
                     return (
                         <>
-                            {state.selectedItem?.avatarUrl ? (
-                                <Avatar size="xs" src={state.selectedItem.avatarUrl} alt={state.selectedItem.label} />
+                            {selectedItem?.avatarUrl ? (
+                                <Avatar size="xs" src={selectedItem.avatarUrl} alt={selectedItem.label} className={cx(size === "sm" && "size-5")} />
                             ) : isReactComponent(Icon) ? (
                                 <Icon data-icon aria-hidden="true" />
                             ) : isValidElement(Icon) ? (
                                 Icon
                             ) : null}
 
-                            {state.selectedItem ? (
-                                <section className="flex w-full gap-2 truncate">
-                                    <p className="truncate text-md font-medium text-primary">{state.selectedItem?.label}</p>
-                                    {state.selectedItem?.supportingText && <p className="text-md text-tertiary">{state.selectedItem?.supportingText}</p>}
+                            {selectedItem ? (
+                                <section className={cx("flex w-full truncate", sizes[size].textContainer)}>
+                                    <p className={cx("truncate font-medium text-primary", sizes[size].text)}>{selectedItem?.label}</p>
+                                    {selectedItem?.supportingText && <p className={cx("text-tertiary", sizes[size].text)}>{selectedItem?.supportingText}</p>}
                                 </section>
                             ) : (
-                                <p className="text-md text-placeholder">{placeholder}</p>
+                                <p className={cx("text-placeholder", sizes[size].text)}>{placeholder}</p>
                             )}
 
                             <ChevronDown
                                 aria-hidden="true"
-                                className={cx("ml-auto shrink-0 text-fg-quaternary", size === "sm" ? "size-4 stroke-[2.5px]" : "size-5")}
+                                className={cx("ml-auto shrink-0 text-fg-quaternary", size === "lg" ? "size-5" : "size-4 stroke-[2.25px]")}
                             />
                         </>
                     );
@@ -108,16 +96,14 @@ const SelectValue = ({ isOpen, isFocused, isDisabled, size, placeholder, icon, r
     );
 };
 
-export const SelectContext = createContext<{ size: "sm" | "md" }>({ size: "sm" });
-
-const Select = ({ placeholder = "Select", icon, size = "md", children, items, label, hint, tooltip, className, ...rest }: SelectProps) => {
+const Select = ({ placeholder = "Select", icon, size = "md", children, items, label, hint, tooltip, hideRequiredIndicator, className, ...rest }: SelectProps) => {
     return (
         <SelectContext.Provider value={{ size }}>
             <AriaSelect {...devProps('Select')} {...rest} className={(state) => cx("flex flex-col gap-1.5", typeof className === "function" ? className(state) : className)}>
                 {(state) => (
                     <>
                         {label && (
-                            <Label isRequired={state.isRequired} tooltip={tooltip}>
+                            <Label isRequired={hideRequiredIndicator ? false : state.isRequired} tooltip={tooltip}>
                                 {label}
                             </Label>
                         )}
@@ -130,7 +116,11 @@ const Select = ({ placeholder = "Select", icon, size = "md", children, items, la
                             </AriaListBox>
                         </Popover>
 
-                        {hint && <HintText isInvalid={state.isInvalid}>{hint}</HintText>}
+                        {hint && (
+                            <HintText isInvalid={state.isInvalid} className={cx(size === "sm" && "text-xs")}>
+                                {hint}
+                            </HintText>
+                        )}
                     </>
                 )}
             </AriaSelect>
@@ -138,30 +128,11 @@ const Select = ({ placeholder = "Select", icon, size = "md", children, items, la
     );
 };
 
-// Static-property pattern (`Select.ComboBox`, `Select.Item`) consumed by
-// brand-hub's typography/color/contrast/logo settings (~10 call sites).
-// Direct assignment here would read `ComboBox` at module-load time, but
-// combobox.tsx imports back from this file (`CommonProps`, `SelectContext`,
-// `SelectItemType`, `sizes`) — that ESM cycle leaves `ComboBox` in TDZ when
-// select.tsx finishes evaluating, and Vite/Storybook surface it as
-// "Cannot access 'ComboBox' before initialization."
-//
-// Lazy getters defer the read until the property is actually accessed, by
-// which time both modules have finished evaluating. C5's `select-shared.tsx`
-// extraction will eliminate the cycle structurally; this is the bridge.
 const _Select = Select as typeof Select & {
     ComboBox: typeof ComboBox;
     Item: typeof SelectItem;
 };
-Object.defineProperty(_Select, "ComboBox", {
-    get: () => ComboBox,
-    enumerable: true,
-    configurable: true,
-});
-Object.defineProperty(_Select, "Item", {
-    get: () => SelectItem,
-    enumerable: true,
-    configurable: true,
-});
+_Select.ComboBox = ComboBox;
+_Select.Item = SelectItem;
 
 export { _Select as Select };
