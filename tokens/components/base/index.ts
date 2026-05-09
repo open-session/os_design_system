@@ -61,6 +61,8 @@ export { NativeSelect } from "./base/select/select-native";
 export { SelectContext } from "./base/select/select";
 export { TagSelectBase, TagSelectTagsValue } from "./base/select/tag-select";
 
+export { RadioButton, RadioButtonBase, RadioGroup } from "./base/radio-buttons/radio-buttons";
+
 export { Slider } from "./base/slider/slider";
 
 export { TextArea, TextAreaBase } from "./base/textarea/textarea";

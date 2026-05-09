@@ -39,3 +39,48 @@ export const WithDots = {
     </Dropdown.Root>
   ),
 };
+
+export const SelectionCheckmark = {
+  render: () => (
+    <Dropdown.Root>
+      <Button>Sort by</Button>
+      <Dropdown.Popover>
+        <Dropdown.Menu selectionMode="single" defaultSelectedKeys={['recent']}>
+          <Dropdown.Item id="recent" label="Most recent" />
+          <Dropdown.Item id="oldest" label="Oldest" />
+          <Dropdown.Item id="alpha" label="Alphabetical" />
+        </Dropdown.Menu>
+      </Dropdown.Popover>
+    </Dropdown.Root>
+  ),
+};
+
+export const SelectionCheckbox = {
+  render: () => (
+    <Dropdown.Root>
+      <Button>Filters</Button>
+      <Dropdown.Popover>
+        <Dropdown.Menu selectionMode="multiple" defaultSelectedKeys={['drafts', 'published']}>
+          <Dropdown.Item id="drafts" label="Drafts" selectionIndicator="checkbox" />
+          <Dropdown.Item id="published" label="Published" selectionIndicator="checkbox" />
+          <Dropdown.Item id="archived" label="Archived" selectionIndicator="checkbox" />
+        </Dropdown.Menu>
+      </Dropdown.Popover>
+    </Dropdown.Root>
+  ),
+};
+
+export const SelectionRadio = {
+  render: () => (
+    <Dropdown.Root>
+      <Button>Theme</Button>
+      <Dropdown.Popover>
+        <Dropdown.Menu selectionMode="single" defaultSelectedKeys={['system']}>
+          <Dropdown.Item id="light" label="Light" selectionIndicator="radio" />
+          <Dropdown.Item id="dark" label="Dark" selectionIndicator="radio" />
+          <Dropdown.Item id="system" label="System" selectionIndicator="radio" />
+        </Dropdown.Menu>
+      </Dropdown.Popover>
+    </Dropdown.Root>
+  ),
+};
