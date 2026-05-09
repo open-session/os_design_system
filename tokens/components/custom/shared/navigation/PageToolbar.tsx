@@ -14,7 +14,7 @@ import {
   UserPlus01,
 } from '@untitledui-pro/icons/line';
 import { Avatar } from '@/components/base/base/avatar/avatar';
-import { Tooltip, TooltipTrigger } from '@/components/base/base/tooltip/tooltip';
+import { Tooltip, TooltipTrigger } from '@/components/base';
 import { devProps } from '@/lib/utils/dev-props';
 
 /* ─── Date formatting ─── */
@@ -54,7 +54,7 @@ function MenuItem({ icon: Icon, label, addon, onAction, inert, ariaExpanded, ari
   const isActive = ariaExpanded === true;
 
   const content = (
-    <div className={`flex items-center rounded-md px-2.5 py-2 transition duration-100 ease-linear group-hover:bg-bg-primary_hover ${isActive ? 'bg-bg-primary_hover' : ''}`}>
+    <div className={`flex items-center rounded-md px-2.5 py-2 transition duration-micro ease-motion-out group-hover:bg-bg-primary_hover ${isActive ? 'bg-bg-primary_hover' : ''}`}>
       <Icon aria-hidden className={`mr-2 size-4 shrink-0 stroke-[2.25px] ${isActive ? 'text-fg-secondary' : 'text-fg-quaternary'}`} />
       <span className={`grow truncate text-sm ${inert ? 'font-normal' : 'font-semibold'} ${isActive ? 'text-fg-primary' : 'text-fg-secondary'} group-hover:text-fg-secondary_hover`}>
         {label}
@@ -213,7 +213,7 @@ export function PageToolbar({
       <Tooltip title={addLabel}>
         <TooltipTrigger
           onPress={onAddClick}
-          className="flex items-center justify-center w-9 h-9 rounded-md text-fg-tertiary hover:text-fg-primary hover:bg-bg-tertiary transition-all duration-150"
+          className="flex items-center justify-center w-9 h-9 rounded-md text-fg-tertiary hover:text-fg-primary hover:bg-bg-tertiary transition-all duration-quick"
         >
           <PlusCircle className="w-[18px] h-[18px]" />
         </TooltipTrigger>
@@ -225,7 +225,7 @@ export function PageToolbar({
           ref={triggerRef}
           onClick={() => setIsMenuOpen(prev => !prev)}
           aria-label="Open menu"
-          className={`flex items-center justify-center w-9 h-9 rounded-md text-fg-tertiary hover:text-fg-primary hover:bg-bg-tertiary transition-all duration-150 ${
+          className={`flex items-center justify-center w-9 h-9 rounded-md text-fg-tertiary hover:text-fg-primary hover:bg-bg-tertiary transition-all duration-quick ${
             isMenuOpen ? 'bg-bg-tertiary text-fg-primary' : ''
           }`}
         >

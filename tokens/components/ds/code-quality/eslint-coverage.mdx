@@ -1,0 +1,238 @@
+---
+title: 'Design System/Code Quality/ESLint Coverage'
+rule: 'Axes 1–5 must have write-time ESLint enforcement in components/custom/; Axis 6 is codemod-only (enforced at vendor-pull time via uui:add, not at write time)'
+scope: 'components/custom/**/*.tsx — write-time (Axes 1–5); components/base/ — codemod-time via uui:add pipeline (Axis 6)'
+detection-command: "rg '\\b(duration-(?:75|100|150|200|300|500|700|1000)|ease-(?:out|in|in-out|linear)|ring-(?:2|offset-2)|disabled:(?:bg|text|border)-gray-\\d+|border-(?:2|4)|bg-\\[var\\(--|text-\\[var\\(--|border-\\[var\\()' components/custom/"
+enforcement:
+  codemod: null
+  eslint-rule: 'better-tailwindcss/no-restricted-classes, bos-local/no-border-2, bos-local/prefer-mapped-tokens, bos-local/require-dev-props'
+  scope: 'custom/'
+  severity: 'error'
+last-audited: '2026-05-09'
+version: 1
+tags: ['code-quality', 'eslint', 'enforcement', 'axes', 'design-system', 'codemod']
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Code Quality/ESLint Coverage" />
+
+# ESLint Coverage — 6 UUI Transformation Axes
+
+## TL;DR
+
+PRD 020 (Wave 3) added write-time enforcement for Axes 1–5. This doc records the final coverage state: which axes have automated ESLint rules, which rely on codemod-only enforcement, and what the severity is for each.
+
+**Coverage as of 2026-05-09:** 5/6 axes enforced at error level in `components/custom/`. Axis 6 is codemod-only (enforced at vendor-pull time via `uui:add`, not at write time).
+
+---
+
+## Coverage Table
+
+| Axis | Name | Codemod (`uui:add`) | ESLint Rule | Scope | Severity |
+|------|------|---------------------|-------------|-------|----------|
+| 1 | Motion tokens | `applyMotionTokens()` | `better-tailwindcss/no-restricted-classes` | `custom/` | `error` |
+| 2 | Focus ring | `applyFocusRing()` | `better-tailwindcss/no-restricted-classes` | `custom/` | `error` |
+| 3 | Disabled state | `applyDisabledState()` | `better-tailwindcss/no-restricted-classes` | `custom/` | `error` |
+| 4 | Token syntax (Style 2) | `applyTokenSyntax()` | `bos-local/prefer-mapped-tokens` | `custom/` | `error` |
+| 5 | devProps | n/a | `bos-local/require-dev-props` | all `*.tsx` | `error` |
+| 6 | Wrapper import retention | `applyWrapperImportRetention()` | **n/a** (codemod only) | `base/` | n/a |
+
+### Axis-Adjacent Rule
+
+| Rule | Covers | ESLint Rule | Severity |
+|------|--------|-------------|----------|
+| Border thickness | `border-2` forbidden (BOS shape rule) | `bos-local/no-border-2` | `error` |
+
+---
+
+## Axis 1 — Motion Tokens
+
+**What it catches:** Stock UUI/Tailwind duration and easing classes that should be replaced with BOS motion tokens.
+
+**ESLint pattern (in `eslint.config.mjs`):**
+
+```javascript
+{
+  pattern: '\\b(?:duration-(?:75|100|150|200|300|500|700|1000)|ease-(?:out|in|in-out|linear))\\b',
+  message: 'Use BOS motion tokens (duration-micro/short/medium, ease-motion-out/inout). See ds/transforms/motion.mdx.',
+}
+```
+
+**Replacements:**
+
+| Before | After | Semantic |
+|--------|-------|---------|
+| `duration-150` | `duration-micro` | Micro (hover, state change) |
+| `duration-200` | `duration-micro` | Micro |
+| `duration-300` | `duration-short` | Short (slide, fade) |
+| `ease-out` | `ease-motion-out` | Decelerate (enter) |
+| `ease-in-out` | `ease-motion-inout` | Balanced curve |
+
+**Codemod gap:** `ease-linear` is detected but NOT auto-transformed — apply manually.
+
+See: [Axis 1 Motion Tokens](../transforms/motion.mdx)
+
+---
+
+## Axis 2 — Focus Ring
+
+**What it catches:** Stock focus ring utilities that should be replaced with BOS glow-ring combination.
+
+**ESLint pattern:**
+
+```javascript
+{
+  pattern: '\\bring-(?:2|offset-2)\\b',
+  message: 'Replace ring-2/ring-offset-2 with ring-1 shadow-focus-ring. See ds/transforms/focus-ring.mdx.',
+}
+```
+
+**Replacement:**
+
+```tsx
+// Before
+className="focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
+
+// After
+className="focus:ring-1 focus:shadow-focus-ring"
+```
+
+See: [Axis 2 Focus Ring](../transforms/focus-ring.mdx)
+
+---
+
+## Axis 3 — Disabled State
+
+**What it catches:** Raw gray classes on disabled variants that should use semantic BOS tokens.
+
+**ESLint pattern:**
+
+```javascript
+{
+  pattern: '\\bdisabled:(?:bg|text|border)-gray-\\d+\\b',
+  message: 'Replace disabled gray with semantic token (disabled:bg-bg-disabled_subtle, disabled:text-fg-disabled). See ds/transforms/disabled-state.mdx.',
+}
+```
+
+**Replacement:**
+
+```tsx
+// Before
+className="disabled:bg-gray-100 disabled:text-gray-400"
+
+// After
+className="disabled:bg-bg-disabled_subtle disabled:text-fg-disabled"
+```
+
+See: [Axis 3 Disabled State](../transforms/disabled-state.mdx)
+
+---
+
+## Axis 4 — Token Syntax (Style 2)
+
+**What it catches:** Style 1 CSS variable bracket notation (`bg-[var(--token)]`) which silently breaks opacity modifiers.
+
+**ESLint rule:** `bos-local/prefer-mapped-tokens` (upgraded from `warn` to `error` in Wave 3).
+
+**Critical:** The `/30` opacity modifier is silently ignored on bracket notation. Style 2 fixes this.
+
+```tsx
+// Before (broken — /30 is silently ignored)
+className="bg-[var(--bg-primary)]/30"
+
+// After (correct)
+className="bg-bg-primary/30"
+```
+
+See: [Axis 4 Token Syntax](../transforms/token-syntax.mdx)
+
+---
+
+## Axis 5 — devProps
+
+**What it catches:** Components missing the `data-component` attribute required for component tracing and dev tooling.
+
+**ESLint rule:** `bos-local/require-dev-props` (error level, blocks CI).
+
+```tsx
+// Required on every component root:
+import { devProps } from '@/lib/utils/dev-props';
+
+export function Button({ children }: Props) {
+  return (
+    <button {...devProps('Button')} className="...">
+      {children}
+    </button>
+  );
+}
+```
+
+See: [Axis 5 devProps](../transforms/dev-props.mdx)
+
+---
+
+## Axis 6 — Wrapper Import Retention (Codemod Only)
+
+**What it does:** Ensures that after a `bun run uui:add <primitive>` pull, any component in `components/base/` that imported from a now-wrapped primitive is rewritten to import from the `ds/` wrapper instead of the raw `base/` path.
+
+**Why no ESLint rule:** Axis 6 operates on `components/base/` source files which are vendor-pull artifacts, not developer-authored files. Write-time enforcement via ESLint would produce false positives on legitimately direct `base/` imports in non-wrapper contexts.
+
+**Codemod:** `applyWrapperImportRetention()` in `scripts/uui-apply-transformations.ts`. Parameterized over `WRAPPED_PRIMITIVES` — add new entries there when new wrappers are created.
+
+**Current wrapped primitives (PRD 020 final state, 5 total):**
+
+| Primitive | Shape | ds/ path |
+|-----------|-------|----------|
+| `buttons/button` | C | `components/ds/buttons/button.tsx` |
+| `tabs/tabs` | C | `components/ds/tabs/tabs.tsx` |
+| `modals/modal` | C | `components/ds/modals/modal.tsx` |
+| `featured-icon/featured-icon` | C | `components/ds/foundations/featured-icon.tsx` |
+| `tooltip/tooltip` | A | `components/ds/tooltips/tooltip.tsx` |
+
+See: [Axis 6 Wrapper Import Retention](../transforms/wrapper-import-retention.mdx)
+
+---
+
+## The no-border-2 Rule (Axis-Adjacent)
+
+`border-2` is a valid Tailwind class — no class-restriction plugin flags it. BOS forbids all borders thicker than 1px per the shape rule. A custom rule handles this gap.
+
+**ESLint rule:** `bos-local/no-border-2` (error + autofix).
+
+**Autofix:** `border-2` → `border` (1px default).
+
+```tsx
+// Before — blocked by bos-local/no-border-2
+className="border-2 border-border-primary"
+
+// After — autofix applies
+className="border border-border-primary"
+```
+
+**Known gap:** `border-4` is also forbidden but currently unguarded. No existing rule pattern catches it. If `border-4` appears in `components/custom/`, it passes lint silently — manual review or a future rule extension is needed.
+
+See: [Shape Rules](../shape/shape.mdx) (when authored)
+
+---
+
+## Coverage Score
+
+**5/6 axes enforced at write-time** (Axes 1–5 via ESLint error-level rules in `components/custom/`; Axis 6 is codemod-only).
+
+**1/6 codemod-only** (Axis 6 — enforced at vendor-pull time, not write time).
+
+**Pre-PRD 020 baseline:** 2.5/5 — `prefer-mapped-tokens` was `warn`, Axes 1–3 had no enforcement, `no-border-2` did not exist, `require-dev-props` was already `error`.
+
+---
+
+## How to Add a New Rule
+
+When a new design system constraint needs enforcement:
+
+1. Determine if `better-tailwindcss/no-restricted-classes` can cover it (pattern + message)
+2. If yes: add a `restrict` entry to the `no-restricted-classes` config in `eslint.config.mjs`
+3. If no (the class is valid Tailwind): author a new rule in `eslint-rules/` using `ESLintUtils.RuleCreator`
+4. Add tests in `tests/unit/scripts/` with lint mock
+5. Update this doc with the new row
+6. Run `bun run lint` on `components/custom/` to get a baseline count before shipping

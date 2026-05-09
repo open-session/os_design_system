@@ -43,7 +43,7 @@ export function ProjectStyleCard({
     >
       <Link
         href={href}
-        className="group relative h-full flex flex-col p-4 gap-3 rounded-xl bg-bg-secondary border border-border-secondary hover:bg-bg-secondary hover:border-border-brand transition-all duration-150"
+        className="group relative h-full flex flex-col p-4 gap-3 rounded-xl bg-bg-secondary border border-border-secondary hover:bg-bg-secondary hover:border-border-brand transition-all duration-quick"
       >
         {/* Row 1: Icon container (top-left) + optional New badge */}
         <div className="flex items-start justify-between">
@@ -56,7 +56,7 @@ export function ProjectStyleCard({
                 New
               </span>
             )}
-            <ArrowRight className="w-4 h-4 text-fg-tertiary opacity-0 group-hover:opacity-100 transition-all duration-150 flex-shrink-0 group-hover:translate-x-0.5" />
+            <ArrowRight className="w-4 h-4 text-fg-tertiary opacity-0 group-hover:opacity-100 transition-all duration-quick flex-shrink-0 group-hover:translate-x-0.5" />
           </div>
         </div>
 

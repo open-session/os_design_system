@@ -1,0 +1,100 @@
+---
+title: 'Design System/Transforms/Disabled State'
+rule: 'Replace disabled:bg-gray-100 / disabled:text-gray-400 with BOS semantic disabled tokens'
+scope: 'base/ normalized by codemod at vendor-pull time; custom/ flagged by ESLint at commit time'
+detection-command: "rg '\\bdisabled:(?:bg|text|border)-gray-\\d+\\b' components/"
+enforcement:
+  codemod: 'applyDisabledStates'
+  eslint-rule: 'better-tailwindcss/no-restricted-classes'
+  scope: 'both'
+  severity: 'error'
+last-audited: '2026-05-09'
+version: 1
+tags: ['transform', 'disabled-state', 'accessibility', 'codemod-axis-3', 'design-system']
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Transforms/Disabled State" />
+
+# Disabled State (Axis 3)
+
+## TL;DR
+
+BOS replaces UUI's hardcoded `disabled:bg-gray-100 disabled:text-gray-400` patterns with semantic disabled-state tokens that theme correctly in both light and dark mode. Raw gray classes are theme-unaware — they render the correct muted look in light mode but fail in dark mode.
+
+---
+
+## The Rule
+
+Replace vendor-stock disabled utilities with BOS semantic tokens:
+
+| Vendor stock (UUI) | BOS token | Role |
+|--------------------|-----------|------|
+| `disabled:bg-gray-100` | `disabled:bg-bg-disabled_subtle` | Disabled background |
+| `disabled:bg-gray-200` | `disabled:bg-bg-disabled` | Disabled background (stronger) |
+| `disabled:text-gray-400` | `disabled:text-fg-disabled` | Disabled text |
+| `disabled:text-gray-500` | `disabled:text-fg-disabled` | Disabled text |
+| `disabled:border-gray-200` | `disabled:border-border-disabled` | Disabled border |
+| `disabled:cursor-not-allowed` | `disabled:cursor-not-allowed` | No change (semantic) |
+
+All BOS disabled tokens are defined in `brand.css` and resolve via CSS custom properties to the correct values for both light and dark themes.
+
+---
+
+## Where It's Enforced
+
+| Layer | Mechanism | Scope | Severity |
+|-------|-----------|-------|----------|
+| Vendor pull | `applyDisabledStates()` in `scripts/uui-apply-transformations.ts` | `components/base/` | Auto-transform |
+| Write-time | `better-tailwindcss/no-restricted-classes` in `eslint.config.mjs` | `components/custom/` | `error` |
+| Manual review | `rg` detection command above | All | Audit |
+
+---
+
+## Before / After
+
+```before
+// Vendor-stock disabled state (BEFORE axis-3)
+<input
+  className="bg-white text-gray-900
+    disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+/>
+```
+
+```after
+// BOS semantic disabled state (AFTER axis-3)
+<input
+  className="bg-bg-primary text-fg-primary
+    disabled:bg-bg-disabled_subtle disabled:text-fg-disabled disabled:cursor-not-allowed"
+/>
+```
+
+---
+
+## Why
+
+**Dark mode correctness.** `disabled:bg-gray-100` is #f3f4f6 — this looks correct on a white background in light mode but is nearly invisible on a dark background. `disabled:bg-bg-disabled_subtle` resolves to the correct muted surface for each theme.
+
+**Design token consistency.** Using semantic tokens means the entire disabled treatment can be adjusted brand-wide by changing a CSS custom property. Raw gray classes require finding and changing every instance.
+
+**UUI v8 compatibility.** UUI v8 ships its own semantic disabled tokens. Axis 3 ensures BOS components align with UUI's token vocabulary, not a divergent hardcoded approach.
+
+---
+
+## Detection Command
+
+```bash
+rg '\bdisabled:(?:bg|text|border)-gray-\d+\b' components/
+```
+
+Expected: 0 results in `components/base/` and `components/custom/`.
+
+---
+
+## Related
+
+- [Motion (Axis 1)](./motion.mdx)
+- [Focus Ring (Axis 2)](./focus-ring.mdx)
+- [Token Syntax (Axis 4)](./token-syntax.mdx)
+- Codemod: `scripts/uui-apply-transformations.ts` → `applyDisabledStates()`

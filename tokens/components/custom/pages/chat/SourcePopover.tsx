@@ -61,7 +61,7 @@ function SourceItem({ source }: { source: SourceInfo }) {
       href={source.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-start gap-2.5 px-2.5 py-2 rounded-lg hover:bg-bg-tertiary transition-all duration-200 group"
+      className="flex items-start gap-2.5 px-2.5 py-2 rounded-lg hover:bg-bg-tertiary transition-all duration-standard group"
     >
       {/* Favicon */}
       <span className="flex-shrink-0">

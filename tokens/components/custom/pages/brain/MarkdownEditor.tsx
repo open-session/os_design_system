@@ -41,8 +41,8 @@ interface MarkdownEditorProps {
 type ViewMode = 'preview' | 'source';
 
 // Consistent icon button styles
-const iconButtonBase = "p-2 rounded-lg transition-all duration-200 group hover:bg-bg-tertiary";
-const iconBase = "w-4 h-4 transition-colors duration-200";
+const iconButtonBase = "p-2 rounded-lg transition-all duration-standard group hover:bg-bg-tertiary";
+const iconBase = "w-4 h-4 transition-colors duration-standard";
 const iconDefault = `${iconBase} text-fg-tertiary group-hover:text-fg-primary`;
 const iconDanger = `${iconBase} text-fg-tertiary group-hover:text-fg-error-primary`;
 
@@ -519,7 +519,7 @@ export function MarkdownEditor({
             />
             <button
               onClick={() => setViewMode('source')}
-              className={`relative z-10 w-7 h-7 flex items-center justify-center rounded-md transition-colors duration-200 ${
+              className={`relative z-10 w-7 h-7 flex items-center justify-center rounded-md transition-colors duration-standard ${
                 viewMode === 'source' 
                   ? 'text-fg-primary' 
                   : 'text-fg-tertiary hover:text-fg-secondary'
@@ -530,7 +530,7 @@ export function MarkdownEditor({
             </button>
             <button
               onClick={() => setViewMode('preview')}
-              className={`relative z-10 w-7 h-7 flex items-center justify-center rounded-md transition-colors duration-200 ${
+              className={`relative z-10 w-7 h-7 flex items-center justify-center rounded-md transition-colors duration-standard ${
                 viewMode === 'preview' 
                   ? 'text-fg-primary' 
                   : 'text-fg-tertiary hover:text-fg-secondary'

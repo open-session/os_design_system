@@ -45,7 +45,7 @@ export function Brandmark({ className = '', size = 24, customLogoUrl }: Brandmar
         alt="Brand Operating System"
         fill
         priority
-        className="object-contain transition-opacity duration-200"
+        className="object-contain transition-opacity duration-standard"
         sizes={`${size}px`}
       />
     </div>

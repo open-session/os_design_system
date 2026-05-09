@@ -251,7 +251,7 @@ export function SeatTypePicker({
                       }
                       className={`
                         w-full flex items-center gap-4 px-4 py-3 rounded-lg text-left
-                        transition-colors duration-150
+                        transition-colors duration-quick
                         ${isCurrentRole
                           ? 'bg-bg-tertiary ring-1 ring-border-primary'
                           : 'hover:bg-bg-tertiary'

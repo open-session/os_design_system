@@ -29,8 +29,8 @@ interface PDFViewerProps {
 }
 
 // Consistent icon button styles (matching MarkdownEditor)
-const iconButtonBase = "p-2 rounded-lg transition-all duration-200 group hover:bg-bg-tertiary";
-const iconDefault = "w-4 h-4 transition-colors duration-200 text-fg-tertiary group-hover:text-fg-primary";
+const iconButtonBase = "p-2 rounded-lg transition-all duration-standard group hover:bg-bg-tertiary";
+const iconDefault = "w-4 h-4 transition-colors duration-standard text-fg-tertiary group-hover:text-fg-primary";
 
 function formatFileSize(bytes: number | undefined): string {
   if (!bytes) return '';

@@ -1363,14 +1363,14 @@ export function ChatInterface() {
       {!hasMessages && <PlusesTexture />}
       {hasMessages && (
         <div 
-          className="fixed left-0 bottom-0 top-14 z-0 bg-bg-primary lg:left-[var(--sidebar-width)] transition-[left,right] duration-300 ease-out"
+          className="fixed left-0 bottom-0 top-14 z-0 bg-bg-primary lg:left-[var(--sidebar-width)] transition-[left,right] duration-moderate ease-motion-out"
           style={{ right: chatRightOffset }}
         />
       )}
 
       <div
         {...devProps('ChatInterface')}
-        className={`fixed left-0 bottom-0 top-14 z-10 flex flex-col lg:left-[var(--sidebar-width)] transition-[left,right] duration-300 ease-out ${hasMessages ? '' : 'items-center justify-center'}`}
+        className={`fixed left-0 bottom-0 top-14 z-10 flex flex-col lg:left-[var(--sidebar-width)] transition-[left,right] duration-moderate ease-motion-out ${hasMessages ? '' : 'items-center justify-center'}`}
         style={{ right: chatRightOffset }}
       >
         {/* Chat Mode */}
@@ -1629,10 +1629,10 @@ export function ChatInterface() {
                   <div
                     className={`
                       relative rounded-xl
-                      border transition-[border-color,box-shadow] duration-200
+                      border transition-[border-color,box-shadow] duration-standard
                       bg-bg-secondary shadow-sm
                       ${isDragging || isFocused || isListening
-                        ? 'border-border-brand-solid shadow-lg shadow-bg-brand-solid/20 ring-2 ring-border-brand-solid/30'
+                        ? 'border-border-brand-solid shadow-lg shadow-bg-brand-solid/20 ring-1 ring-border-brand-solid/30'
                         : 'border-border-primary hover:border-fg-tertiary'
                       }
                     `}

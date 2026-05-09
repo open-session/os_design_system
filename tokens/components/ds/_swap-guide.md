@@ -299,6 +299,8 @@ The campaign retrospective documents predictions vs reality, what the framework 
 
 ## References
 
+- **Storybook (canonical, browsable):** Design System → Swap Guide
+- [`components/ds/swap-guide.mdx`](./swap-guide.mdx) — Storybook-discoverable version of this doc (PRD 020 Wave 4c, published)
 - [`components/README.md`](../README.md) — three-folder decision tree
 - [`components/ds/README.md`](./README.md) — formula spec architecture
 - [`components/custom/README.md`](../custom/README.md) — pages-vs-shared taxonomy

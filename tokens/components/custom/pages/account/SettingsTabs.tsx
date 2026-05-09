@@ -91,7 +91,7 @@ export function SettingsTabs({ tabs, activeTab, onTabChange }: SettingsTabsProps
             rounded-md
             text-fg-tertiary hover:text-fg-primary
             hover:bg-bg-quaternary
-            transition-colors duration-150
+            transition-colors duration-quick
           "
           aria-label="Scroll tabs left"
           initial={{ opacity: 0, scale: 0.8 }}
@@ -183,7 +183,7 @@ export function SettingsTabs({ tabs, activeTab, onTabChange }: SettingsTabsProps
                     px-2 py-0.5
                     text-xs font-medium
                     rounded-full
-                    transition-colors duration-150
+                    transition-colors duration-quick
                     ${isActive
                       ? 'bg-bg-tertiary text-fg-tertiary'
                       : 'bg-bg-quaternary text-fg-quaternary'
@@ -209,7 +209,7 @@ export function SettingsTabs({ tabs, activeTab, onTabChange }: SettingsTabsProps
             rounded-md
             text-fg-tertiary hover:text-fg-primary
             hover:bg-bg-quaternary
-            transition-colors duration-150
+            transition-colors duration-quick
           "
           aria-label="Scroll tabs right"
           initial={{ opacity: 0, scale: 0.8 }}

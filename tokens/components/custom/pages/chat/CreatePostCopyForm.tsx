@@ -202,7 +202,7 @@ function Chip({ selected, onClick, children, disabled }: ChipProps) {
       disabled={disabled}
       className={`
         inline-flex items-center gap-1.5 px-2.5 py-1.5
-        rounded-md text-xs font-medium transition-all duration-150
+        rounded-md text-xs font-medium transition-all duration-quick
         ${selected
           ? 'bg-bg-brand-primary text-fg-brand-primary ring-1 ring-border-brand-solid'
           : 'bg-bg-primary text-fg-secondary ring-1 ring-border-primary hover:ring-border-brand-solid hover:text-fg-primary'
@@ -233,7 +233,7 @@ function SegmentedControl<T extends string>({ options, value, onChange, disabled
           onClick={() => onChange(option.id)}
           disabled={disabled}
           className={`
-            px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-150
+            px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-quick
             ${value === option.id
               ? 'bg-bg-primary text-fg-primary shadow-sm'
               : 'text-fg-tertiary hover:text-fg-secondary'
@@ -332,7 +332,7 @@ function GoalTabSelector({ goals, activeGoalId, onChange }: GoalTabSelectorProps
                 rounded-md
                 text-fg-tertiary hover:text-fg-primary
                 hover:bg-bg-quaternary
-                transition-colors duration-150
+                transition-colors duration-quick
               "
               aria-label="Scroll goals left"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -433,7 +433,7 @@ function GoalTabSelector({ goals, activeGoalId, onChange }: GoalTabSelectorProps
                 rounded-md
                 text-fg-tertiary hover:text-fg-primary
                 hover:bg-bg-quaternary
-                transition-colors duration-150
+                transition-colors duration-quick
               "
               aria-label="Scroll goals right"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -465,7 +465,7 @@ function ChannelChip({ channel, selected, onClick }: ChannelChipProps) {
       onClick={onClick}
       className={`
         inline-flex items-center gap-1.5 px-2.5 py-1.5
-        rounded-md text-xs font-medium transition-all duration-150
+        rounded-md text-xs font-medium transition-all duration-quick
         ${selected
           ? 'bg-bg-brand-primary text-fg-brand-primary ring-1 ring-border-brand-solid'
           : 'bg-bg-primary text-fg-secondary ring-1 ring-border-primary hover:ring-border-brand-solid hover:text-fg-primary'
@@ -584,9 +584,9 @@ function CompactSelect<T extends string | number>({ value, onChange, options, la
             inline-flex items-center gap-1.5 px-2.5 py-1.5
             rounded-md text-xs font-medium
             bg-bg-primary text-fg-primary
-            ring-1 transition-all duration-150 cursor-pointer
+            ring-1 transition-all duration-quick cursor-pointer
             ${isOpen 
-              ? 'ring-2 ring-border-brand-solid' 
+              ? 'ring-1 ring-border-brand-solid' 
               : 'ring-border-primary hover:ring-border-brand-solid'
             }
           `}

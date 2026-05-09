@@ -304,7 +304,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreate }: CreateSpaceModal
               border
               text-fg-primary placeholder:text-fg-placeholder
               focus:outline-hidden focus:ring-1 focus:ring-brand focus:shadow-focus-ring focus:border-transparent
-              transition-all duration-200
+              transition-all duration-standard
               disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-bg-disabled
               ${hasValidationError ? 'border-border-error' : 'border-border-primary'}
             `}
@@ -339,7 +339,7 @@ export function CreateSpaceModal({ isOpen, onClose, onCreate }: CreateSpaceModal
               border border-border-primary
               text-fg-primary placeholder:text-fg-placeholder
               focus:outline-hidden focus:ring-1 focus:ring-brand focus:shadow-focus-ring focus:border-transparent
-              transition-all duration-200
+              transition-all duration-standard
               resize-none
               disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-bg-disabled
             "
@@ -416,11 +416,11 @@ export function CreateSpaceModal({ isOpen, onClose, onCreate }: CreateSpaceModal
                   className={`
                     w-full aspect-square rounded-xl
                     flex items-center justify-center
-                    transition-all duration-200
+                    transition-all duration-standard
                     focus:outline-hidden focus:ring-1 focus:ring-brand focus:shadow-focus-ring focus:ring-offset-1
                     disabled:opacity-50 disabled:cursor-not-allowed
                     ${selectedIcon === iconName
-                      ? 'bg-bg-brand-primary ring-2 ring-focus-ring text-fg-brand-primary'
+                      ? 'bg-bg-brand-primary ring-1 ring-focus-ring text-fg-brand-primary'
                       : 'bg-bg-tertiary text-fg-tertiary hover:bg-bg-secondary hover:text-fg-primary'
                     }
                   `}

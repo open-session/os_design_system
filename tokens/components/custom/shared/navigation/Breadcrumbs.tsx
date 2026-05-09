@@ -68,7 +68,7 @@ export function Breadcrumbs() {
                 rounded
                 text-fg-secondary hover:text-fg-primary
                 hover:bg-bg-tertiary
-                transition-all duration-150
+                transition-all duration-quick
               "
             >
               {crumb.label}

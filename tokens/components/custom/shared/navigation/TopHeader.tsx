@@ -84,7 +84,7 @@ export function TopHeader({ children }: TopHeaderProps) {
                   w-9 h-9
                   rounded-md
                   hover:bg-bg-tertiary
-                  transition-all duration-150
+                  transition-all duration-quick
                 "
                 title="Home"
               >
@@ -113,7 +113,7 @@ export function TopHeader({ children }: TopHeaderProps) {
                 border border-border-secondary
                 text-fg-quaternary
                 hover:bg-bg-tertiary hover:border-border-primary hover:text-fg-tertiary
-                transition-all duration-150
+                transition-all duration-quick
                 text-sm
                 h-8
               "
@@ -134,7 +134,7 @@ export function TopHeader({ children }: TopHeaderProps) {
                 rounded-md
                 text-fg-tertiary hover:text-fg-primary
                 hover:bg-bg-tertiary
-                transition-all duration-150
+                transition-all duration-quick
               "
               title="Search"
             >
@@ -152,7 +152,7 @@ export function TopHeader({ children }: TopHeaderProps) {
                   rounded-md
                   text-fg-tertiary hover:text-fg-primary
                   hover:bg-bg-tertiary
-                  transition-all duration-150
+                  transition-all duration-quick
                   ${isNotificationsOpen ? 'bg-bg-tertiary text-fg-primary' : ''}
                 `}
                 title="Notifications"
@@ -178,7 +178,7 @@ export function TopHeader({ children }: TopHeaderProps) {
                   rounded-md
                   text-fg-tertiary hover:text-fg-primary
                   hover:bg-bg-tertiary
-                  transition-all duration-150
+                  transition-all duration-quick
                   ${isHelpOpen ? 'bg-bg-tertiary text-fg-primary' : ''}
                 `}
                 title="Help"
@@ -203,7 +203,7 @@ export function TopHeader({ children }: TopHeaderProps) {
                   w-9 h-9
                   rounded-md
                   hover:bg-bg-tertiary
-                  transition-all duration-150
+                  transition-all duration-quick
                   ${isProfileOpen ? 'bg-bg-tertiary' : ''}
                 `}
                 title="Profile"

@@ -7,7 +7,7 @@ import { FeaturedIcon } from './featured-icon';
  * Imports through `@/components/base` resolve here, NOT to the upstream UUI vendor file.
  */
 const meta: Meta<typeof FeaturedIcon> = {
-  title: 'Design System/Foundations/FeaturedIcon',
+  title: 'Base/Foundations/FeaturedIcon',
   component: FeaturedIcon,
   tags: ['autodocs'],
 };

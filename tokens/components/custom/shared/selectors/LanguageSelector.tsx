@@ -58,7 +58,7 @@ export function LanguageSelector({ variant = 'dropdown' }: LanguageSelectorProps
             w-full flex items-center justify-between
             px-4 py-2
             text-left
-            transition-colors duration-150
+            transition-colors duration-quick
             disabled:opacity-50
             ${isOpen
               ? 'bg-bg-tertiary text-fg-primary'
@@ -75,7 +75,7 @@ export function LanguageSelector({ variant = 'dropdown' }: LanguageSelectorProps
             </span>
           </div>
           <ChevronDown 
-            className={`w-4 h-4 text-fg-tertiary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            className={`w-4 h-4 text-fg-tertiary transition-transform duration-standard ${isOpen ? 'rotate-180' : ''}`}
           />
         </button>
 
@@ -105,7 +105,7 @@ export function LanguageSelector({ variant = 'dropdown' }: LanguageSelectorProps
                         w-full flex items-center justify-between
                         px-4 py-2
                         text-left text-sm
-                        transition-colors duration-150
+                        transition-colors duration-quick
                         ${isSelected 
                           ? 'bg-bg-tertiary text-fg-primary' 
                           : 'text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary'
@@ -140,7 +140,7 @@ export function LanguageSelector({ variant = 'dropdown' }: LanguageSelectorProps
             px-4 py-3.5
             rounded-xl
             text-left
-            transition-colors duration-150
+            transition-colors duration-quick
             disabled:opacity-50
             ${isOpen
               ? 'bg-bg-tertiary text-fg-primary'
@@ -158,7 +158,7 @@ export function LanguageSelector({ variant = 'dropdown' }: LanguageSelectorProps
             </div>
           </div>
           <ChevronDown 
-            className={`w-4 h-4 text-fg-quaternary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+            className={`w-4 h-4 text-fg-quaternary transition-transform duration-standard ${isOpen ? 'rotate-180' : ''}`} 
           />
         </button>
 
@@ -188,7 +188,7 @@ export function LanguageSelector({ variant = 'dropdown' }: LanguageSelectorProps
                         w-full flex items-center justify-between
                         px-4 py-3
                         text-left text-sm
-                        transition-colors duration-150
+                        transition-colors duration-quick
                         border-b border-border-secondary last:border-b-0
                         ${isSelected 
                           ? 'bg-bg-tertiary text-fg-primary' 
@@ -236,7 +236,7 @@ export function LanguageSelector({ variant = 'dropdown' }: LanguageSelectorProps
           <span>{localeNames[currentLocale]}</span>
         </div>
         <ChevronDown 
-          className={`w-4 h-4 text-fg-tertiary transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+          className={`w-4 h-4 text-fg-tertiary transition-transform duration-standard ${isOpen ? 'rotate-180' : ''}`} 
         />
       </button>
 

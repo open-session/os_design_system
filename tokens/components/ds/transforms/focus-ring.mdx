@@ -1,0 +1,98 @@
+---
+title: 'Design System/Transforms/Focus Ring'
+rule: 'Replace ring-2 ring-offset-2 with ring-1 shadow-focus-ring; replace ring-brand-500/30 with ring-ring-brand'
+scope: 'base/ normalized by codemod at vendor-pull time; custom/ flagged by ESLint at commit time'
+detection-command: "rg '\\bring-(?:2|offset-2)\\b' components/"
+enforcement:
+  codemod: 'applyFocusRing'
+  eslint-rule: 'better-tailwindcss/no-restricted-classes'
+  scope: 'both'
+  severity: 'error'
+last-audited: '2026-05-09'
+version: 1
+tags: ['transform', 'focus-ring', 'accessibility', 'codemod-axis-2', 'design-system']
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Transforms/Focus Ring" />
+
+# Focus Ring (Axis 2)
+
+## TL;DR
+
+BOS replaces Tailwind's stock focus ring (`ring-2 ring-offset-2`) with a custom glow-ring combination (`ring-1 shadow-focus-ring`) that matches the BOS focus treatment defined in `brand.css`. The stock ring is visually heavier and uses a different offset approach than the BOS design spec.
+
+---
+
+## The Rule
+
+Replace vendor-stock focus utilities with BOS semantic tokens:
+
+| Vendor stock (UUI) | BOS token | Note |
+|--------------------|-----------|------|
+| `ring-2` | `ring-1` | BOS uses 1px ring thickness |
+| `ring-offset-2` | `shadow-focus-ring` | Glow effect replaces offset |
+| `ring-brand-500/30` | `ring-ring-brand` | Semantic brand ring color |
+| `focus:ring-2 focus:ring-offset-2` | `focus:ring-1 focus:shadow-focus-ring` | Full replacement |
+
+`shadow-focus-ring` is defined in `brand.css` as a box-shadow that produces the BOS glow effect. It replaces `ring-offset-2` (which adds a white gap between the element and the ring) with a softer outer glow.
+
+---
+
+## Where It's Enforced
+
+| Layer | Mechanism | Scope | Severity |
+|-------|-----------|-------|----------|
+| Vendor pull | `applyFocusRing()` in `scripts/uui-apply-transformations.ts` | `components/base/` | Auto-transform |
+| Write-time | `better-tailwindcss/no-restricted-classes` in `eslint.config.mjs` | `components/custom/` | `error` |
+| Manual review | `rg` detection command above | All | Audit |
+
+---
+
+## Before / After
+
+```before
+// Vendor-stock focus ring (BEFORE axis-2)
+<button
+  className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500/30"
+>
+```
+
+```after
+// BOS focus ring (AFTER axis-2)
+<button
+  className="focus:outline-hidden focus:ring-1 focus:shadow-focus-ring focus:ring-ring-brand"
+>
+```
+
+**Important:** When `focus:ring-offset-2` is already accompanied by `focus:shadow-focus-ring` on the same element, simply remove `focus:ring-offset-2` — do not add a second `focus:shadow-focus-ring`. The codemod handles this, but manual edits can introduce duplicates.
+
+---
+
+## Why
+
+**Design alignment.** The UUI stock `ring-2` (2px solid ring) and `ring-offset-2` (white 2px gap) produce a heavier appearance than BOS's design spec. The BOS focus indicator is a 1px ring with a subtle glow — more refined, less obtrusive for keyboard users while remaining accessible.
+
+**Accessibility preserved.** The BOS focus ring meets WCAG 2.1 AA requirements. The glow (`shadow-focus-ring`) provides additional perceptual differentiation for users with low-contrast vision without relying on offset alone.
+
+**Token semantics.** `ring-ring-brand` adapts to light/dark themes via the CSS custom property system. `ring-brand-500/30` is hardcoded to a specific brand color and does not theme.
+
+---
+
+## Detection Command
+
+```bash
+rg '\bring-(?:2|offset-2)\b' components/
+```
+
+Expected: 0 results in `components/base/` and `components/custom/`. Brand.css definitions are not violations.
+
+---
+
+## Related
+
+- [Motion (Axis 1)](./motion.mdx)
+- [Disabled State (Axis 3)](./disabled-state.mdx)
+- [Token Syntax (Axis 4)](./token-syntax.mdx)
+- Codemod: `scripts/uui-apply-transformations.ts` → `applyFocusRing()`

@@ -48,7 +48,7 @@ export function MobileHeader({ onBrandClick }: MobileHeaderProps) {
                 rounded-md
                 text-fg-tertiary hover:text-fg-primary
                 hover:bg-bg-tertiary
-                transition-all duration-150
+                transition-all duration-quick
                 min-w-[44px] min-h-[44px]
               "
               title="Notifications"
@@ -66,7 +66,7 @@ export function MobileHeader({ onBrandClick }: MobileHeaderProps) {
                 rounded-md
                 text-fg-tertiary hover:text-fg-primary
                 hover:bg-bg-tertiary
-                transition-all duration-150
+                transition-all duration-quick
                 min-w-[44px] min-h-[44px]
               "
               title="Search"

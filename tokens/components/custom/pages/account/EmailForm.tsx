@@ -66,9 +66,9 @@ function Toggle({
       onClick={() => onChange(!enabled)}
       className={`
         relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer
-        rounded-full border-2 border-transparent
-        transition-colors duration-200 ease-in-out
-        focus:outline-hidden focus:ring-1 focus:ring-brand focus:shadow-focus-ring focus:ring-offset-2
+        rounded-full border border-transparent
+        transition-colors duration-standard ease-motion-inout
+        focus:outline-hidden focus:ring-1 focus:ring-brand focus:shadow-focus-ring
         ${enabled ? 'bg-bg-brand-solid' : 'bg-bg-quaternary'}
       `}
     >
@@ -76,7 +76,7 @@ function Toggle({
         className={`
           pointer-events-none inline-block h-5 w-5 transform
           rounded-full bg-white shadow ring-0
-          transition duration-200 ease-in-out
+          transition duration-standard ease-motion-inout
           ${enabled ? 'translate-x-5' : 'translate-x-0'}
         `}
       />
@@ -246,7 +246,7 @@ export function EmailForm() {
                   px-3 py-1.5
                   rounded-lg
                   text-sm font-medium
-                  transition-all duration-150
+                  transition-all duration-quick
                   ${provider.connected
                     ? 'bg-transparent border border-border-secondary text-fg-tertiary hover:text-fg-error-primary hover:border-border-error'
                     : 'bg-bg-brand-primary border border-border-brand text-fg-brand-primary hover:bg-bg-brand-primary-hover'
@@ -386,7 +386,7 @@ export function EmailForm() {
                   rounded-lg
                   text-sm font-medium text-fg-brand-primary
                   hover:bg-bg-brand-primary-hover
-                  transition-all duration-150
+                  transition-all duration-quick
                 "
               >
                 Add
@@ -404,7 +404,7 @@ export function EmailForm() {
                   text-sm font-medium text-fg-tertiary
                   hover:text-fg-secondary
                   hover:border-border-primary
-                  transition-all duration-150
+                  transition-all duration-quick
                 "
               >
                 Cancel

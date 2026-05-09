@@ -144,9 +144,9 @@ export function AddFilesModal({
         onClick={() => fileInputRef.current?.click()}
         onKeyDown={handleKeyDown}
         className={`
-          border-2 border-dashed rounded-xl p-8
+          border border-dashed rounded-xl p-8
           flex flex-col items-center justify-center
-          cursor-pointer transition-all duration-200
+          cursor-pointer transition-all duration-standard
           focus:outline-hidden focus:ring-1 focus:ring-brand focus:shadow-focus-ring
           ${isDragging 
             ? 'border-border-brand-solid bg-bg-brand-primary scale-[1.02]' 

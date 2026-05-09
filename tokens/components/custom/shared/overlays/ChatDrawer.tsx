@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'motion/react';
 import { Lock01, LockUnlocked01, X as CloseIcon } from '@untitledui-pro/icons/line';
-import { Tooltip } from '@/components/base/base/tooltip/tooltip';
+import { Tooltip } from '@/components/base';
 import { useChatDrawerStore } from '@/stores/chat-drawer-store';
 import { useDrawerWidth, DRAWER_MIN_WIDTH, DRAWER_MAX_VW_RATIO } from '@/hooks/useDrawerWidth';
 import { DrawerChat } from './DrawerChat';
@@ -138,7 +138,7 @@ export function ChatDrawer() {
                     : isResizing
                       ? 'cursor-col-resize bg-bg-brand-solid/40'
                       : 'cursor-col-resize bg-transparent hover:bg-border-brand/40'
-                } focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border-brand`}
+                } focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-border-brand`}
                 style={{ zIndex: 1 }}
               />
             )}
@@ -154,7 +154,7 @@ export function ChatDrawer() {
                       onClick={toggleLocked}
                       aria-label={locked ? 'Unlock drawer width' : 'Lock drawer width'}
                       aria-pressed={locked}
-                      className={`flex h-10 w-10 items-center justify-center transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border-brand ${
+                      className={`flex h-10 w-10 items-center justify-center transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-border-brand ${
                         locked
                           ? 'bg-bg-brand-primary text-fg-brand-primary hover:bg-bg-brand-primary_alt'
                           : 'text-fg-tertiary hover:bg-bg-secondary hover:text-fg-primary'
@@ -172,7 +172,7 @@ export function ChatDrawer() {
                       type="button"
                       onClick={closeDrawer}
                       aria-label="Close chat"
-                      className="flex h-10 w-10 items-center justify-center border-l border-border-secondary text-fg-tertiary transition-colors hover:bg-bg-secondary hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border-brand"
+                      className="flex h-10 w-10 items-center justify-center border-l border-border-secondary text-fg-tertiary transition-colors hover:bg-bg-secondary hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-border-brand"
                     >
                       <CloseIcon className="h-4 w-4" aria-hidden />
                     </button>

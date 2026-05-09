@@ -176,11 +176,11 @@ export function ProjectFileUpload({
         onDrop={handleDrop}
         className={`
           relative
-          border-2 border-dashed rounded-lg
+          border border-dashed rounded-lg
           p-6
           text-center
           cursor-pointer
-          transition-all duration-200
+          transition-all duration-standard
           ${isDragging
             ? 'border-fg-brand-primary bg-bg-brand-primary/10'
             : 'border-border-secondary hover:border-border-primary hover:bg-bg-tertiary'

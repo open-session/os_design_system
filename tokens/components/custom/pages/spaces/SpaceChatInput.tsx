@@ -222,10 +222,10 @@ export function SpaceChatInput({
           <div
             className={`
               relative bg-bg-secondary backdrop-blur-xl rounded-xl
-              border transition-all duration-200 shadow-sm
+              border transition-all duration-standard shadow-sm
               ${
                 isDragging || isFocused || isListening
-                  ? 'border-border-brand-solid shadow-lg shadow-bg-brand-solid/20 ring-2 ring-border-brand-solid/30'
+                  ? 'border-border-brand-solid shadow-lg shadow-bg-brand-solid/20 ring-1 ring-border-brand-solid/30'
                   : 'border-border-primary hover:border-fg-tertiary'
               }
             `}

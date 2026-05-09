@@ -423,7 +423,7 @@ export function FileUploadZone({
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
-      className={`flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${
+      className={`flex flex-col items-center justify-center p-8 border border-dashed rounded-xl cursor-pointer transition-colors ${
         isDragging
           ? 'border-border-brand bg-bg-brand-primary'
           : 'border-border-primary hover:border-border-secondary bg-bg-secondary'

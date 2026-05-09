@@ -49,7 +49,7 @@ export function SectionGroup({
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls={contentId}
-          className="group relative flex flex-1 items-center text-left outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)]"
+          className="group relative flex flex-1 items-center text-left outline-hidden focus-visible:ring-1 focus-visible:ring-ring-brand"
         >
           <span className="relative flex items-center gap-2.5 bg-bg-primary px-1">
             <span
@@ -57,8 +57,8 @@ export function SectionGroup({
               className={cx(
                 'h-1.5 w-1.5 rotate-45',
                 marker === 'filled'
-                  ? 'bg-[var(--color-brand-500)]'
-                  : 'border border-[var(--color-brand-500)]',
+                  ? 'bg-bg-brand-solid'
+                  : 'border border-border-brand-solid',
               )}
             />
             <Eyebrow size="sm" tone="primary">
@@ -79,7 +79,7 @@ export function SectionGroup({
             )}
             <ChevronDown
               className={cx(
-                'h-3.5 w-3.5 text-fg-tertiary transition-transform duration-200',
+                'h-3.5 w-3.5 text-fg-tertiary transition-transform duration-standard',
                 open ? 'rotate-0' : '-rotate-90',
               )}
               aria-hidden

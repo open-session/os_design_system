@@ -174,7 +174,7 @@ export function SourcesDrawer({ isOpen, onClose, sources, resourceCards = [], qu
                     key={`brand-${idx}`}
                     href={card.href}
                     onClick={onClose}
-                    className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-bg-secondary transition-all duration-200 group"
+                    className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-bg-secondary transition-all duration-standard group"
                   >
                     {/* Icon */}
                     <div className="w-8 h-8 rounded-lg bg-bg-secondary flex items-center justify-center flex-shrink-0">
@@ -192,7 +192,7 @@ export function SourcesDrawer({ isOpen, onClose, sources, resourceCards = [], qu
                     </div>
 
                     {/* Arrow */}
-                    <ArrowRight className="w-4 h-4 text-fg-tertiary/40 opacity-0 group-hover:opacity-100 transition-all duration-200 flex-shrink-0 mt-1 translate-x-0 group-hover:translate-x-0.5" />
+                    <ArrowRight className="w-4 h-4 text-fg-tertiary/40 opacity-0 group-hover:opacity-100 transition-all duration-standard flex-shrink-0 mt-1 translate-x-0 group-hover:translate-x-0.5" />
                   </Link>
                 ))}
               </div>
@@ -222,7 +222,7 @@ export function SourcesDrawer({ isOpen, onClose, sources, resourceCards = [], qu
                       href={source.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-cyan-500/5 transition-all duration-200 group"
+                      className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-cyan-500/5 transition-all duration-standard group"
                     >
                       {/* Icon with category color */}
                       <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
@@ -257,7 +257,7 @@ export function SourcesDrawer({ isOpen, onClose, sources, resourceCards = [], qu
                       </div>
 
                       {/* External link icon */}
-                      <LinkExternal01 className="w-3.5 h-3.5 text-fg-tertiary/40 opacity-0 group-hover:opacity-100 transition-all duration-200 flex-shrink-0 mt-1" />
+                      <LinkExternal01 className="w-3.5 h-3.5 text-fg-tertiary/40 opacity-0 group-hover:opacity-100 transition-all duration-standard flex-shrink-0 mt-1" />
                     </a>
                   );
                 })}
@@ -286,7 +286,7 @@ export function SourcesDrawer({ isOpen, onClose, sources, resourceCards = [], qu
                     href={source.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-bg-secondary transition-all duration-200 group"
+                    className="flex items-start gap-3 px-3 py-3 rounded-xl hover:bg-bg-secondary transition-all duration-standard group"
                   >
                     {/* Favicon */}
                     <div className="w-8 h-8 rounded-lg bg-bg-secondary flex items-center justify-center flex-shrink-0 overflow-hidden">
@@ -332,7 +332,7 @@ export function SourcesDrawer({ isOpen, onClose, sources, resourceCards = [], qu
                     </div>
 
                     {/* External link icon */}
-                    <LinkExternal01 className="w-3.5 h-3.5 text-fg-tertiary/40 opacity-0 group-hover:opacity-100 transition-all duration-200 flex-shrink-0 mt-1" />
+                    <LinkExternal01 className="w-3.5 h-3.5 text-fg-tertiary/40 opacity-0 group-hover:opacity-100 transition-all duration-standard flex-shrink-0 mt-1" />
                   </a>
                 ))}
               </div>
@@ -357,7 +357,7 @@ export function SourcesDrawer({ isOpen, onClose, sources, resourceCards = [], qu
                     href={`https://www.google.com/search?q=${searchQuery}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-bg-secondary hover:bg-bg-secondary transition-all duration-200 group"
+                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-bg-secondary hover:bg-bg-secondary transition-all duration-standard group"
                   >
                     <img src="https://www.google.com/favicon.ico" alt="" className="w-4 h-4" />
                     <span className="text-[13px] text-fg-primary group-hover:text-fg-brand-primary transition-colors flex-1 text-left font-medium">
@@ -369,7 +369,7 @@ export function SourcesDrawer({ isOpen, onClose, sources, resourceCards = [], qu
                     href={`https://www.perplexity.ai/search?q=${searchQuery}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-bg-secondary hover:bg-bg-secondary transition-all duration-200 group"
+                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-bg-secondary hover:bg-bg-secondary transition-all duration-standard group"
                   >
                     <Globe01 className="w-4 h-4 text-fg-tertiary/60" />
                     <span className="text-[13px] text-fg-primary group-hover:text-fg-brand-primary transition-colors flex-1 text-left font-medium">

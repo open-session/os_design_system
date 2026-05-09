@@ -1,0 +1,200 @@
+---
+title: 'Design System/Transforms/Dev Props'
+rule: 'Add {...devProps(ComponentName)} to the root DOM element of every component'
+scope: 'All components under components/base/ and components/custom/ — enforced by bos-local/require-dev-props'
+detection-command: "rg -l 'export (function|const)' components/base components/custom | xargs rg -L 'devProps'"
+enforcement:
+  codemod: null
+  eslint-rule: 'bos-local/require-dev-props'
+  scope: 'both'
+  severity: 'error'
+last-audited: '2026-05-09'
+version: 1
+tags: ['transform', 'dev-props', 'debugging', 'codemod-axis-5', 'design-system']
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Transforms/Dev Props" />
+
+# Dev Props (Axis 5)
+
+## TL;DR
+
+Every BOS component must include a `data-component` attribute on its root DOM element via `{...devProps('ComponentName')}`. This powers the dev-mode component inspector — hover any element in the browser to see which component rendered it. The ESLint rule `bos-local/require-dev-props` enforces this at error level.
+
+---
+
+## The Rule
+
+Add `{...devProps('ComponentName')}` to the root DOM element of every component:
+
+```tsx
+import { devProps } from '@/lib/utils/dev-props';
+
+export function MyComponent({ children }: Props) {
+  return (
+    <div {...devProps('MyComponent')} className="...">
+      {children}
+    </div>
+  );
+}
+```
+
+Rules:
+- Apply to the **root DOM element only** (the first element returned by the component)
+- Match the component name exactly (`devProps('Button')` for `function Button`)
+- Import from `@/lib/utils/dev-props`
+
+---
+
+## Where It's Enforced
+
+| Layer | Mechanism | Scope | Severity |
+|-------|-----------|-------|----------|
+| Vendor pull | No codemod — applied when adding new wrappers | `components/ds/` | Manual |
+| Write-time | `bos-local/require-dev-props` in `eslint.config.mjs` | All components | `error` |
+| Manual review | Detection command above | All | Audit |
+
+---
+
+## Before / After
+
+```before
+// Component without devProps (BEFORE axis-5)
+import { cx } from '@/lib/utils';
+
+export function Button({ children, className }: ButtonProps) {
+  return (
+    <button className={cx('btn', className)}>
+      {children}
+    </button>
+  );
+}
+```
+
+```after
+// Component with devProps (AFTER axis-5)
+import { cx } from '@/lib/utils';
+import { devProps } from '@/lib/utils/dev-props';
+
+export function Button({ children, className }: ButtonProps) {
+  return (
+    <button {...devProps('Button')} className={cx('btn', className)}>
+      {children}
+    </button>
+  );
+}
+```
+
+---
+
+## Edge Cases
+
+### Conditional returns
+
+Add `devProps` to BOTH branches:
+
+```tsx
+export function Avatar({ src }: AvatarProps) {
+  if (!src) {
+    return <div {...devProps('Avatar')} className="avatar-placeholder" />;
+  }
+  return <img {...devProps('Avatar')} src={src} className="avatar-image" />;
+}
+```
+
+### Portals
+
+Add `devProps` to the portaled content, not the portal call:
+
+```tsx
+export function Modal({ children }: ModalProps) {
+  return createPortal(
+    <div {...devProps('Modal')} className="modal-backdrop">
+      {children}
+    </div>,
+    document.body
+  );
+}
+```
+
+### AnimatePresence
+
+Add `devProps` to the motion element inside, not the fragment:
+
+```tsx
+export function AnimatedPanel({ isOpen, children }: AnimatedPanelProps) {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div {...devProps('AnimatedPanel')} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+```
+
+### Multiple exports from one file
+
+Each export gets its own `devProps`:
+
+```tsx
+export function PrimaryButton(props: ButtonProps) {
+  return <button {...devProps('PrimaryButton')} {...props} />;
+}
+
+export function SecondaryButton(props: ButtonProps) {
+  return <button {...devProps('SecondaryButton')} {...props} />;
+}
+```
+
+### `return null`
+
+Skip `devProps` — no DOM element exists:
+
+```tsx
+export function ConditionalWrapper({ show, children }: Props) {
+  if (!show) return null; // no devProps needed
+  return <div {...devProps('ConditionalWrapper')}>{children}</div>;
+}
+```
+
+### Fragments
+
+Apply to the first meaningful DOM child:
+
+```tsx
+export function LabelGroup({ label, hint }: LabelGroupProps) {
+  return (
+    <>
+      <label {...devProps('LabelGroup')} className="label">{label}</label>
+      <span className="hint">{hint}</span>
+    </>
+  );
+}
+```
+
+---
+
+## Detection Command
+
+```bash
+# Find component files that export a function/const but are missing devProps
+rg -l 'export (function|const)' components/base components/custom | xargs rg -L 'devProps'
+```
+
+Expected: 0 results (all component files use devProps).
+
+---
+
+## Related
+
+- [Motion (Axis 1)](./motion.mdx)
+- [Token Syntax (Axis 4)](./token-syntax.mdx)
+- [Wrapper Import Retention (Axis 6)](./wrapper-import-retention.mdx)
+- ESLint rule: `bos-local/require-dev-props`
+- Source: `lib/utils/dev-props.ts`
+- Docs: `docs/components/component-standards.md`

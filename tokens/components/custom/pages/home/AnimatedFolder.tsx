@@ -40,7 +40,7 @@ export function AnimatedFolder({
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative w-full h-full rounded-2xl bg-bg-secondary border border-border-primary p-4 cursor-pointer text-left transition-all duration-300 hover:border-border-brand hover:shadow-lg hover:shadow-black/10"
+      className="group relative w-full h-full rounded-2xl bg-bg-secondary border border-border-primary p-4 cursor-pointer text-left transition-all duration-moderate hover:border-border-brand hover:shadow-lg hover:shadow-black/10"
       whileTap={{ scale: 0.98 }}
       transition={{
         type: 'spring',
@@ -54,7 +54,7 @@ export function AnimatedFolder({
         <div className="mb-3">
           {/* Title - vanilla by default, orange on hover */}
           <h3 
-            className="text-sm font-semibold mb-0.5 transition-colors duration-300"
+            className="text-sm font-semibold mb-0.5 transition-colors duration-moderate"
             style={{ color: isHovered ? colors.hex : 'var(--fg-primary)' }}
           >
             {title}

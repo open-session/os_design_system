@@ -17,7 +17,7 @@ export function ActivityRow({ text, timestamp, muted = false }: ActivityRowProps
       <span
         className={cx(
           'mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full',
-          muted ? 'bg-border-primary' : 'bg-[var(--color-brand-500)]',
+          muted ? 'bg-border-primary' : 'bg-bg-brand-solid',
         )}
       />
       <div className="flex-1">

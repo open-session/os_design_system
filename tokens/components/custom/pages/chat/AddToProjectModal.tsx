@@ -166,7 +166,7 @@ export function AddToProjectModal({
                   disabled={isSaving}
                   className={`
                     w-full flex items-center justify-between px-5 py-2.5
-                    text-left transition-colors duration-150
+                    text-left transition-colors duration-quick
                     disabled:opacity-50
                     ${!currentProject
                       ? 'bg-bg-brand-primary text-fg-brand-primary'
@@ -191,7 +191,7 @@ export function AddToProjectModal({
                       disabled={isSaving}
                       className={`
                         w-full flex items-center justify-between px-5 py-2.5
-                        text-left transition-colors duration-150
+                        text-left transition-colors duration-quick
                         disabled:opacity-50
                         ${isSelected
                           ? 'bg-bg-brand-primary text-fg-brand-primary'

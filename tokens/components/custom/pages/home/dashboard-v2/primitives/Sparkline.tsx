@@ -21,7 +21,7 @@ export function Sparkline({ bars, highlightThreshold = 60, height = 32, classNam
         <span
           // eslint-disable-next-line @eslint-react/no-array-index-key
           key={`bar-${i}`}
-          className="flex-1 bg-[var(--color-brand-500)]"
+          className="flex-1 bg-bg-brand-solid"
           style={{
             height: `${Math.max(value, 4)}%`,
             opacity: value >= highlightThreshold ? 1 : 0.5,

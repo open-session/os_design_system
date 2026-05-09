@@ -66,8 +66,8 @@ export function ThemeCompactToggle() {
             className={`
               relative flex items-center justify-center
               w-8 h-7 rounded
-              transition-colors duration-150
-              focus:outline-hidden focus-visible:ring-2 focus-visible:ring-fg-brand-primary focus-visible:ring-offset-1
+              transition-colors duration-quick
+              focus:outline-hidden focus-visible:ring-1 focus-visible:ring-fg-brand-primary focus-visible:ring-offset-1
               ${isSelected 
                 ? 'text-fg-primary' 
                 : 'text-fg-tertiary hover:text-fg-secondary'

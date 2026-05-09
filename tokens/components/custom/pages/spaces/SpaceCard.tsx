@@ -65,7 +65,7 @@ export function SpaceCard({ space, isCreate = false, onDelete, onCreateClick, me
     'bg-bg-secondary',
     'hover:bg-secondary-hover',
     'hover:border-border-brand',
-    'transition-all duration-200 ease-out',
+    'transition-all duration-standard ease-motion-out',
     'min-h-[200px]',
     'shadow-sm',
     'hover:shadow-md',
@@ -80,7 +80,7 @@ export function SpaceCard({ space, isCreate = false, onDelete, onCreateClick, me
         className={cn(
           cardBaseStyles,
           'items-center justify-center',
-            'border-2 border-dashed',
+            'border border-dashed',
             'hover:border-border-brand-solid',
           'cursor-pointer w-full text-left group'
         )}
@@ -123,9 +123,9 @@ export function SpaceCard({ space, isCreate = false, onDelete, onCreateClick, me
               'text-fg-secondary hover:text-fg-white',
               'border border-border-secondary hover:border-border-error-solid',
               'shadow-sm hover:shadow-md',
-              'transition-all duration-200',
+              'transition-all duration-standard',
               'z-10',
-              'focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-error'
+              'focus-visible:opacity-100 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-error'
             )}
             aria-label="Delete space"
           >

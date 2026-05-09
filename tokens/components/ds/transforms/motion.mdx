@@ -1,0 +1,115 @@
+---
+title: 'Design System/Transforms/Motion'
+rule: 'Replace UUI stock motion classes (duration-200, ease-out) with BOS motion tokens (duration-micro, ease-motion-out)'
+scope: 'base/ normalized by codemod at vendor-pull time; custom/ flagged by ESLint at commit time'
+detection-command: "rg '\\b(?:duration-(?:75|100|150|200|300|500|700|1000)|ease-(?:out|in|in-out|linear))\\b' components/"
+enforcement:
+  codemod: 'applyMotionTokens'
+  eslint-rule: 'better-tailwindcss/no-restricted-classes'
+  scope: 'custom/'
+  severity: 'error'
+last-audited: '2026-05-09'
+version: 1
+tags: ['transform', 'motion', 'codemod-axis-1', 'design-system']
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Transforms/Motion" />
+
+# Motion (Axis 1)
+
+## TL;DR
+
+BOS uses named motion tokens (`duration-micro`, `duration-quick`, `duration-standard`, etc.) instead of Tailwind's stock duration utilities (`duration-200`, `ease-out`). Every animation on every surface uses the same timing curves and duration tiers — motion is a consistent brand signal, not a per-component choice.
+
+---
+
+## The Rule
+
+Replace vendor-stock duration and easing utilities with BOS motion tokens:
+
+| Vendor stock (UUI) | BOS token | Tier |
+|--------------------|-----------|------|
+| `duration-75` | `duration-micro` | Micro (sub-perceptible) |
+| `duration-100` | `duration-micro` | Micro |
+| `duration-150` | `duration-quick` | Quick (UI response) |
+| `duration-200` | `duration-standard` | Standard (default) |
+| `duration-300` | `duration-moderate` | Moderate (emphasis) |
+| `duration-500` | `duration-page` | Page (route transitions) |
+| `duration-700` | `duration-page` | Page |
+| `duration-1000` | `duration-page` | Page |
+| `ease-in-out` | `ease-motion-inout` | Balanced curve |
+| `ease-out` | `ease-motion-out` | Decelerate (enter) |
+| `ease-in` | `ease-motion-out` | Decelerate (approximate) |
+| `ease-linear` | `ease-motion-out` | Decelerate (approximate) — **detection only; codemod gap, apply manually** |
+
+Motion tokens are defined in `components/ds/brand.css` and bridged to Tailwind utility classes via `tailwind.config.ts`.
+
+---
+
+## Where It's Enforced
+
+| Layer | Mechanism | Scope | Severity |
+|-------|-----------|-------|----------|
+| Vendor pull | `applyMotionTokens()` in `scripts/uui-apply-transformations.ts` | `components/base/` | Auto-transform |
+| Write-time | `better-tailwindcss/no-restricted-classes` in `eslint.config.mjs` | `components/custom/` | `error` |
+| Manual review | `rg` detection command above | All | Audit |
+
+---
+
+## Before / After
+
+```before
+// components/base/base/buttons/button.tsx (vendor pull, BEFORE axis-1)
+<button
+  className={cx(
+    'transition-colors duration-200 ease-in-out',
+    'focus:ring-2 focus:ring-offset-2',
+  )}
+>
+```
+
+```after
+// components/base/base/buttons/button.tsx (vendor pull, AFTER axis-1)
+<button
+  className={cx(
+    'transition-colors duration-standard ease-motion-inout',
+    'focus:ring-1 focus:shadow-focus-ring',
+  )}
+>
+```
+
+---
+
+## Why
+
+**Motion hierarchy matters.** When every component uses `duration-200`, there's no hierarchy — a tooltip open and a full-page transition feel identical. BOS's five-tier system (micro → quick → standard → moderate → page) gives engineers a vocabulary to place each animation in the right perceptual bucket.
+
+**Brand consistency.** `duration-standard` is the default transition. Changing the brand's motion feel means changing one token in `brand.css`, not hunting 200+ instances of `duration-200` across 100+ files.
+
+**Prevented:** `duration-200 ease-in-out` animations on hover states that outlast the hover itself, creating a "sticky" feel that differs from the BOS motion spec.
+
+---
+
+## Detection Command
+
+Run this to find any remaining Axis 1 violations:
+
+```bash
+rg '\b(?:duration-(?:75|100|150|200|300|500|700|1000)|ease-(?:out|in|in-out|linear))\b' components/
+```
+
+Expected: 0 results in `components/base/` and `components/custom/`. Any results in `components/ds/brand.css` are token definitions, not violations.
+
+---
+
+## Related
+
+- [Focus Ring (Axis 2)](./focus-ring.mdx)
+- [Disabled State (Axis 3)](./disabled-state.mdx)
+- [Token Syntax (Axis 4)](./token-syntax.mdx)
+- [Dev Props (Axis 5)](./dev-props.mdx)
+- [Wrapper Import Retention (Axis 6)](./wrapper-import-retention.mdx)
+- ESLint config: `eslint.config.mjs` → `better-tailwindcss/no-restricted-classes`
+- Codemod: `scripts/uui-apply-transformations.ts` → `applyMotionTokens()`

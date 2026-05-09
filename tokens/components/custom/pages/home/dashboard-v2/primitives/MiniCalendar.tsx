@@ -34,14 +34,14 @@ export function MiniCalendar({ days, className }: MiniCalendarProps) {
             key={day.date}
             className={cx(
               'relative rounded-[2px] px-1 py-1.5 text-center text-[11px]',
-              day.state === 'today' && 'bg-[var(--color-brand-500)] font-medium text-[var(--color-charcoal)]',
+              day.state === 'today' && 'bg-bg-brand-solid font-medium text-fg-primary',
               day.state === 'active' && 'bg-utility-brand-50 text-fg-brand-secondary',
               (!day.state || day.state === 'default') && 'text-fg-tertiary',
             )}
           >
             {day.date}
             {day.state === 'active' && (
-              <span className="absolute bottom-0.5 left-1/2 h-[3px] w-[3px] -translate-x-1/2 rounded-full bg-[var(--color-brand-500)]" />
+              <span className="absolute bottom-0.5 left-1/2 h-[3px] w-[3px] -translate-x-1/2 rounded-full bg-bg-brand-solid" />
             )}
           </div>
         ))}

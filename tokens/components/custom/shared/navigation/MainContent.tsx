@@ -57,7 +57,7 @@ export function MainContent({ children, className = '' }: MainContentProps) {
   return (
     <main
       {...devProps('MainContent')}
-      className={`flex-1 flex flex-col pt-14 lg:pt-14 transition-all duration-300 ease-out ${className}`}
+      className={`flex-1 flex flex-col pt-14 lg:pt-14 transition-all duration-moderate ease-motion-out ${className}`}
       style={{ 
         paddingLeft: isDesktop ? `${sidebarWidth}px` : 0,
         width: getWidth(),

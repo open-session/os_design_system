@@ -47,7 +47,7 @@ const BrandLoader = React.forwardRef<HTMLDivElement, BrandLoaderProps>(
     
     // Animation style based on variant
     const animationStyle = variant === 'pulse' 
-      ? 'brand-loader-pulse 2s ease-in-out infinite'
+      ? 'brand-loader-pulse 2s ease-motion-inout infinite'
       : 'brand-loader-rotate 3s linear infinite';
 
     return (

@@ -741,7 +741,7 @@ function AddFontRow({ onAdd, onCancel, isAdding }: AddFontRowProps) {
           onDrop={handleDrop}
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
-          className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center cursor-pointer border-2 border-dashed transition-colors ${
+          className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center cursor-pointer border border-dashed transition-colors ${
             isDragging
               ? 'border-border-brand bg-bg-brand-primary'
               : file

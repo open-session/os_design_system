@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, type ReactNode } from 'react';
 import { Plus, X as CloseIcon } from '@untitledui-pro/icons/line';
-import { Tooltip } from '@/components/base/base/tooltip/tooltip';
+import { Tooltip } from '@/components/base';
 import { useChatDrawerStore, type DrawerTab } from '@/stores/chat-drawer-store';
 import { Orb } from '@/components/custom/shared/effects/Orb';
 import { devProps } from '@/lib/utils/dev-props';
@@ -96,7 +96,7 @@ export function ChatDrawerTabStrip({ trailing }: ChatDrawerTabStripProps = {}) {
           type="button"
           onClick={() => newTab()}
           aria-label="New chat"
-          className="flex h-10 w-10 shrink-0 items-center justify-center border-l border-border-secondary text-fg-tertiary transition-colors hover:bg-bg-secondary hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border-brand"
+          className="flex h-10 w-10 shrink-0 items-center justify-center border-l border-border-secondary text-fg-tertiary transition-colors hover:bg-bg-secondary hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-border-brand"
         >
           <Plus className="h-3.5 w-3.5" aria-hidden />
         </button>
@@ -170,7 +170,7 @@ function TabButton({
         {tab.unread && !isActive && (
           <span
             aria-hidden
-            className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-bg-brand-solid ring-2 ring-bg-secondary_subtle"
+            className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-bg-brand-solid ring-1 ring-bg-secondary_subtle"
           />
         )}
       </span>

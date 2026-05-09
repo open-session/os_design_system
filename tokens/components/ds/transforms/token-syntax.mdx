@@ -1,0 +1,120 @@
+---
+title: 'Design System/Transforms/Token Syntax'
+rule: 'Use Style 2 mapped classes (bg-bg-primary) instead of Style 1 bracket notation (bg-[var(--bg-primary)])'
+scope: 'All components — enforced at error level via bos-local/prefer-mapped-tokens'
+detection-command: "rg 'bg-\\[var\\(--|text-\\[var\\(--|border-\\[var\\(--' components/"
+enforcement:
+  codemod: 'applyTokenSyntax'
+  eslint-rule: 'bos-local/prefer-mapped-tokens'
+  scope: 'both'
+  severity: 'error'
+last-audited: '2026-05-09'
+version: 1
+tags: ['transform', 'token-syntax', 'style-2', 'codemod-axis-4', 'design-system']
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Transforms/Token Syntax" />
+
+# Token Syntax (Axis 4)
+
+## TL;DR
+
+BOS uses **Style 2 mapped classes** (`bg-bg-primary`, `text-fg-primary`) instead of **Style 1 bracket notation** (`bg-[var(--bg-primary)]`, `text-[var(--fg-primary)]`). Style 1 has a critical silent failure: the `/30` opacity modifier is silently ignored when applied to a CSS variable reference. Style 2 works correctly with opacity modifiers and IntelliSense.
+
+---
+
+## The Rule
+
+Always use Style 2 (mapped classes), never Style 1 (bracket notation with CSS vars):
+
+| Style 1 (WRONG) | Style 2 (CORRECT) | Notes |
+|-----------------|-------------------|-------|
+| `bg-[var(--bg-primary)]` | `bg-bg-primary` | Main background |
+| `text-[var(--fg-primary)]` | `text-fg-primary` | Primary text |
+| `border-[var(--border-primary)]` | `border-border-primary` | Container border |
+| `bg-[var(--bg-primary)]/30` | `bg-bg-primary/30` | **CRITICAL** — `/30` fails silently in Style 1 |
+| `ring-[var(--ring-brand)]` | `ring-ring-brand` | Brand focus ring |
+
+---
+
+## Where It's Enforced
+
+| Layer | Mechanism | Scope | Severity |
+|-------|-----------|-------|----------|
+| Vendor pull | `applyTokenSyntax()` in `scripts/uui-apply-transformations.ts` | `components/base/` | Auto-transform |
+| Write-time | `bos-local/prefer-mapped-tokens` in `eslint.config.mjs` | `components/custom/` | `error` |
+| Manual review | `rg` detection command above | All | Audit |
+
+---
+
+## Before / After
+
+```before
+// Style 1 — bracket notation (BEFORE axis-4)
+<div
+  className={cx(
+    "bg-[var(--bg-secondary)]",
+    "text-[var(--fg-primary)]",
+    "border border-[var(--border-primary)]",
+    // CRITICAL BUG: the /30 opacity is silently ignored:
+    "bg-[var(--bg-primary)]/30",
+  )}
+>
+```
+
+```after
+// Style 2 — mapped classes (AFTER axis-4)
+<div
+  className={cx(
+    "bg-bg-secondary",
+    "text-fg-primary",
+    "border border-border-primary",
+    // Opacity modifier works correctly:
+    "bg-bg-primary/30",
+  )}
+>
+```
+
+---
+
+## The Silent Opacity Bug
+
+This is the most consequential syntax rule. The bug is non-obvious — the code looks correct, ESLint doesn't catch it (until this rule was added), and the UI renders without error. The `/30` opacity simply does not apply.
+
+**Why does Style 1 break?** Tailwind's opacity modifier works by extracting the color's RGB channel values and constructing `rgba(R, G, B, 0.30)`. When the value is `var(--bg-primary)` (a CSS variable reference), Tailwind cannot extract the channel values at compile time — the CSS variable resolves at runtime. The modifier is silently dropped.
+
+**Why does Style 2 work?** With `bg-bg-primary`, Tailwind generates the utility class from the `@theme {}` token definition at compile time. The color channels are known, and the opacity modifier works correctly.
+
+---
+
+## IntelliSense Verification
+
+After converting to Style 2, verify IntelliSense works in VS Code:
+
+1. Type `bg-bg-` — autocomplete should show all `--bg-*` tokens
+2. Type `/30` after a color utility — autocomplete should show the opacity modifier options
+
+If IntelliSense does not show the token, the `@theme {}` registration may be incomplete. Check `components/ds/brand.css`.
+
+---
+
+## Detection Command
+
+```bash
+rg 'bg-\[var\(--|text-\[var\(--|border-\[var\(--' components/
+```
+
+Expected: 0 results. Any match is a Style 1 violation that should be converted to Style 2.
+
+---
+
+## Related
+
+- [Motion (Axis 1)](./motion.mdx)
+- [Focus Ring (Axis 2)](./focus-ring.mdx)
+- [Disabled State (Axis 3)](./disabled-state.mdx)
+- [Dev Props (Axis 5)](./dev-props.mdx)
+- ESLint rule: `bos-local/prefer-mapped-tokens`
+- Codemod: `scripts/uui-apply-transformations.ts` → `applyTokenSyntax()`

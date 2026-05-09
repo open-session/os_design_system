@@ -145,7 +145,7 @@ const styles = sortCx({
     },
 
     outline: {
-        base: "before:absolute before:rounded-full before:border-2 after:absolute after:rounded-full after:border-2",
+        base: "before:absolute before:rounded-full before:border after:absolute after:rounded-full after:border",
         sizes: {
             sm: "size-4 before:size-6 after:size-8.5",
             md: "size-5 before:size-7 after:size-9.5",

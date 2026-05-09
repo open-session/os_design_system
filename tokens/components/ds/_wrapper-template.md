@@ -177,6 +177,8 @@ The audit row in `docs/audits/2026-05/009-layer4-primitive-classification.md` MU
 
 ## Reference files
 
+- **Storybook (canonical, browsable):** Design System → Wrapper Template
+- [`components/ds/wrapper-template.mdx`](./wrapper-template.mdx) — Storybook-discoverable version of this doc (PRD 020 Wave 4c, published)
 - `components/base/base/tooltip/with-defaults.tsx` — Shape A canonical example.
 - `components/ds/_exceptions.md` — documents true brand decisions (Button #2, Avatar token swap, React Aria limitations).
 - `components/ds/_history/<primitive>.md` — per-primitive decision log (immutable; append-only).

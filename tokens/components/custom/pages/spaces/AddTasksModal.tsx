@@ -165,7 +165,7 @@ export function AddTasksModal({
               aria-label={`${completedCount} of ${totalCount} tasks completed`}
             >
               <div
-                className="h-full bg-bg-brand-solid transition-all duration-300 ease-out"
+                className="h-full bg-bg-brand-solid transition-all duration-moderate ease-motion-out"
                 style={{ width: `${(completedCount / totalCount) * 100}%` }}
               />
             </div>
@@ -176,7 +176,7 @@ export function AddTasksModal({
               <div
                 key={task.id}
                 className={`
-                  flex items-start gap-3 p-3 rounded-xl transition-all duration-200
+                  flex items-start gap-3 p-3 rounded-xl transition-all duration-standard
                   ${task.completed 
                     ? 'bg-bg-secondary' 
                     : 'bg-bg-tertiary hover:bg-bg-secondary'

@@ -454,10 +454,10 @@ export function BillingForm() {
                       {[...Array(4)].map((_, i) => (
                         <div
                           key={i}
-                          className="w-6 h-6 rounded-full bg-bg-quaternary border-2 border-bg-primary"
+                          className="w-6 h-6 rounded-full bg-bg-quaternary border border-bg-primary"
                         />
                       ))}
-                      <div className="w-6 h-6 rounded-full bg-bg-tertiary border-2 border-bg-primary flex items-center justify-center">
+                      <div className="w-6 h-6 rounded-full bg-bg-tertiary border border-bg-primary flex items-center justify-center">
                         <span className="text-[10px] font-medium text-fg-tertiary">
                           +{invoice.usersOnPlan - 4}
                         </span>

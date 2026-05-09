@@ -404,7 +404,7 @@ export function GuidedInputFlow({
               <Loading01 className="w-8 h-8 text-fg-brand-primary animate-spin" />
             </div>
             <motion.div
-              className="absolute inset-0 rounded-full border-2 border-border-brand"
+              className="absolute inset-0 rounded-full border border-border-brand"
               initial={{ scale: 1, opacity: 0.5 }}
               animate={{ scale: 1.5, opacity: 0 }}
               transition={{ duration: 1.5, repeat: Infinity }}

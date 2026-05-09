@@ -90,7 +90,7 @@ function LinkCard({ link }: { link: UnifiedLink }) {
   return (
     <CardWrapper
       {...linkProps}
-      className="group flex flex-col gap-1.5 p-3 rounded-lg bg-bg-secondary hover:bg-bg-tertiary border border-border-tertiary hover:border-border-secondary transition-all duration-150 cursor-pointer min-h-[72px]"
+      className="group flex flex-col gap-1.5 p-3 rounded-lg bg-bg-secondary hover:bg-bg-tertiary border border-border-tertiary hover:border-border-secondary transition-all duration-quick cursor-pointer min-h-[72px]"
       title={link.title}
     >
       {/* Top row: Favicon + Domain */}
@@ -179,7 +179,7 @@ function FilterToolbar({
                 onClick={() => onFilterChange(filter.id)}
                 disabled={count === 0 && filter.id !== 'all'}
                 className={`
-                  flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] font-medium transition-all duration-150
+                  flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] font-medium transition-all duration-quick
                   ${isActive 
                     ? 'bg-bg-brand-primary text-fg-brand-primary border border-border-brand' 
                     : 'bg-bg-secondary text-fg-tertiary border border-transparent hover:bg-bg-tertiary hover:text-fg-secondary'
@@ -200,7 +200,7 @@ function FilterToolbar({
         {/* Sort Dropdown */}
         <button
           onClick={() => onSortChange(sortOrder === 'asc' ? 'desc' : 'asc')}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] font-medium bg-bg-secondary text-fg-tertiary hover:bg-bg-tertiary hover:text-fg-secondary transition-all duration-150 border border-transparent"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-[11px] font-medium bg-bg-secondary text-fg-tertiary hover:bg-bg-tertiary hover:text-fg-secondary transition-all duration-quick border border-transparent"
           title={sortOrder === 'asc' ? 'Sorted A to Z' : 'Sorted Z to A'}
         >
           {sortOrder === 'asc' ? (
@@ -271,7 +271,7 @@ function EmptyState({
             href={`https://www.google.com/search?q=${encodedQuery}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-bg-secondary hover:bg-bg-secondary-hover transition-all duration-200 group"
+            className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-bg-secondary hover:bg-bg-secondary-hover transition-all duration-standard group"
           >
             <img src="https://www.google.com/favicon.ico" alt="" className="w-4 h-4" />
             <span className="text-[13px] text-fg-primary group-hover:text-fg-brand-primary transition-colors flex-1 text-left font-medium">
@@ -283,7 +283,7 @@ function EmptyState({
             href={`https://www.perplexity.ai/search?q=${encodedQuery}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-bg-secondary hover:bg-bg-secondary-hover transition-all duration-200 group"
+            className="flex items-center gap-3 px-4 py-3.5 rounded-xl bg-bg-secondary hover:bg-bg-secondary-hover transition-all duration-standard group"
           >
             <Globe01 className="w-4 h-4 text-fg-tertiary/60" />
             <span className="text-[13px] text-fg-primary group-hover:text-fg-brand-primary transition-colors flex-1 text-left font-medium">

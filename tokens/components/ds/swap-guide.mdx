@@ -1,0 +1,222 @@
+---
+title: 'Design System/Swap Guide'
+rule: 'Replace components/base/ vendor source files, then apply the 6-axis transform rules — components/custom/ and components/ds/ are untouched'
+scope: 'components/base/ — the only layer that changes in a vendor swap'
+detection-command: "bash .githooks/check-components-folders.sh && bun run lint 2>&1 | grep 'no-restricted-imports' | wc -l"
+enforcement:
+  codemod: null
+  eslint-rule: 'no-restricted-imports'
+  scope: 'both'
+  severity: 'error'
+last-audited: '2026-05-09'
+version: 1
+tags: ['swap-guide', 'vendor-agnostic', 'architecture', 'prd-018', 'design-system']
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Swap Guide" />
+
+# Vendor Swap Guide
+
+## TL;DR
+
+The BOS three-folder architecture (`base/`, `custom/`, `ds/`) is intentionally designed so the vendor design system in `base/` can be replaced without touching product code in `custom/` or the brand spec in `ds/`. Replace `components/base/`, apply the 6 transform axes, re-wire `defaults/`. Everything else stays.
+
+This guide is **documentation only** — the proof-of-concept implementation (UUI Pro → shadcn/ui) is scoped to **PRD 018 — Brand-OS Marketplace + Vendor-Swap POC**.
+
+---
+
+## What Changes vs What Stays
+
+| Layer | Changes in a swap? | Why |
+|-------|-------------------|-----|
+| `components/base/` | **YES** — replace ~95 vendor source files | This is the vendor layer |
+| `components/ds/transforms/` | **NO** — transform rules are vendor-agnostic | Each axis (motion, focus ring, disabled, token syntax, devProps, wrapper retention) applies universally |
+| `components/ds/defaults/` | Minimal — re-wire CVA `defaultVariants` for new vendor | Only changes if vendor's variant API differs |
+| `components/ds/brand.css` | **NO** — brand tokens are semantic CSS variables | Not vendor-specific |
+| `components/ds/{motion,shape,accessibility,code-quality}/` | **NO** — formula categories | Vendor-agnostic spec |
+| `components/custom/` (~244 files) | Minimal — only if vendor's component API changes | Import paths stay `@/components/base/...` |
+| `app/` (route files) | **NO** — product code goes through `custom/` | No direct vendor imports in pages |
+
+**Key insight:** The `components/ds/transforms/` rules encode the brand delta as a small, declarative formula rather than forked source files. This is why a swap is feasible at all. A vendor that ships completely different class names still hits the same 6 axes — only the before/after mappings differ.
+
+---
+
+## Pre-Swap Checklist
+
+Before starting a swap, confirm:
+
+1. **All product code routes through `components/custom/`** — no direct `@/components/base/` imports outside the spec layer. (Verified by ESLint `no-restricted-imports` drift guard at error level.)
+2. **Drift guard is locked at error-level** in `eslint.config.mjs` and `.githooks/check-components-folders.sh`. The three-folder rule must hold before, during, and after the swap.
+3. **A feature branch is open** — the swap should never land directly on `main`.
+4. **Storybook builds clean** on the pre-swap state — the post-swap Storybook build is the primary visual-regression check.
+5. **PRD 018 (or successor) is the owning workstream** — this guide does not itself authorize a swap.
+
+---
+
+## Step-by-Step Procedure
+
+### 1. Replace the Primitive Layer
+
+Replace `components/base/` contents with the new vendor's primitives.
+
+**For UUI Pro (current, post Phase B):**
+
+```bash
+# bun run uui:add is the canonical update flow — applies all 6 transform axes
+# automatically, sidecars existing files for inspection, scaffolds Layer 4 wrappers.
+bun run uui:add button
+bun run uui:add tabs
+bun run uui:add featured-icon
+# See scripts/uui-add.ts and components/ds/_wrapper-template.md
+```
+
+**For shadcn/ui:**
+
+```bash
+# shadcn defaults to components/ui/ — point at components/base/ instead.
+# (components/ui/ would recreate the legacy folder; PRD 017 deleted it.)
+npx shadcn@latest init
+npx shadcn@latest add button --path components/base/base/buttons
+npx shadcn@latest add input --path components/base/base/input
+# ... etc for each primitive in PRD 017's base/ inventory
+```
+
+**For Radix UI primitives:** Install packages (`@radix-ui/react-dialog`, etc.) and create thin wrappers in `components/base/base/<primitive>/<primitive>.tsx`. Each wrapper composes Radix primitives with BOS brand tokens via `cx()`.
+
+**For DaisyUI:** Install `daisyui` Tailwind plugin and create Tailwind-class-based wrappers in `components/base/`.
+
+### 2. Apply the 6 Transform Axes
+
+Apply all 6 axes from `components/ds/transforms/` to the new vendor sources:
+
+| Axis | Rule | Codemod |
+|------|------|---------|
+| 1 Motion | `duration-200 ease-out` → `duration-standard ease-motion-inout` | `applyMotionTokens()` |
+| 2 Focus ring | `ring-2 ring-offset-2` → `ring-1 shadow-focus-ring` | `applyFocusRing()` |
+| 3 Disabled state | `disabled:bg-gray-100` → `disabled:bg-bg-disabled_subtle` | `applyDisabledStates()` |
+| 4 Token syntax | `bg-[var(--bg-primary)]` → `bg-bg-primary` | `applyTokenSyntax()` |
+| 5 Dev props | Add `{...devProps('Name')}` to root element | ESLint `require-dev-props` |
+| 6 Wrapper import retention | Re-apply `ds/` wrapper imports after re-pull | `wrapperImportRetention()` |
+
+For a fresh vendor pull (not a re-pull), Axis 6 only matters if the new vendor's source files reference the same component paths. All other axes apply universally.
+
+### 3. Re-wire CVA Defaults in `components/ds/defaults/`
+
+The 10 files in `components/ds/defaults/` (avatar, badges, button, hint-text, input, label, select, tags, textarea, tooltip) inject brand `defaultVariants` without forking vendor source files.
+
+For each file: open the corresponding vendor primitive in the new `components/base/`, identify the variant API, and update the `defaults/<name>.ts` to use the new variant names.
+
+```ts
+// Pattern (vendor-agnostic):
+// components/ds/defaults/button.ts
+export const buttonBrandDefaults = {
+  defaultVariants: {
+    variant: 'primary' as const,
+    size: 'md' as const,
+  },
+};
+
+// components/base/base/buttons/button.tsx (vendor source — receives defaults)
+import { buttonBrandDefaults } from '@/components/ds/defaults/button';
+const buttonVariants = cva(['...'], {
+  variants: { /* vendor-defined */ },
+  ...buttonBrandDefaults, // brand defaults injected here
+});
+```
+
+If the new vendor uses a different pattern than CVA (Radix uses data attributes; DaisyUI uses utility classes), restructure the defaults file accordingly.
+
+### 4. Update Product Callsites if the Vendor API Changed
+
+```bash
+# Map all product imports of base/ primitives:
+grep -rn "@/components/base/" components/custom/ app/ --include="*.tsx" --include="*.ts"
+
+# For each callsite, verify the new vendor's component API matches the old.
+# Likely mismatches: prop names (variant vs intent), children types, render-prop signatures.
+```
+
+Component API compatibility scales with API surface size. For a fully API-compatible vendor, this step is a no-op.
+
+### 5. Run the Drift Guards
+
+```bash
+# ESLint at error-level — confirms no legacy import paths regressed:
+bun run lint
+
+# Three-folder rule — components/ must contain exactly base/, custom/, ds/:
+bash .githooks/check-components-folders.sh
+# Expected: "✓ Three-folder check: OK (base, custom, ds)"
+
+# devProps coverage — root elements still have data-component attributes:
+bun run lint 2>&1 | grep "bos-local/require-dev-props" | head
+```
+
+### 6. Smoke Test
+
+```bash
+bun run typecheck
+bun run build   # TypeScript compile + production bundle
+bun run test:run
+
+# Storybook (primary visual-regression check):
+bun run storybook:build
+bunx test-storybook
+
+# Manual: bun dev — visit key routes and verify shell renders:
+#   /, /home, /chat, /brain, /brand-hub, /spaces, /projects, /account
+```
+
+### 7. Lighthouse + Bundle Baseline Comparison
+
+Compare against the post-PRD-017 baseline in `.karimo/prds/017_design-system-architecture-revamp-part-2/metrics.md`. Any performance regression >10% is a blocker — investigate root cause before merging the swap.
+
+---
+
+## Estimated Scope (UUI Pro → Alternative)
+
+Based on PRD 017 final state:
+
+| Layer | Files | Expected change in a swap |
+|-------|-------|--------------------------|
+| `components/base/` | ~95 vendor primitives | Replace all |
+| `components/custom/` | ~244 product files | 0–10% touched (depends on vendor API) |
+| `components/ds/` | ~32 spec files | `defaults/` re-wired (10 files); rest unchanged |
+| `app/` | route files | 0 changes |
+
+**Effort estimates (research-grade — refine in PRD 018):**
+
+- shadcn/ui (also CVA-based, compatible API): ~3–5 days primitives + ~1 day product callsite verification
+- DaisyUI (different convention): ~1–2 weeks including codemods for product callsites
+- Raw Radix UI: ~1 week for wrappers + ~3 days for Storybook coverage rebuild
+
+---
+
+## Vendor Major-Version Upgrade (Same Vendor)
+
+Different from a vendor swap, but the same instinct — pulling v8 of UUI Pro into a codebase on v7. The procedure is documented as the Phase C / UUI v7→v8 alignment campaign.
+
+**Key methodological moves to lift from the campaign:**
+
+1. **Three-way diff per primitive.** For every primitive: pull the v-next sidecar via `bun run uui:add <name>`, then diff three artifacts: existing wrapper / current `base/<file>.tsx` / `<file>.tsx.uui-fresh`. Classify each delta as Type 1 (token rename — fix in `brand.css`), Type 2 (vendor evolution to adopt), or Type 3 (genuine BOS brand decision — wrap, retain, or drop on principle).
+
+2. **Wrapper-deletion test.** After classifying deltas, ask: "Are there ≥1 Type 3 deltas remaining?" If yes, wrapper survives. If no, delete the wrapper and re-route the barrel. The Phase C campaign predicted 7–10 wrappers; actual was 5 (4 structural Shape C + 1 behavioral Shape A — Tooltip) after this test.
+
+3. **"Lean into UUI" default.** When a Type 3 candidate surfaces and is recoverable as a small wrapper if product re-asks, default to dropping it on principle. Over the 8-day campaign this default rejected ~15 wrapper candidates.
+
+4. **Validation gate — runtime, not parser.** `storybook:build` is parser-only and shipped a 9-commit-deep latent bug. Add `bunx test-storybook` (Playwright) per-wave for any major-version upgrade.
+
+5. **Pipeline-gap fix-first cadence.** Run one primitive end-to-end first. The campaign surfaced 4 pipeline gaps (G1, G2, G3, snapshot/restore race) — fixing G1+G2 mid-campaign saved hours.
+
+---
+
+## References
+
+- Wrapper architecture: [Wrapper Template](./wrapper-template.mdx)
+- Transform rules: [transforms/](./transforms/motion.mdx)
+- Source spec: `components/ds/_swap-guide.md` (legacy Markdown version)
+- Campaign record: `docs/spikes/design-system/2026-05-06-uui-v8-campaign.md`
+- Type 1/2/3 framework: `docs/spikes/design-system/2026-05-06-vendor-design-system-upgrades.md`
+- PRD 018 stub: `.karimo/prds/018_brand-os-marketplace-vendor-swap/`

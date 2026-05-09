@@ -40,7 +40,7 @@ export function ShareButton({ threadUrl = '' }: { threadUrl?: string }) {
     <div {...devProps('ShareButton')} className="relative" ref={modalRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-center w-7 h-7 bg-bg-brand-solid text-white rounded-lg hover:bg-vanilla hover:text-fg-brand-aperol transition-all duration-200"
+        className="flex items-center justify-center w-7 h-7 bg-bg-brand-solid text-white rounded-lg hover:bg-vanilla hover:text-fg-brand-aperol transition-all duration-standard"
         title="Share"
       >
         <Share01 className="w-3.5 h-3.5" />

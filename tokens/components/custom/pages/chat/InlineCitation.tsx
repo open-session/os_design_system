@@ -154,7 +154,7 @@ export function InlineCitation({
       <span
         onClick={handleClick}
         className={`
-          inline-flex items-center gap-1 px-2 py-0.5 rounded text-chat-citation cursor-pointer transition-all duration-200 font-mono
+          inline-flex items-center gap-1 px-2 py-0.5 rounded text-chat-citation cursor-pointer transition-all duration-standard font-mono
           ${isBrandSource
             ? 'bg-bg-secondary text-fg-tertiary hover:bg-bg-secondary-hover hover:text-fg-primary'
             : 'bg-fg-brand-primary/15 text-fg-brand-primary hover:bg-fg-brand-primary/25'

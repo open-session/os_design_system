@@ -113,7 +113,7 @@ function PageTypeCard({ config, onClick }: PageTypeCardProps) {
       {...devProps('PageTypeCard')}
       type="button"
       onClick={() => onClick(config.type)}
-      className="flex flex-col gap-3 p-4 rounded-xl border border-border-secondary bg-bg-primary hover:bg-bg-secondary hover:border-border-primary transition-all duration-150 text-left group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-fg-quaternary"
+      className="flex flex-col gap-3 p-4 rounded-xl border border-border-secondary bg-bg-primary hover:bg-bg-secondary hover:border-border-primary transition-all duration-quick text-left group focus-visible:outline-hidden focus-visible:ring-1 focus-visible:shadow-focus-ring focus-visible:ring-fg-quaternary"
     >
       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${config.bgClass}`}>
         <Icon className={`w-5 h-5 ${config.accentClass}`} />
@@ -310,7 +310,7 @@ export function AddPageModal({ isOpen, onClose, createPage }: AddPageModalProps)
                           onChange={(e) => setDescription(e.target.value)}
                           placeholder="What's on this page? Help your team understand its purpose."
                           rows={3}
-                          className="w-full px-3 py-2.5 text-sm rounded-lg border border-border-primary bg-bg-primary text-fg-primary placeholder:text-fg-quaternary focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-fg-quaternary resize-none transition-shadow"
+                          className="w-full px-3 py-2.5 text-sm rounded-lg border border-border-primary bg-bg-primary text-fg-primary placeholder:text-fg-quaternary focus:outline-hidden focus:ring-1 focus:shadow-focus-ring focus:ring-fg-quaternary resize-none transition-shadow"
                         />
                       </div>
                     </div>

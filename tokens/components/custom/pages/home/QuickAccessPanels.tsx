@@ -151,7 +151,7 @@ export function QuickAccessPanels({ onPromptSubmit }: QuickAccessPanelsProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
         >
-          <div className="rounded-2xl bg-bg-secondary border border-border-primary transition-colors duration-200 hover:border-fg-tertiary overflow-hidden">
+          <div className="rounded-2xl bg-bg-secondary border border-border-primary transition-colors duration-standard hover:border-fg-tertiary overflow-hidden">
             {/* Header - always clickable */}
             <button
               onClick={() => setActionsExpanded(!actionsExpanded)}
@@ -222,7 +222,7 @@ export function QuickAccessPanels({ onPromptSubmit }: QuickAccessPanelsProps) {
                       <motion.button
                         key={action.id}
                         onClick={() => handleActionClick(action)}
-                        className="group/btn flex items-center gap-2 px-3 py-2.5 rounded-lg text-left transition-all duration-150 bg-bg-tertiary hover:bg-bg-tertiary-hover border border-border-secondary hover:border-fg-tertiary"
+                        className="group/btn flex items-center gap-2 px-3 py-2.5 rounded-lg text-left transition-all duration-quick bg-bg-tertiary hover:bg-bg-tertiary-hover border border-border-secondary hover:border-fg-tertiary"
                         initial={{ opacity: 0, x: -8 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 + index * 0.05, duration: 0.25 }}
@@ -232,7 +232,7 @@ export function QuickAccessPanels({ onPromptSubmit }: QuickAccessPanelsProps) {
                         </span>
 
                         {/* Arrow - simple opacity transition */}
-                        <ArrowUpRight className="w-3.5 h-3.5 text-fg-quaternary group-hover/btn:text-fg-primary transition-all duration-150 opacity-0 group-hover/btn:opacity-100" />
+                        <ArrowUpRight className="w-3.5 h-3.5 text-fg-quaternary group-hover/btn:text-fg-primary transition-all duration-quick opacity-0 group-hover/btn:opacity-100" />
                       </motion.button>
                     ))}
                   </div>
@@ -249,7 +249,7 @@ export function QuickAccessPanels({ onPromptSubmit }: QuickAccessPanelsProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
         >
-          <div className="rounded-2xl bg-bg-secondary border border-border-primary transition-colors duration-200 hover:border-fg-tertiary overflow-hidden">
+          <div className="rounded-2xl bg-bg-secondary border border-border-primary transition-colors duration-standard hover:border-fg-tertiary overflow-hidden">
             {/* Header - always clickable */}
             <button
               onClick={() => setBrandExpanded(!brandExpanded)}
@@ -327,7 +327,7 @@ export function QuickAccessPanels({ onPromptSubmit }: QuickAccessPanelsProps) {
                         >
                           <Link
                             href={link.href}
-                            className="group/link flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors duration-150 bg-bg-tertiary hover:bg-bg-tertiary-hover border border-border-secondary hover:border-fg-tertiary"
+                            className="group/link flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors duration-quick bg-bg-tertiary hover:bg-bg-tertiary-hover border border-border-secondary hover:border-fg-tertiary"
                           >
                             <Icon className="w-3.5 h-3.5 text-fg-quaternary group-hover/link:text-fg-tertiary transition-colors flex-shrink-0" />
                             <span className="text-[13px] text-fg-secondary group-hover/link:text-fg-primary transition-colors truncate">

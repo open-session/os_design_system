@@ -49,7 +49,7 @@ export function ThemeToggle({ isCollapsed = false, variant = 'sidebar' }: ThemeT
           w-full flex items-center space-x-3 px-3 py-3 rounded-lg
           text-fg-tertiary
           hover:bg-bg-tertiary hover:text-fg-primary
-          transition-all duration-200
+          transition-all duration-standard
         "
         aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
       >
@@ -74,11 +74,11 @@ export function ThemeToggle({ isCollapsed = false, variant = 'sidebar' }: ThemeT
         flex flex-col items-center justify-center
         py-2 px-2 min-h-[52px]
         text-fg-tertiary hover:text-fg-primary
-        transition-colors duration-150 group
+        transition-colors duration-quick group
       "
       title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
     >
-      <div className="w-8 h-8 flex items-center justify-center rounded-lg group-hover:bg-bg-tertiary transition-colors duration-150">
+      <div className="w-8 h-8 flex items-center justify-center rounded-lg group-hover:bg-bg-tertiary transition-colors duration-quick">
         {isDark ? (
           <Sun className="w-[18px] h-[18px]" />
         ) : (
@@ -86,7 +86,7 @@ export function ThemeToggle({ isCollapsed = false, variant = 'sidebar' }: ThemeT
         )}
       </div>
       <span 
-        className="text-[9px] font-medium text-center mt-1 transition-all duration-200 ease-out"
+        className="text-[9px] font-medium text-center mt-1 transition-all duration-standard ease-motion-out"
         style={{
           opacity: isCollapsed ? 0 : 1,
           transform: isCollapsed ? 'translateY(-2px)' : 'translateY(0)',

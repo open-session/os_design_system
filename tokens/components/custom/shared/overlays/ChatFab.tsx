@@ -43,7 +43,7 @@ export function ChatFab() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.85 }}
           transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed bottom-6 right-6 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-bg-brand-solid text-fg-primary_on-brand shadow-lg transition-shadow hover:shadow-xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary"
+          className="fixed bottom-6 right-6 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-bg-brand-solid text-fg-primary_on-brand shadow-lg transition-shadow hover:shadow-xl focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-border-brand focus-visible:shadow-focus-ring"
         >
           <Orb size={20} />
           <span className="sr-only">Ask Remy</span>
@@ -53,7 +53,7 @@ export function ChatFab() {
               className="absolute -right-0.5 -top-0.5 flex h-3 w-3 items-center justify-center"
             >
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-bg-brand-solid opacity-60" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-bg-brand-solid ring-2 ring-bg-primary" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-bg-brand-solid ring-1 ring-bg-primary" />
             </span>
           )}
         </motion.button>

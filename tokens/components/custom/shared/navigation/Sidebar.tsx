@@ -168,7 +168,7 @@ function SidebarControl({ isExpanded }: { isExpanded: boolean }) {
           px-2 py-2
           text-fg-tertiary hover:text-fg-primary
           hover:bg-bg-tertiary
-          transition-colors duration-150
+          transition-colors duration-quick
           rounded-md
           ${isExpanded ? 'justify-start' : 'justify-center'}
         `}
@@ -217,7 +217,7 @@ function SidebarControl({ isExpanded }: { isExpanded: boolean }) {
                       px-3 py-2
                       text-left
                       hover:bg-bg-tertiary
-                      transition-colors duration-100
+                      transition-colors duration-micro
                       ${isSelected ? 'text-fg-primary' : 'text-fg-secondary'}
                     `}
                     role="menuitem"
@@ -975,7 +975,7 @@ export function Sidebar() {
             handleMouseLeaveItem();
           }
         }}
-        className="hidden lg:flex fixed top-14 left-0 z-[200] bg-bg-secondary border-r border-border-secondary flex-col h-[calc(100vh-56px)] transition-all duration-200 ease-out"
+        className="hidden lg:flex fixed top-14 left-0 z-[200] bg-bg-secondary border-r border-border-secondary flex-col h-[calc(100vh-56px)] transition-all duration-standard ease-motion-out"
         style={{ width: sidebarWidth }}
         role="navigation"
         aria-label="Main navigation"
@@ -988,7 +988,7 @@ export function Sidebar() {
             onClick={handleNewChat}
             className={`
               flex items-center gap-2
-              transition-colors duration-150
+              transition-colors duration-quick
               group
               text-fg-tertiary hover:text-fg-primary
               ${isExpandedMode
@@ -1000,7 +1000,7 @@ export function Sidebar() {
             aria-label="Start new chat"
           >
             <div className={`
-              flex items-center justify-center rounded-lg transition-all duration-150
+              flex items-center justify-center rounded-lg transition-all duration-quick
               ${isExpandedMode
                 ? ''
                 : 'w-11 h-11 bg-bg-tertiary group-hover:bg-bg-quaternary border border-border-secondary'
@@ -1032,7 +1032,7 @@ export function Sidebar() {
                     <div className="flex flex-col">
                       <div
                         className={`
-                          flex items-center pr-1.5 rounded-md transition-colors duration-150
+                          flex items-center pr-1.5 rounded-md transition-colors duration-quick
                           ${isActive || isOnMainPage
                             ? 'bg-bg-brand-primary text-fg-brand-primary'
                             : 'text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary'
@@ -1063,7 +1063,7 @@ export function Sidebar() {
                         {(hasSubItems || item.label === 'Spaces' || item.label === 'Home') && (
                           <button
                             onClick={() => toggleSection(item.label)}
-                            className="p-2 rounded-md transition-colors duration-150 hover:bg-bg-quaternary"
+                            className="p-2 rounded-md transition-colors duration-quick hover:bg-bg-quaternary"
                             aria-expanded={isSectionExpanded}
                             aria-label={`${isSectionExpanded ? 'Collapse' : 'Expand'} ${item.label} section`}
                           >
@@ -1209,7 +1209,7 @@ export function Sidebar() {
                           className={`
                             flex items-center justify-center
                             w-11 h-11 mx-auto rounded-lg
-                            transition-colors duration-150
+                            transition-colors duration-quick
                             ${showHighlight
                               ? 'text-fg-brand-primary bg-bg-brand-primary'
                               : 'text-fg-tertiary hover:text-fg-primary hover:bg-bg-tertiary'
@@ -1249,7 +1249,7 @@ export function Sidebar() {
                 return (
                   <div className="flex flex-col">
                     <div className={`
-                      flex items-center pr-1.5 rounded-md transition-colors duration-150
+                      flex items-center pr-1.5 rounded-md transition-colors duration-quick
                       ${isProjectsActive
                         ? 'bg-bg-brand-primary text-fg-brand-primary'
                         : 'text-fg-tertiary hover:bg-bg-tertiary hover:text-fg-primary'
@@ -1276,7 +1276,7 @@ export function Sidebar() {
                       {projects.length > 0 && (
                         <button
                           onClick={() => toggleSection('Projects')}
-                          className="p-2 rounded-md transition-colors duration-150 hover:bg-bg-quaternary"
+                          className="p-2 rounded-md transition-colors duration-quick hover:bg-bg-quaternary"
                         >
                           <motion.div animate={{ rotate: isProjectsExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
                             <ChevronDown className="w-3 h-3" />
@@ -1333,7 +1333,7 @@ export function Sidebar() {
                   className={`
                     flex items-center justify-center
                     w-11 h-11 mx-auto rounded-lg
-                    transition-colors duration-150
+                    transition-colors duration-quick
                     ${isProjectsActive
                       ? 'text-fg-brand-primary bg-bg-brand-primary'
                       : 'text-fg-tertiary hover:text-fg-primary hover:bg-bg-tertiary'
@@ -1361,7 +1361,7 @@ export function Sidebar() {
                 return (
                   <div className="flex flex-col">
                     <div className={`
-                      flex items-center pr-1.5 rounded-md transition-colors duration-150
+                      flex items-center pr-1.5 rounded-md transition-colors duration-quick
                       ${isRecentChatsActive
                         ? 'bg-bg-brand-primary text-fg-brand-primary'
                         : 'text-fg-tertiary hover:bg-bg-tertiary hover:text-fg-primary'
@@ -1388,7 +1388,7 @@ export function Sidebar() {
                       {chatHistory.length > 0 && (
                         <button
                           onClick={() => toggleSection('RecentChats')}
-                          className="p-2 rounded-md transition-colors duration-150 hover:bg-bg-quaternary"
+                          className="p-2 rounded-md transition-colors duration-quick hover:bg-bg-quaternary"
                         >
                           <motion.div animate={{ rotate: isRecentChatsExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
                             <ChevronDown className="w-3 h-3" />
@@ -1444,7 +1444,7 @@ export function Sidebar() {
                   className={`
                     flex items-center justify-center
                     w-11 h-11 mx-auto rounded-lg
-                    transition-colors duration-150
+                    transition-colors duration-quick
                     ${isRecentChatsActive
                       ? 'text-fg-brand-primary bg-bg-brand-primary'
                       : 'text-fg-tertiary hover:text-fg-primary hover:bg-bg-tertiary'

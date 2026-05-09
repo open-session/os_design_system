@@ -125,9 +125,9 @@ export function MemberRow({ member, isSelected, onSelect, onRowClick, onSeatClic
       id={member.user_id}
       className={`
         group border-b border-border-secondary last:border-b-0
-        hover:bg-bg-secondary transition-colors duration-150 cursor-pointer
+        hover:bg-bg-secondary transition-colors duration-quick cursor-pointer
         ${isSelected ? 'bg-bg-secondary' : ''}
-        outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-border-primary
+        outline-hidden focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-border-primary focus-visible:shadow-focus-ring
       `}
       onAction={() => onRowClick(member.user_id)}
     >
@@ -201,7 +201,7 @@ export function MemberRow({ member, isSelected, onSelect, onRowClick, onSeatClic
                 p-1 rounded
                 text-fg-tertiary hover:text-fg-error-primary
                 opacity-0 group-hover:opacity-100
-                transition-all duration-150
+                transition-all duration-quick
                 disabled:opacity-50 disabled:cursor-not-allowed
               "
             >
@@ -209,7 +209,7 @@ export function MemberRow({ member, isSelected, onSelect, onRowClick, onSeatClic
             </button>
           )}
           <ChevronRight
-            className="w-4 h-4 text-fg-tertiary opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+            className="w-4 h-4 text-fg-tertiary opacity-0 group-hover:opacity-100 transition-opacity duration-quick"
             aria-hidden="true"
           />
         </div>

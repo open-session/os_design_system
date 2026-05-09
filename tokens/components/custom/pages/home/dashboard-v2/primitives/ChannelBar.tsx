@@ -19,7 +19,7 @@ export function ChannelBar({ label, value, fillPercent, className }: ChannelBarP
       </div>
       <div className="h-1 w-full overflow-hidden bg-border-secondary">
         <div
-          className="h-full bg-[var(--color-brand-500)]"
+          className="h-full bg-bg-brand-solid"
           style={{ width: `${Math.min(100, Math.max(0, fillPercent))}%` }}
         />
       </div>

@@ -414,7 +414,7 @@ function DestinationRow({ icon, label, isCurrent, disabled, onClick }: Destinati
       type="button"
       onClick={onClick}
       disabled={disabled || isCurrent}
-      className={`w-full flex items-center justify-between px-4 py-2.5 text-left transition-colors duration-150 disabled:cursor-default ${
+      className={`w-full flex items-center justify-between px-4 py-2.5 text-left transition-colors duration-quick disabled:cursor-default ${
         isCurrent
           ? 'bg-bg-brand-primary text-fg-brand-primary'
           : 'text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary disabled:opacity-50'

@@ -756,7 +756,7 @@ function AddArtImageRow({ onAdd, onCancel, isAdding, customCategories, onAddCate
           onDrop={handleDrop}
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
-          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center cursor-pointer border-2 border-dashed transition-colors overflow-hidden flex-shrink-0 ${
+          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center cursor-pointer border border-dashed transition-colors overflow-hidden flex-shrink-0 ${
             isDragging
               ? 'border-border-brand bg-bg-brand-primary'
               : file

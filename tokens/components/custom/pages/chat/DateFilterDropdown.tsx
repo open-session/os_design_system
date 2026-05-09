@@ -173,7 +173,7 @@ export function DateFilterDropdown({ value, onChange }: DateFilterDropdownProps)
       {/* Backdrop - blurs content behind (rendered at root level via portal-like fixed positioning) */}
       {isOpen && (
         <div 
-          className="fixed inset-0 z-30 bg-black/20 backdrop-blur-sm animate-in fade-in duration-150"
+          className="fixed inset-0 z-30 bg-black/20 backdrop-blur-sm animate-in fade-in duration-quick"
           onClick={() => {
             setIsOpen(false);
             setSelectionStart(null);
@@ -193,9 +193,9 @@ export function DateFilterDropdown({ value, onChange }: DateFilterDropdownProps)
               text-sm font-medium
               rounded-lg
               border border-border-secondary
-              transition-all duration-150
+              transition-all duration-quick
               ${isOpen 
-                ? 'bg-bg-tertiary ring-2 ring-brand-aperol/20 border-brand-aperol' 
+                ? 'bg-bg-tertiary ring-1 ring-brand-aperol/20 border-brand-aperol' 
                 : 'bg-bg-secondary hover:bg-bg-tertiary text-fg-primary'
               }
             `}
@@ -227,7 +227,7 @@ export function DateFilterDropdown({ value, onChange }: DateFilterDropdownProps)
               rounded-xl
               shadow-xl shadow-black/20
               overflow-hidden
-              animate-in fade-in slide-in-from-top-2 duration-150
+              animate-in fade-in slide-in-from-top-2 duration-quick
               w-[320px]
               z-40
             "
@@ -285,7 +285,7 @@ export function DateFilterDropdown({ value, onChange }: DateFilterDropdownProps)
                         outline-hidden transition-colors flex items-center justify-center
                         ${isOutsideMonth ? 'text-fg-quaternary opacity-40' : ''}
                         ${isDisabled || date.compare(todayDate) > 0 ? 'text-fg-quaternary opacity-40 cursor-not-allowed' : ''}
-                        ${isFocusVisible ? 'ring-2 ring-brand-aperol/30' : ''}
+                        ${isFocusVisible ? 'ring-1 ring-brand-aperol/30' : ''}
                         ${isCurrentlySelected(date) && !selectionStart ? 'bg-brand-aperol/15 text-brand-aperol' : ''}
                         ${isSelectionEndpoint(date) ? 'bg-brand-aperol text-white' : ''}
                         ${isInRange(date) && !isSelectionEndpoint(date) ? 'bg-brand-aperol/20 text-fg-primary' : ''}

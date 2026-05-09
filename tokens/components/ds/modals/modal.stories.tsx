@@ -13,7 +13,7 @@ import { Dialog, DialogTrigger, Modal, ModalOverlay } from './modal';
  *   2. Slower modal motion: duration-moderate enter, duration-standard exit.
  */
 const meta: Meta<typeof Modal> = {
-  title: 'Design System/Modal',
+  title: 'Base/Application/Modal',
   component: Modal,
   tags: ['autodocs'],
 };

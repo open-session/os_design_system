@@ -10,7 +10,7 @@ void TabPanel;
  * Imports through `@/components/base` resolve here, NOT to the upstream UUI vendor file.
  */
 const meta: Meta = {
-  title: 'Design System/Application/Tabs',
+  title: 'Base/Application/Tabs',
   tags: ['autodocs'],
 };
 

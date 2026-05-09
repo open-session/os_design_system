@@ -252,7 +252,7 @@ export function PrePromptCarousel({ onPromptSubmit }: PrePromptCarouselProps) {
           <motion.button
             onClick={handlePrev}
             disabled={currentIndex <= 0}
-            className={`shrink-0 w-9 h-9 rounded-full bg-bg-secondary border border-border-primary flex items-center justify-center transition-colors duration-150 ${
+            className={`shrink-0 w-9 h-9 rounded-full bg-bg-secondary border border-border-primary flex items-center justify-center transition-colors duration-quick ${
               currentIndex > 0 
                 ? 'cursor-pointer hover:bg-bg-tertiary hover:border-border-brand' 
                 : 'opacity-30 cursor-not-allowed'
@@ -319,7 +319,7 @@ export function PrePromptCarousel({ onPromptSubmit }: PrePromptCarouselProps) {
           <motion.button
             onClick={handleNext}
             disabled={currentIndex >= maxIndex}
-            className={`shrink-0 w-9 h-9 rounded-full bg-bg-secondary border border-border-primary flex items-center justify-center transition-colors duration-150 ${
+            className={`shrink-0 w-9 h-9 rounded-full bg-bg-secondary border border-border-primary flex items-center justify-center transition-colors duration-quick ${
               currentIndex < maxIndex 
                 ? 'cursor-pointer hover:bg-bg-tertiary hover:border-border-brand' 
                 : 'opacity-30 cursor-not-allowed'
@@ -346,7 +346,7 @@ export function PrePromptCarousel({ onPromptSubmit }: PrePromptCarouselProps) {
               role="tab"
               aria-selected={idx === currentIndex}
               aria-label={`Go to slide ${idx + 1} of ${maxIndex + 1}`}
-              className={`h-1.5 rounded-full focus:outline-hidden focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 transition-colors duration-150 ${
+              className={`h-1.5 rounded-full focus:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 focus-visible:shadow-focus-ring transition-colors duration-quick ${
                 idx === currentIndex 
                   ? 'bg-fg-brand-primary' 
                   : 'bg-border-primary hover:bg-fg-tertiary'

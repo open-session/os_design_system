@@ -30,7 +30,7 @@ export function SectionDivider({ label, right, marker = 'outline', className }: 
           aria-hidden
           className={cx(
             'h-1.5 w-1.5 rotate-45',
-            marker === 'filled' ? 'bg-[var(--color-brand-500)]' : 'border border-[var(--color-brand-500)]',
+            marker === 'filled' ? 'bg-bg-brand-solid' : 'border border-border-brand-solid',
           )}
         />
         <Eyebrow size="sm" tone="primary">

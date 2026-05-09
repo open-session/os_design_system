@@ -32,7 +32,7 @@ export function ProjectCard({ project, chatCount = 0, isCreate = false, onCreate
     'bg-bg-secondary',
     'hover:bg-secondary-hover',
     'hover:border-border-brand',
-    'transition-all duration-200 ease-out',
+    'transition-all duration-standard ease-motion-out',
     'min-h-[200px]',
     'shadow-sm',
     'hover:shadow-md',
@@ -47,7 +47,7 @@ export function ProjectCard({ project, chatCount = 0, isCreate = false, onCreate
         className={cn(
           cardBaseStyles,
           'items-center justify-center',
-          'border-2 border-dashed',
+          'border border-dashed',
           'hover:border-border-brand-solid',
           'cursor-pointer w-full text-left group'
         )}

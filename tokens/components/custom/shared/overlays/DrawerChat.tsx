@@ -216,7 +216,7 @@ export function DrawerChat({ tabId, isActive, panelWidth, isResizing }: DrawerCh
           <button
             type="button"
             onClick={() => void openInFullPage()}
-            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-fg-tertiary transition-colors hover:bg-bg-secondary hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-border-brand"
+            className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-fg-tertiary transition-colors hover:bg-bg-secondary hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-border-brand"
             title="Open in full page"
           >
             <Expand06 className="h-3.5 w-3.5" aria-hidden />

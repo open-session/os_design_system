@@ -109,7 +109,7 @@ export function ModelSelector({ selectedModel, onModelChange, disabled }: ModelS
         disabled={disabled}
         className={`
           flex items-center gap-1 px-2 py-1 rounded-md text-xs
-          transition-all duration-200
+          transition-all duration-standard
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-bg-tertiary cursor-pointer'}
           ${
             isOpen
@@ -147,7 +147,7 @@ export function ModelSelector({ selectedModel, onModelChange, disabled }: ModelS
                     onModelChange(model.id);
                     setIsOpen(false);
                   }}
-                  className="group w-full flex items-center gap-2 px-3 py-2 text-left transition-colors duration-150 hover:bg-bg-tertiary"
+                  className="group w-full flex items-center gap-2 px-3 py-2 text-left transition-colors duration-quick hover:bg-bg-tertiary"
                 >
                   <Icon className="w-4 h-4 text-fg-quaternary group-hover:text-fg-tertiary transition-colors flex-shrink-0" />
                   <div className="flex-1 min-w-0">

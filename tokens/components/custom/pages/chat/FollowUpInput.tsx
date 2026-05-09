@@ -177,11 +177,11 @@ export function FollowUpInput({
         <div
           className={`
             relative rounded-xl
-            border transition-all duration-200
+            border transition-all duration-standard
             bg-bg-secondary shadow-sm
             ${
               isDragging || isFocused || isListening
-                ? 'border-border-brand-solid shadow-lg shadow-bg-brand-solid/20 ring-2 ring-border-brand-solid/30'
+                ? 'border-border-brand-solid shadow-lg shadow-bg-brand-solid/20 ring-1 ring-border-brand-solid/30'
                 : 'border-border-primary hover:border-fg-tertiary'
             }
           `}

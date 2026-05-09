@@ -158,7 +158,7 @@ export function SearchResearchToggle({
         <div className="relative inline-flex items-center bg-bg-tertiary rounded-lg p-1">
           {/* Sliding pill indicator */}
           <div
-            className="absolute top-1 h-[calc(100%-8px)] w-[32px] bg-bg-brand-solid rounded-md transition-all duration-300 ease-out"
+            className="absolute top-1 h-[calc(100%-8px)] w-[32px] bg-bg-brand-solid rounded-md transition-all duration-moderate ease-motion-out"
             style={{
               left: activeMode === 'search' ? '4px' : '36px',
             }}
@@ -172,7 +172,7 @@ export function SearchResearchToggle({
               onMouseEnter={() => handleButtonMouseEnter('search')}
               onMouseLeave={handleButtonMouseLeave}
               className={`
-                relative z-10 flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-300
+                relative z-10 flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-moderate
                 ${
                   activeMode === 'search'
                     ? 'text-fg-white'
@@ -185,7 +185,7 @@ export function SearchResearchToggle({
             </button>
             {/* Simple tooltip when suggestions are showing */}
             {showSuggestionsState && (
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-fg-primary bg-bg-secondary border border-border-secondary rounded-md opacity-0 group-hover/search:opacity-100 transition-opacity duration-150 whitespace-nowrap pointer-events-none z-50">
+              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-fg-primary bg-bg-secondary border border-border-secondary rounded-md opacity-0 group-hover/search:opacity-100 transition-opacity duration-quick whitespace-nowrap pointer-events-none z-50">
                 Search
               </span>
             )}
@@ -199,7 +199,7 @@ export function SearchResearchToggle({
               onMouseEnter={() => handleButtonMouseEnter('research')}
               onMouseLeave={handleButtonMouseLeave}
               className={`
-                relative z-10 flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-300
+                relative z-10 flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-moderate
                 ${
                   activeMode === 'research'
                     ? 'text-fg-white'
@@ -212,7 +212,7 @@ export function SearchResearchToggle({
             </button>
             {/* Simple tooltip when suggestions are showing */}
             {showSuggestionsState && (
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-fg-primary bg-bg-secondary border border-border-secondary rounded-md opacity-0 group-hover/research:opacity-100 transition-opacity duration-150 whitespace-nowrap pointer-events-none z-50">
+              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs font-medium text-fg-primary bg-bg-secondary border border-border-secondary rounded-md opacity-0 group-hover/research:opacity-100 transition-opacity duration-quick whitespace-nowrap pointer-events-none z-50">
                 Research
               </span>
             )}
@@ -228,7 +228,7 @@ export function SearchResearchToggle({
           >
             {/* Arrow pointer with solid background */}
             <div
-              className={`absolute -top-[9px] w-4 h-4 border-l border-t border-border-secondary transform rotate-45 transition-all duration-200 bg-bg-secondary ${getArrowPosition()}`}
+              className={`absolute -top-[9px] w-4 h-4 border-l border-t border-border-secondary transform rotate-45 transition-all duration-standard bg-bg-secondary ${getArrowPosition()}`}
             />
             
             <div className="relative">

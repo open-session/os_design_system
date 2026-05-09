@@ -602,7 +602,7 @@ export function ProjectSidebar({
             onDrop={handleDrop}
             className={`
               block mb-4 cursor-pointer
-              border-2 border-dashed rounded-lg
+              border border-dashed rounded-lg
               p-4 text-center
               transition-all
               ${isDragOver

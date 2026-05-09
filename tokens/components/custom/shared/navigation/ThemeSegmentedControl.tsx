@@ -57,7 +57,7 @@ export function ThemeSegmentedControl() {
               relative flex-1 flex items-center justify-center gap-2
               h-9 px-3 rounded-md
               text-sm font-medium
-              transition-colors duration-150
+              transition-colors duration-quick
               min-w-[44px]
               ${isSelected 
                 ? 'text-fg-primary' 

@@ -115,7 +115,7 @@ export function RichTextEditor({
           overflow-hidden
           transition-colors
           ${isFocused
-            ? 'border-border-brand ring-2 ring-focus-ring'
+            ? 'border-border-brand ring-1 ring-focus-ring'
             : 'border-border-primary'
           }
           ${isOverLimit ? 'border-fg-error-primary' : ''}

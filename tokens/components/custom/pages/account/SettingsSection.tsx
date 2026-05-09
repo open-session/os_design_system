@@ -96,7 +96,7 @@ export function SettingsField({
                 text-xs font-semibold text-white dark:text-fg-primary
                 rounded-lg
                 opacity-0 invisible group-hover:opacity-100 group-hover:visible
-                transition-all duration-150
+                transition-all duration-quick
                 whitespace-nowrap
                 z-50
                 shadow-lg
@@ -167,7 +167,7 @@ export function SettingsSectionFooter({
           hover:border-border-primary
           hover:bg-bg-secondary-alt
           disabled:opacity-50 disabled:cursor-not-allowed
-          transition-all duration-150
+          transition-all duration-quick
         "
       >
         {cancel}
@@ -184,7 +184,7 @@ export function SettingsSectionFooter({
           text-sm font-medium text-fg-brand-primary
           hover:bg-bg-brand-primary-hover
           disabled:opacity-50 disabled:cursor-not-allowed
-          transition-all duration-150
+          transition-all duration-quick
         "
       >
         {isSaving ? saving : save}

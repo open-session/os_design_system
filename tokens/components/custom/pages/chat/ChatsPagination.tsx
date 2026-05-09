@@ -37,7 +37,7 @@ export function ChatsPagination({
               onClick={() => onRowsPerPageChange(option)}
               className={`
                 px-3 py-1.5 text-xs font-medium rounded-md
-                transition-all duration-150
+                transition-all duration-quick
                 ${rowsPerPage === option
                   ? 'bg-brand-aperol text-white'
                   : 'bg-bg-secondary text-fg-tertiary hover:bg-bg-tertiary hover:text-fg-primary border border-border-secondary'
@@ -68,7 +68,7 @@ export function ChatsPagination({
           disabled={currentPage <= 1}
           className={`
             flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md
-            transition-all duration-150
+            transition-all duration-quick
             ${currentPage <= 1
               ? 'opacity-40 cursor-not-allowed text-fg-quaternary'
               : 'bg-bg-secondary text-fg-primary hover:bg-bg-tertiary border border-border-secondary'
@@ -84,7 +84,7 @@ export function ChatsPagination({
           disabled={currentPage >= totalPages}
           className={`
             flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md
-            transition-all duration-150
+            transition-all duration-quick
             ${currentPage >= totalPages
               ? 'opacity-40 cursor-not-allowed text-fg-quaternary'
               : 'bg-bg-secondary text-fg-primary hover:bg-bg-tertiary border border-border-secondary'

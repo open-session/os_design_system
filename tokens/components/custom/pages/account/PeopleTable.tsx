@@ -154,8 +154,8 @@ export function PeopleTable({ orgId: _orgId }: PeopleTableProps) {
               w-full pl-9 pr-3 py-2
               text-sm text-fg-primary placeholder:text-fg-tertiary
               bg-bg-secondary border border-border-secondary rounded-lg
-              outline-hidden focus:ring-2 focus:ring-border-primary focus:border-border-primary
-              transition-colors duration-150
+              outline-hidden focus:ring-1 focus:shadow-focus-ring focus:ring-border-primary focus:border-border-primary
+              transition-colors duration-quick
             "
           />
         </div>

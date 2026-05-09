@@ -83,7 +83,7 @@ export function FeatureCarousel({ children, count }: FeatureCarouselProps) {
           disabled={!canPrev}
           className={cx(
             'flex h-6 w-6 items-center justify-center rounded-sm text-fg-tertiary transition-colors',
-            'hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)]',
+            'hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring-brand',
             'disabled:cursor-not-allowed disabled:opacity-30',
           )}
         >
@@ -110,7 +110,7 @@ export function FeatureCarousel({ children, count }: FeatureCarouselProps) {
           disabled={!canNext}
           className={cx(
             'flex h-6 w-6 items-center justify-center rounded-sm text-fg-tertiary transition-colors',
-            'hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)]',
+            'hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring-brand',
             'disabled:cursor-not-allowed disabled:opacity-30',
           )}
         >

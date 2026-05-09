@@ -74,7 +74,7 @@ function BrandSourceItem({ source }: { source: BrandSourceInfo }) {
   };
 
   return (
-    <span {...devProps('BrandSourceItem')} className="flex items-start gap-2.5 px-2.5 py-2 rounded-lg hover:bg-bg-tertiary transition-all duration-200 group cursor-pointer">
+    <span {...devProps('BrandSourceItem')} className="flex items-start gap-2.5 px-2.5 py-2 rounded-lg hover:bg-bg-tertiary transition-all duration-standard group cursor-pointer">
       {/* Icon or Thumbnail */}
       <span className="flex-shrink-0">
         {isAsset && isImage && source.thumbnail ? (

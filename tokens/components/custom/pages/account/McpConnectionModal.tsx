@@ -488,7 +488,7 @@ export function McpConnectionModal({
               hover:text-fg-secondary
               hover:border-border-primary
               hover:bg-bg-tertiary
-              transition-all duration-150
+              transition-all duration-quick
             "
           >
             Cancel

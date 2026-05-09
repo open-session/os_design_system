@@ -155,7 +155,7 @@ function SelectInput({ control, value, onChange }: ControlInputProps) {
         >
           <div
             className={cn(
-              'w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors',
+              'w-4 h-4 rounded-full border flex items-center justify-center transition-colors',
               currentValue === option.value
                 ? 'border-brand-aperol'
                 : 'border-os-border-dark'

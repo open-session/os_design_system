@@ -99,7 +99,7 @@ export function HomeDashboardV2() {
           aria-live="polite"
           className="mt-2 flex items-center justify-center gap-2 rounded-sm bg-bg-secondary/60 px-3 py-2 text-xs text-fg-tertiary backdrop-blur-sm"
         >
-          <span className="h-1.5 w-1.5 rotate-45 bg-[var(--color-brand-500)]" aria-hidden />
+          <span className="h-1.5 w-1.5 rotate-45 bg-bg-brand-solid" aria-hidden />
           <span>
             Editing layout — drag to reorder, then <span className="text-fg-primary">Save</span>{' '}
             or press <span className="text-fg-primary">Esc</span> to cancel.
@@ -123,7 +123,7 @@ export function HomeDashboardV2() {
                 type="button"
                 onClick={() => toggleSectionVisibility(id)}
                 aria-label={isHidden ? `Show ${section.label}` : `Hide ${section.label}`}
-                className="flex h-6 w-6 items-center justify-center rounded-sm text-fg-tertiary hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)]"
+                className="flex h-6 w-6 items-center justify-center rounded-sm text-fg-tertiary hover:text-fg-primary focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring-brand"
               >
                 {isHidden ? (
                   <Eye className="h-3.5 w-3.5" aria-hidden />

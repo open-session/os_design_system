@@ -69,9 +69,11 @@ export { TextArea, TextAreaBase } from "./base/textarea/textarea";
 
 export { Toggle, ToggleBase } from "./base/toggle/toggle";
 
-// Tooltip: with-defaults re-exports `TooltipTrigger` + types from ./tooltip,
-// then exports the BOS-defaulted Tooltip wrapper. Single import covers both.
-export { Tooltip, TooltipTrigger } from "./base/tooltip/with-defaults";
+// Tooltip: re-exported from the BOS Layer-4 wrapper (ds/tooltips/tooltip.tsx, Shape A).
+// The vendor-pristine base/base/tooltip/tooltip.tsx remains as the unwrapped primitive
+// that ds/tooltips/tooltip.tsx depends on (correct direction: ds/ → base/).
+// base/base/tooltip/with-defaults.tsx has been deleted (PRD 020, Wave 2c).
+export { Tooltip, TooltipTrigger } from "@/components/ds/tooltips/tooltip";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // application/ — composed primitives

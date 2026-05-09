@@ -1,0 +1,250 @@
+---
+title: 'Design System/Wrapper Template'
+rule: 'Use Shape A (behavioral defaults), Shape B (CVA variant override), or Shape C (full fork) to lift brand overrides out of components/base/ into components/ds/'
+scope: 'components/ds/<primitive>/<primitive>.tsx — authored once per primitive that diverges structurally from UUI'
+detection-command: "rg -l 'Wrapper shape:' components/ds/"
+enforcement:
+  codemod: null
+  eslint-rule: null
+  scope: 'ds/'
+  severity: null
+last-audited: '2026-05-09'
+version: 1
+tags: ['wrapper', 'layer-4', 'architecture', 'shape-a', 'shape-b', 'shape-c', 'design-system', 'bos-novel']
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Wrapper Template" />
+
+# Layer 4 Wrapper Template
+
+## TL;DR
+
+BOS brand-variant overrides are **lifted out of `components/base/`** into `components/ds/<primitive>/<primitive>.tsx`. This lets the vendor file be re-pulled (`bun run uui:add <name>`) without losing brand customizations. Three wrapper shapes cover every scenario: Shape A (behavioral defaults), Shape B (CVA variant override), Shape C (full fork).
+
+---
+
+## Why Wrappers Exist
+
+`components/base/` is vendor source. When `bun run uui:add button` is run, the file is regenerated from upstream UUI Pro. Any BOS brand override hand-baked inside `base/` will be silently overwritten on that regeneration.
+
+The contract: `base/<primitive>/<primitive>.tsx` reflects upstream UUI **after** the 5-axis mechanical transforms (motion, focus-ring, disabled-state, token-syntax, devProps — applied by `scripts/uui-apply-transformations.ts`). Anything beyond mechanical — a redefined CVA arm, a forked color variant, a re-shaped sizing scale — belongs in a `ds/` wrapper.
+
+---
+
+## Decision Tree
+
+```
+Diff base/<primitive>/<primitive>.tsx against a fresh vendor pull.
+
+├── No deltas (or mechanical-only) → no wrapper. Done.
+
+├── Single-token swap where the BOS token name = UUI-native token name
+│   re-defined in brand.css (e.g., text-fg-secondary, --ring-brand)
+│   → no wrapper. The brand value lives in brand.css; vendor file is correct.
+
+├── CVA-based primitive with redefined variant ARMS
+│   → Shape B: re-create the cva() call in ds/ with overridden arms.
+
+├── Object-style (sortCx, plain styles object) with structural deltas
+│   (multiple variant keys redefined, sizing scale shifted, behavior changed)
+│   → Shape C: full fork. Copy into ds/, restore upstream in base/.
+
+└── Primitive whose only delta is BEHAVIORAL DEFAULTS
+    (placement, delay, size default — no class deltas)
+    → Shape A: spread *_BEHAVIORAL_DEFAULTS from ds/defaults/<primitive>.ts.
+```
+
+---
+
+## Shape A — Behavioral Defaults
+
+Use when the primitive's CVA / styles object is byte-identical to upstream and the only BOS deltas are non-class default props (e.g., `delay={300}`, `placement="top"`).
+
+**Canonical example:** `components/base/base/tooltip/with-defaults.tsx`. Lives inside `base/<primitive>/with-defaults.tsx` because there are no class-level deltas to lift out — only a behavioral spread.
+
+**Barrel re-export:** `components/base/index.ts` re-exports from `with-defaults.tsx`:
+
+```ts
+export { Tooltip, TooltipTrigger } from './base/tooltip/with-defaults';
+```
+
+**ds/defaults/ wiring:**
+
+```ts
+// components/ds/defaults/tooltip.ts
+export const tooltipDefaults = {
+  delay: 300,
+  placement: 'top',
+} satisfies TooltipDefaultProps;
+
+// components/base/base/tooltip/with-defaults.tsx
+import { tooltipDefaults } from '@/components/ds/defaults/tooltip';
+
+export function Tooltip(props: TooltipProps) {
+  return <TooltipBase {...tooltipDefaults} {...props} />;
+}
+```
+
+---
+
+## Shape B — CVA Variant Override
+
+Use when the primitive uses `cva()` and one or more variant arms have been redefined to express BOS brand semantics.
+
+**Layout:**
+- `components/base/base/<primitive>/<primitive>.tsx` — pristine UUI vendor source (cva uses upstream tokens)
+- `components/ds/<primitive>/<primitive>.tsx` — re-creates the cva config with overridden arms; re-exports the BOS-branded component
+- `components/base/index.ts` — barrel re-export points at `@/components/ds/<primitive>/<primitive>`
+
+**Why re-create instead of spread:** CVA does not support spread-based variant override. The wrapper has to call `cva()` again with the overridden arm values.
+
+**Sketch:**
+
+```tsx
+'use client';
+/**
+ * BOS Button — recreates the cva config with brand-overridden variant arms.
+ *
+ * Wrapper shape: B (CVA variant override).
+ * Brand decisions: see ds/_history/button.md.
+ * @upstream-base components/base/base/buttons/button.tsx
+ */
+import { cva } from 'class-variance-authority';
+import { ButtonBase } from '@/components/base/base/buttons/button-base';
+import type { ComponentProps } from 'react';
+
+const bosButtonStyles = cva('base-classes-from-upstream', {
+  variants: {
+    color: {
+      primary: 'bg-bg-secondary text-fg-primary ...', // BOS calm/contained primary
+      secondary: '...',
+    },
+    size: { xs: '...', sm: '...', md: '...' },
+  },
+  defaultVariants: { color: 'primary', size: 'sm' },
+});
+
+export function Button(props: ComponentProps<typeof ButtonBase>) {
+  return (
+    <ButtonBase {...props} className={bosButtonStyles({ color: props.color, size: props.size })} />
+  );
+}
+```
+
+---
+
+## Shape C — Full Fork
+
+Use when the primitive uses an object-style `sortCx` / plain `styles` constant and the BOS deltas span multiple keys. **This is the most common shape for Layer-4 primitives in BOS.**
+
+**Layout:**
+- `components/base/base/<primitive>/<primitive>.tsx` — pristine UUI vendor source (after 5-axis mechanical transforms)
+- `components/ds/<primitive>/<primitive>.tsx` — full copy with the BOS `styles` object and structural overrides
+- `components/base/index.ts` — barrel re-export points at `@/components/ds/<primitive>/<primitive>`
+
+**Trade-off:** Duplication. But diffing the fork against `base/` after a re-pull makes the brand delta explicit — no silent drift. Vendor-survival is automatic.
+
+**Sketch:**
+
+```tsx
+'use client';
+// components/ds/buttons/button.tsx — Wrapper shape: C (full fork).
+//
+// Brand decisions:
+//   - primary variant: neutral-secondary (Decision #2, ds/_exceptions.md)
+//   - xs size: shrunk vs upstream UUI
+//   - linkRoot: drops UUI's underline-offset additions
+// @upstream-base components/base/base/buttons/button.tsx
+// See ds/_history/button.md for round-trip history.
+
+import { Button as AriaButton, Link as AriaLink } from 'react-aria-components';
+import { cx, sortCx } from '@/utils/cx';
+import { devProps } from '@/lib/utils/dev-props';
+
+// Re-export types from base — type contract is shared.
+export type { CommonProps, ButtonProps, Props } from '@/components/base/base/buttons/button';
+
+// BOS-branded styles — diverges from base/buttons/button.tsx in:
+//   - colors.primary.root (Decision #2)
+//   - sizes.xs (smaller text/padding)
+//   - colors.{primary-destructive,secondary-destructive}.root (added disabled states)
+export const styles = sortCx({
+  /* ... full BOS styles object ... */
+});
+
+export const Button = ({ /* ...props */ }) => {
+  // JSX body identical to base/; only `styles` lookup differs.
+};
+```
+
+---
+
+## Per-Wrapper Documentation Requirements
+
+Every wrapper file MUST include at the top:
+
+1. **Wrapper shape declaration** in JSDoc: `Wrapper shape: A | B | C`
+2. **Pointer to `_history/<primitive>.md`** — the round-trip decision log
+3. **Brand-decision callout** — one line per delta, naming what differs from upstream
+4. **Upstream pointer**: `// @upstream-base components/base/base/<primitive>/<primitive>.tsx`
+
+The audit row in `docs/audits/2026-05/009-layer4-primitive-classification.md` MUST be updated to point at the wrapper with `Status: Resolved — wrapper at ds/<primitive>/<primitive>.tsx (Shape <A|B|C>)`.
+
+---
+
+## Migration Checklist (Per Primitive)
+
+1. **Pull upstream:** `npx untitledui@latest add <primitive> --path /tmp/uui-fresh-<primitive>`
+2. **Diff:** `diff /tmp/uui-fresh-<primitive>/... components/base/base/<path>/<file>.tsx`
+3. **Triage:** mechanical-only → no wrapper. Token-name-only → no wrapper. Structural → pick Shape A / B / C.
+4. **Author wrapper:** copy/refactor into `ds/<primitive>/<primitive>.tsx`. Apply documentation requirements.
+5. **Restore upstream in base/:** for Shape C, replace BOS-overridden chunks with upstream content, then re-apply 5-axis transforms.
+6. **Update barrel:** `components/base/index.ts` — point export at `@/components/ds/<primitive>/<primitive>`.
+7. **Audit + history:** update audit row; append `ds/_history/<primitive>.md` round-trip entry.
+8. **Validate:** `bun run typecheck && bun run lint && bun run build`. Storybook stories render visually identical.
+9. **Cleanup:** `rm -rf /tmp/uui-fresh-<primitive>`
+
+---
+
+## The Wrapper-Deletion Test
+
+During any major version upgrade (UUI v8, PRD 018 vendor swap), re-run the decision tree for each existing wrapper. Ask: "Are there still ≥1 **Type 3** deltas (genuine BOS brand decisions — not mechanical, not token-rename) remaining for this primitive?"
+
+- **Yes** → wrapper survives
+- **No** → delete the wrapper, re-route the barrel to `base/` directly
+
+The Phase C / UUI v7→v8 campaign predicted 7–10 wrappers would survive; the actual count was 5 (4 structural Shape C + 1 behavioral Shape A) after applying this test. Most candidates failed — their deltas turned out to be Type 1 (token rename in `brand.css`) or Type 2 (vendor evolution to adopt). Only 4 had genuine Type 3 class-level brand decisions; 1 additional wrapper (Tooltip) was retained for behavioral defaults and did not go through the deletion test. Default: lean into UUI and drop wrapper candidates unless product use is currently validated.
+
+---
+
+## Active Wrappers (PRD 020 Final State)
+
+| Primitive | Shape | Brand Decisions | History |
+|-----------|-------|-----------------|---------|
+| `buttons/button` | C (full fork) | Primary = neutral-secondary; xs size shrunk; linkRoot cleanup | `ds/_history/button.md` |
+| `tabs/tabs` | C (full fork) | `ease-motion-out` retained (Type 3); deletable if codemod axis 1b (ease-linear rule) lands | `ds/_history/tabs.md` |
+| `modals/modal` | C (full fork) | Backdrop opacity; border-radius; padding scale | `ds/_history/modal.md` |
+| `featured-icon/featured-icon` | C (full fork) | Color variant mapping to BOS tokens | `ds/_history/featured-icon.md` |
+| `tooltips/tooltip` | A (behavioral) | Default delay=300, placement=top | `ds/_history/tooltip.md` |
+
+---
+
+## Detection Command
+
+```bash
+# List all wrapper files (Shape A/B/C):
+rg -l 'Wrapper shape:' components/ds/
+```
+
+---
+
+## Related
+
+- [Wrapper Import Retention (Axis 6)](./transforms/wrapper-import-retention.mdx) — how wrapper imports survive vendor re-pulls
+- [Swap Guide](./swap-guide.mdx) — vendor-swap procedure that uses these wrappers
+- Source spec: `components/ds/_wrapper-template.md` (legacy Markdown version)
+- Audit inventory: `docs/audits/2026-05/009-layer4-primitive-classification.md`
+- Brand decisions: `components/ds/_exceptions.md`
+- Decision history: `components/ds/_history/<primitive>.md`

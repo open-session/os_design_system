@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowLeft, Check, ChevronDown, Copy01, Download01, Eye, XClose, Code01 as Code } from '@untitledui-pro/icons/line';
-import { Tooltip, TooltipTrigger } from '@/components/base/base/tooltip/with-defaults';
+import { Tooltip, TooltipTrigger } from '@/components/base';
 import type { CanvasPanelMode, CanvasViewMode } from '@/lib/canvas-context';
 import { devProps } from '@/lib/utils/dev-props';
 
@@ -142,7 +142,7 @@ export function CanvasHeader({
           <Tooltip title="Source view" placement="bottom" delay={300}>
             <TooltipTrigger
               onPress={() => onViewModeChange('source')}
-              className={`relative z-10 w-7 h-7 flex items-center justify-center rounded-md transition-colors duration-200 ${
+              className={`relative z-10 w-7 h-7 flex items-center justify-center rounded-md transition-colors duration-standard ${
                 viewMode === 'source' 
                   ? 'text-fg-primary' 
                   : 'text-fg-tertiary hover:text-fg-secondary'
@@ -154,7 +154,7 @@ export function CanvasHeader({
           <Tooltip title="Preview" placement="bottom" delay={300}>
             <TooltipTrigger
               onPress={() => onViewModeChange('view')}
-              className={`relative z-10 w-7 h-7 flex items-center justify-center rounded-md transition-colors duration-200 ${
+              className={`relative z-10 w-7 h-7 flex items-center justify-center rounded-md transition-colors duration-standard ${
                 viewMode === 'view' 
                   ? 'text-fg-primary' 
                   : 'text-fg-tertiary hover:text-fg-secondary'

@@ -164,7 +164,7 @@ function LogoCard({ logo }: { logo: LogoAsset }) {
   };
 
   return (
-    <div {...devProps('LogoCard')} className="group flex-shrink-0 w-[140px] sm:w-[160px] rounded-lg overflow-hidden border border-border-secondary bg-bg-secondary transition-all duration-200 hover:border-border-brand">
+    <div {...devProps('LogoCard')} className="group flex-shrink-0 w-[140px] sm:w-[160px] rounded-lg overflow-hidden border border-border-secondary bg-bg-secondary transition-all duration-standard hover:border-border-brand">
       {/* Header */}
       <div className="bg-bg-tertiary px-2 py-1.5 border-b border-border-secondary flex items-center justify-between">
         <span className="text-[10px] font-medium text-fg-secondary truncate">{logo.name}</span>
@@ -216,7 +216,7 @@ function FontCard({ font }: { font: FontAsset }) {
   const fontClass = font.id === 'offbit' ? 'font-mono' : 'font-display';
 
   return (
-    <div {...devProps('FontCard')} className="group flex-shrink-0 w-[180px] sm:w-[200px] rounded-lg overflow-hidden border border-border-secondary bg-bg-secondary transition-all duration-200 hover:border-border-brand">
+    <div {...devProps('FontCard')} className="group flex-shrink-0 w-[180px] sm:w-[200px] rounded-lg overflow-hidden border border-border-secondary bg-bg-secondary transition-all duration-standard hover:border-border-brand">
       {/* Header */}
       <div className="bg-bg-tertiary px-2 py-1.5 border-b border-border-secondary flex items-center justify-between">
         <span className="text-[10px] font-medium text-fg-secondary truncate">{font.name}</span>
@@ -269,7 +269,7 @@ function ArtDirectionCard({ image }: { image: ArtDirectionAsset }) {
   };
 
   return (
-    <div {...devProps('ArtDirectionCard')} className="group flex-shrink-0 w-[140px] sm:w-[160px] rounded-lg overflow-hidden border border-border-secondary bg-bg-secondary transition-all duration-200 hover:border-border-brand">
+    <div {...devProps('ArtDirectionCard')} className="group flex-shrink-0 w-[140px] sm:w-[160px] rounded-lg overflow-hidden border border-border-secondary bg-bg-secondary transition-all duration-standard hover:border-border-brand">
       {/* Header */}
       <div className="bg-bg-tertiary px-2 py-1.5 border-b border-border-secondary flex items-center justify-between">
         <span className="text-[10px] font-medium text-fg-secondary capitalize truncate">{image.category}</span>
@@ -318,7 +318,7 @@ function TextureCard({ texture }: { texture: TextureAsset }) {
   };
 
   return (
-    <div {...devProps('TextureCard')} className="group flex-shrink-0 w-[140px] sm:w-[160px] rounded-lg overflow-hidden border border-border-secondary bg-bg-secondary transition-all duration-200 hover:border-border-brand">
+    <div {...devProps('TextureCard')} className="group flex-shrink-0 w-[140px] sm:w-[160px] rounded-lg overflow-hidden border border-border-secondary bg-bg-secondary transition-all duration-standard hover:border-border-brand">
       {/* Header */}
       <div className="bg-bg-tertiary px-2 py-1.5 border-b border-border-secondary flex items-center justify-between">
         <span className="text-[10px] font-medium text-fg-secondary truncate">{texture.name}</span>

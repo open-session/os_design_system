@@ -51,7 +51,7 @@ export function InfoPopover({ title, description }: InfoPopoverProps) {
         ref={triggerRef}
         onClick={() => setIsOpen(prev => !prev)}
         aria-label="Learn more"
-        className={`flex items-center justify-center w-9 h-9 rounded-md text-fg-tertiary hover:text-fg-primary hover:bg-bg-tertiary transition-all duration-150 cursor-pointer focus:outline-hidden focus-visible:ring-2 focus-visible:ring-fg-brand-primary ${
+        className={`flex items-center justify-center w-9 h-9 rounded-md text-fg-tertiary hover:text-fg-primary hover:bg-bg-tertiary transition-all duration-quick cursor-pointer focus:outline-hidden focus-visible:ring-1 focus-visible:ring-fg-brand-primary ${
           isOpen ? 'bg-bg-tertiary text-fg-primary' : ''
         }`}
       >

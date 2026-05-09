@@ -1,0 +1,220 @@
+---
+title: 'Design System/Mental Model'
+rule: 'Brand expression flows through two mechanisms: Mechanism 1 (token values — brand.css) and Mechanism 2 (structural variants — ds/<primitive>/). Knowing which one applies tells you where to make the change and what survives a vendor update.'
+scope: 'Architectural — informs decisions across all three component folders'
+detection-command: "rg -l 'bg-\\[var\\(--|ring-brand-500' components/base/ components/custom/ | wc -l"
+enforcement:
+  codemod: null
+  eslint-rule: null
+  scope: null
+  severity: null
+last-audited: '2026-05-09'
+version: 1
+tags: ['mental-model', 'architecture', 'two-mechanisms', 'vendor-agnostic', 'design-system']
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Mental Model" />
+
+# Design System Mental Model
+
+> **One sentence:** Brand expression in BOS flows through **two distinct mechanisms** — tokens (automatic, value-based) and structural variants (explicit, behavior-based). Knowing which one you're touching tells you where to make the change and what survives a vendor update.
+
+---
+
+## The Two Mechanisms
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                     How brand reaches a primitive                        │
+├─────────────────────────────────────┬────────────────────────────────────┤
+│  Mechanism 1 — Tokens               │  Mechanism 2 — Structural Variants │
+│                                     │                                    │
+│  "What is the value of this thing?" │  "What does this variant DO?"      │
+│                                     │                                    │
+│  Lives in: components/ds/brand.css  │  Lives in: components/ds/<name>/   │
+│                                     │                                    │
+│  Flows automatically via CSS vars   │  Imported explicitly via barrel    │
+│                                     │                                    │
+│  Covers ~95% of brand decisions     │  Covers ~5% — the hard cases       │
+│                                     │                                    │
+│  Examples:                          │  Examples:                         │
+│    • brand color → #FF6900          │    • Button primary = neutral with │
+│    • motion-micro → 100ms           │      hover-reveal (not orange CTA) │
+│    • radius-brand → 12px            │    • Tabs sizing scale restructure  │
+│    • focus-ring brand → blue tint   │    • FeaturedIcon outline behavior │
+└─────────────────────────────────────┴────────────────────────────────────┘
+```
+
+---
+
+## Mechanism 1 — Tokens (the automatic 95%)
+
+`components/ds/brand.css` is the single source of truth for **what every brand value equals**. It uses Tailwind's `@theme` to define CSS custom properties: `--bg-primary`, `--ring-brand`, `--motion-micro`, `--radius-brand`, and the full token vocabulary.
+
+Vendor primitives in `components/base/` don't hardcode pixel values — they reference token names. UUI's Button says "use `bg-brand-solid`" — and `brand.css` decides what `bg-brand-solid` means today.
+
+**Why this is mostly automatic:** Tailwind reads CSS variables at build time. Change a value in `brand.css`, and every Button / Input / Tab / FeaturedIcon across the app updates — no code edits, no imports. The vendor file doesn't know anything changed.
+
+**The catch:** Mechanism 1 is automatic for VALUES within a stable vocabulary, not for the vocabulary itself. If the vendor renames or removes CSS custom properties, `brand.css` needs a coordinated update. This is a "Type 1" change (see below). The UUI v7→v8 upgrade reduced CSS variables from 1,093 to 657 (a 40% drop) — that was a real Type 1 event.
+
+**What tokens cannot do:** They change values, not behaviors. There is no token called `--button-personality`. Token swaps don't restructure logic.
+
+---
+
+## Mechanism 2 — Structural Variants (the explicit 5%)
+
+Some brand decisions aren't values — they're behaviors. UUI's Button `primary` variant means "orange background, white text." BOS's `primary` means "neutral surface by default, brand color appears on hover." That is a different interaction pattern, not a color swap.
+
+For these cases, BOS publishes its own version of the primitive at `components/ds/<primitive>/<primitive>.tsx`. The barrel at `components/base/index.ts` re-routes consumers to the BOS version. The vendor's pristine source stays at `components/base/base/<path>/<file>.tsx` as a reference, but no application code routes through it.
+
+**In Figma terms:** think of it as publishing your own variant of someone else's master component. You inherit their structure, override specific properties, and your team links to your variant — not the original.
+
+---
+
+## The Figma Analogy (Whole-System View)
+
+| Code concept | Figma analog |
+|---|---|
+| `components/ds/brand.css` | Color Styles + Effect Styles + Variables. One change cascades everywhere. |
+| `components/base/` | Master components someone else made (the UUI Pro library). Has its own internal logic, variant defs, sizing scales. |
+| `components/ds/<primitive>/` | Your "published variant" of a vendor master component. Inherits structure, overrides properties, gets used in production instead of the original. |
+| `components/custom/` | Your designed pages and instances. Composes both DS primitives and one-off layouts. Where product UX actually lives. |
+| `bun run uui:add <name>` | The "pull updates from the source library" action. Lets vendor changes flow into the master without breaking your published variants. |
+
+**The dream:** change a brand value in `brand.css`, see every primitive update everywhere — without touching component code. **The reality:** that dream works perfectly for the ~95% of brand decisions that ARE just token values. For the structural ~5%, you publish a tiny explicit variant file and route consumers to it.
+
+---
+
+## How Import Resolution Actually Works
+
+When application code writes `import { Button } from '@/components/base'`:
+
+1. The barrel at `components/base/index.ts` intercepts the import.
+2. For Button specifically, it re-exports from `@/components/ds/buttons/button` — NOT from `./base/buttons/button`.
+3. The user's app renders the BOS Button with all brand decisions intact.
+4. The vendor-pristine `base/base/buttons/button.tsx` exists as the "what UUI ships" baseline — only ever read by the codemod on re-pull.
+
+**Production path:** consumers → barrel → `ds/` wrapper → render. The `base/` vendor file is a reference artifact, not a runtime dependency.
+
+For primitives with **no structural deltas** (most of them), the barrel re-exports directly from `base/`. No wrapper, no detour. Tokens flow through automatically. Mechanism 1 alone is enough.
+
+---
+
+## Decision Tree — Which Mechanism Applies?
+
+```
+Is it a value change? (color, motion timing, radius, opacity, focus ring tint)
+  → Mechanism 1. Edit components/ds/brand.css.
+    Every primitive updates automatically. Done.
+
+Is it a behavior change for one specific primitive?
+  (variant arms redefined, sizing scale shifted, new conditional logic)
+  → Mechanism 2. Create or edit components/ds/<primitive>/<primitive>.tsx.
+    See components/ds/wrapper-template.mdx for the three wrapper shapes.
+
+Is it a NEW primitive that doesn't exist anywhere yet?
+  → Build it under components/custom/<page-or-shared-category>/.
+    DS primitives are vendor-sourced; custom primitives are BOS-authored.
+
+Is it a one-off layout for a single page?
+  → components/custom/pages/<route>/. Compose DS primitives there.
+```
+
+---
+
+## Three Types of Vendor Change
+
+The two-mechanism model frames how you express brand. This section frames how the vendor changes underneath you. Every vendor update falls into one of three types.
+
+### Type 1 — Token Vocabulary Changes (Rare, Consequential)
+
+The vendor renames, removes, or adds CSS custom properties.
+
+**Response:** Update `brand.css` to align with the new vocabulary. Mechanism 1 requires maintenance here.
+
+**Risk if ignored:** `brand.css` defines orphaned tokens (vendor dropped them — bloats CSS) or fails to define new ones (vendor primitives reference undefined variables — silent visual bugs, missing colors, broken disabled states).
+
+### Type 2 — API Additions (Common, Additive)
+
+The vendor adds new props, sizes, variants, or whole primitives. UUI v8 added `lg` to Input and Select, `xs` to Button, `selectionIndicator` to Dropdown, and the entire multi-select / OTP input set.
+
+**Response:** Adopt. Pull the updated `base/` files. No wrapper required unless there is a Type 3 reason to override.
+
+**Risk if mistreated as Type 3:** Wrapping the new feature freezes BOS at the old vendor version — every subsequent vendor improvement to that primitive becomes a manual merge. Enough of these and the design system stops tracking the vendor at all.
+
+### Type 3 — Behavior Overrides (Small, Deliberate)
+
+You deliberately want the primitive to behave differently than the vendor ships. Examples: Button's calm-primary (Decision #2 — vendor ships orange CTA, BOS shows neutral with brand-on-hover), Tabs' restructured sizing scale, FeaturedIcon's outline behavior.
+
+**Response:** Wrap at `components/ds/<primitive>/<primitive>.tsx`. This IS Mechanism 2. The wrapper isolates the brand decision from vendor evolution.
+
+**Risk if leaky:** Letting the brand decision live inside `base/` directly. Vendor re-pull silently overwrites it, design system drifts back to vendor defaults, no one notices until a stakeholder asks why the primary button turned orange.
+
+```
+┌────────────────────┬───────────────────┬────────────────────────────────┐
+│ Type 1             │ Type 2            │ Type 3                         │
+│ Token vocabulary   │ API additions     │ Behavior overrides             │
+├────────────────────┼───────────────────┼────────────────────────────────┤
+│ Update brand.css   │ Adopt — no wrapper│ Wrap at ds/<primitive>/        │
+│ Frequency: rare    │ Frequency: common │ Frequency: small but real      │
+│ Risk: silent visual│ Risk: frozen at   │ Risk: vendor re-pull overwrites│
+│ bugs               │ old vendor        │ brand decision silently        │
+└────────────────────┴───────────────────┴────────────────────────────────┘
+```
+
+---
+
+## Current State (Phase C Shipped, 2026-05-09)
+
+**Mechanism 1:** Fully working but not free. Phase C confirmed that token alignment is earned, not automatic. Token maintenance is required on every major upgrade.
+
+**Mechanism 2:** 5 wrappers retained (not 23):
+
+| Wrapper | Shape | Brand Decision |
+|---------|-------|---------------|
+| `ds/buttons/button.tsx` | C (full fork) | Decision #2 calm-primary + 5 secondary deltas |
+| `ds/tabs/tabs.tsx` | C (full fork) | `ease-motion-out` retained; deletable if codemod axis 1b lands |
+| `ds/featured-icon/featured-icon.tsx` | C (full fork) | modern-theme + sm icon-stroke deltas |
+| `ds/modals/modal.tsx` | C (full fork) | BOS Dialog surface + slower modal motion |
+| `ds/tooltips/tooltip.tsx` | A (behavioral) | Default delay=300, placement=top (PRD 020 Wave 2) |
+
+The wrapper-deletion test held end-to-end: every wave applied the three-way diff (current / vendor-pristine / wrapper) and dropped any wrapper without surviving Type 3 deltas. The Phase B regex sweep predicted 31 wrappers; the post-sweep refinement said ~26; the actual count was 5 (4 structural + 1 behavioral).
+
+**The wrapper-deletion test:** When evaluating a wrapper candidate, ask: "Are there still ≥1 Type 3 deltas remaining?" If yes, wrapper survives. If no, delete the wrapper, re-route the barrel to `base/` directly. Default: lean into UUI and drop wrapper candidates unless product use is currently validated.
+
+---
+
+## Vendor Agnosticism
+
+| Piece | Vendor-agnostic? | Coupling |
+|-------|-----------------|---------|
+| `ds/brand.css` (Mechanism 1) | Fully — any Tailwind-based vendor reads tokens automatically | None |
+| `ds/<primitive>/` wrappers (Mechanism 2) | Conceptually (three shapes work for any vendor) | Implementation imports vendor-specific symbols; a swap means rewriting wrapper bodies |
+| `bun run uui:add` pipeline | UUI-specific today | Hardcoded to `npx untitledui@latest`; needs vendor adapter layer for PRD 018 |
+
+**For a vendor swap (PRD 018):** Mechanism 1 transfers for free. Mechanism 2 wrappers need re-authoring against the new vendor's primitives. See [Swap Guide](./swap-guide.mdx).
+
+---
+
+## Known Gaps
+
+- **No Type 1 awareness in the pipeline.** `bun run uui:add` doesn't check whether a vendor pull references undefined tokens or leaves orphaned ones.
+- **No vendor major-version mode.** The pipeline is one-primitive-at-a-time. Major versions are coordinated multi-primitive events.
+- **No `brand.css` ↔ vendor diff tooling.** Type 1 changes are caught only by manual inspection or downstream visual bugs.
+- **Codemod incomplete on multi-export files.** `scripts/uui-apply-transformations.ts` only injects `devProps` on the first exported component.
+- **Codemod missing `ease-linear` rule.** Both Button and Tabs have `ease-linear` upstream that BOS prefers as `ease-motion-out`.
+
+---
+
+## Related
+
+- [Wrapper Template](./wrapper-template.mdx) — Mechanism 2 wrapper shapes (A / B / C) and migration checklist
+- [Swap Guide](./swap-guide.mdx) — vendor-swap procedure
+- [transforms/](./transforms/motion.mdx) — the 6 transform axes applied on every vendor re-pull
+- Source doc: `docs/design-system/mental-model.md` (legacy Markdown version)
+- Vendor change framework: `docs/spikes/design-system/2026-05-06-vendor-design-system-upgrades.md`
+- Campaign record: `docs/spikes/design-system/2026-05-06-uui-v8-campaign.md`
+- Brand decisions: `components/ds/_exceptions.md`
+- Audit inventory: `docs/audits/2026-05/009-layer4-primitive-classification.md`

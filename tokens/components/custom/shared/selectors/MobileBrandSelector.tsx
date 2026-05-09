@@ -197,7 +197,7 @@ export function MobileBrandSelector({ onClose }: MobileBrandSelectorProps) {
             rounded-lg
             bg-bg-secondary
             hover:border-brand-aperol/50
-            transition-all duration-200
+            transition-all duration-standard
             cursor-pointer
             group
           "
@@ -228,7 +228,7 @@ export function MobileBrandSelector({ onClose }: MobileBrandSelectorProps) {
           <ChevronDown 
             className={`
               w-4 h-4 text-fg-secondary
-              transition-transform duration-200
+              transition-transform duration-standard
               flex-shrink-0 ml-2
               ${isOpen ? 'rotate-180' : ''}
             `}
@@ -260,7 +260,7 @@ export function MobileBrandSelector({ onClose }: MobileBrandSelectorProps) {
                     w-full flex items-center justify-between
                     px-3.5 py-2.5 rounded-lg
                     hover:bg-bg-tertiary
-                    transition-colors duration-200
+                    transition-colors duration-standard
                     ${selectedBrandId === brand.id ? 'bg-bg-tertiary' : ''}
                   `}
                 >
@@ -301,7 +301,7 @@ export function MobileBrandSelector({ onClose }: MobileBrandSelectorProps) {
                   border border-border-secondary
                   hover:bg-bg-tertiary
                   hover:border-brand-aperol/50
-                  transition-all duration-200
+                  transition-all duration-standard
                 "
               >
                 <Plus className="w-5 h-5 text-brand-aperol" />
@@ -385,12 +385,12 @@ export function MobileBrandSelector({ onClose }: MobileBrandSelectorProps) {
                   onClick={() => fileInputRef.current?.click()}
                   className="
                     w-full
-                    border-2 border-dashed border-border-secondary
+                    border border-dashed border-border-secondary
                     rounded-lg p-6
                     bg-bg-tertiary
                     hover:border-brand-aperol/50
                     hover:bg-bg-tertiary-hover
-                    transition-all duration-200
+                    transition-all duration-standard
                     cursor-pointer
                     flex flex-col items-center justify-center
                     text-center
@@ -491,7 +491,7 @@ export function MobileBrandSelector({ onClose }: MobileBrandSelectorProps) {
                   text-fg-secondary
                   hover:text-fg-primary
                   hover:bg-bg-tertiary
-                  transition-colors duration-200
+                  transition-colors duration-standard
                 "
               >
                 Cancel
@@ -502,7 +502,7 @@ export function MobileBrandSelector({ onClose }: MobileBrandSelectorProps) {
                   px-4 py-2 rounded-lg
                   bg-brand-aperol text-white
                   hover:bg-brand-aperol/90
-                  transition-colors duration-200
+                  transition-colors duration-standard
                   font-medium
                 "
               >

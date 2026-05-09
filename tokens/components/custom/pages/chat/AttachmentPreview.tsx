@@ -131,7 +131,7 @@ export function DragOverlay({ isDragging }: DragOverlayProps) {
           exit={{ opacity: 0 }}
           className="
             absolute inset-0 z-10
-            bg-bg-brand-primary border-2 border-dashed border-border-brand-solid
+            bg-bg-brand-primary border border-dashed border-border-brand-solid
             rounded-xl flex items-center justify-center
             pointer-events-none
           "

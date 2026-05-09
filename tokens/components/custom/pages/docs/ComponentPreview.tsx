@@ -222,7 +222,7 @@ export default function Example() {
           )}
         >
           <div 
-            className="transition-transform duration-200"
+            className="transition-transform duration-standard"
             style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}
           >
             <Component {...componentProps} />

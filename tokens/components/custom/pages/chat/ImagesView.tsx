@@ -85,7 +85,7 @@ function ImageCard({
     <button
       {...devProps('ImageCard')}
       onClick={onClick}
-      className="group relative aspect-square rounded-lg overflow-hidden bg-bg-secondary hover:ring-2 hover:ring-border-brand-solid/50 transition-all"
+      className="group relative aspect-square rounded-lg overflow-hidden bg-bg-secondary hover:ring-1 hover:ring-border-brand-solid/50 transition-all"
     >
       <Image
         src={image.thumbnailUrl || image.url}

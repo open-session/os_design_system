@@ -210,7 +210,7 @@ export function SyncStatusIndicator({
         onClick={triggerSync}
         disabled={isSyncing}
         className={`
-          p-2 rounded-lg transition-all duration-150
+          p-2 rounded-lg transition-all duration-quick
           bg-bg-secondary border border-border-secondary
           hover:bg-bg-secondary-hover hover:border-border-primary
           disabled:opacity-50 disabled:cursor-not-allowed
@@ -255,7 +255,7 @@ export function SyncStatusIndicator({
         onClick={triggerSync}
         disabled={isSyncing}
         className={`
-          ml-auto p-1.5 rounded-md transition-all duration-150
+          ml-auto p-1.5 rounded-md transition-all duration-quick
           text-fg-tertiary hover:text-fg-primary
           hover:bg-bg-tertiary
           disabled:opacity-50 disabled:cursor-not-allowed

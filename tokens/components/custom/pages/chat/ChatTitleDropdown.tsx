@@ -247,7 +247,7 @@ export function ChatTitleDropdown({
                     color-mix(in srgb, var(--color-brand-500) 15%, transparent) 70%,
                     transparent 100%
                   )`,
-                  animation: 'aperolPulse 2.5s ease-in-out infinite, aperolShimmer 2s ease-in-out infinite',
+                  animation: 'aperolPulse 2.5s ease-motion-inout infinite, aperolShimmer 2s ease-motion-inout infinite',
                 }}
               />
             </motion.div>

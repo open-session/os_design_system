@@ -81,7 +81,7 @@ export function SortableItem({
             aria-hidden
             style={ghostStyle}
             className={cx(
-              'pointer-events-none absolute inset-0 -z-10 bg-bg-secondary transition-opacity duration-200',
+              'pointer-events-none absolute inset-0 -z-10 bg-bg-secondary transition-opacity duration-standard',
               ghostShape === 'rounded' && 'rounded-md',
               isDragging ? 'opacity-70' : 'opacity-40',
             )}
@@ -94,7 +94,7 @@ export function SortableItem({
             {...attributes}
             {...listeners}
             className={cx(
-              'absolute z-40 flex h-6 w-6 cursor-grab items-center justify-center rounded-sm bg-bg-primary/70 text-fg-tertiary backdrop-blur-sm hover:text-fg-primary active:cursor-grabbing focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[var(--color-brand-500)]',
+              'absolute z-40 flex h-6 w-6 cursor-grab items-center justify-center rounded-sm bg-bg-primary/70 text-fg-tertiary backdrop-blur-sm hover:text-fg-primary active:cursor-grabbing focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring-brand',
               handlePosition === 'top-right' && 'right-2 top-2',
               handlePosition === 'left-gutter' && '-left-8 top-2.5',
             )}

@@ -10,7 +10,7 @@ export function BackgroundGradient({ fadeOut = false }: BackgroundGradientProps)
   return (
     <div
       {...devProps('BackgroundGradient')}
-      className={`fixed inset-0 lg:left-[var(--sidebar-width)] z-0 pointer-events-none overflow-hidden transition-all duration-500 ${
+      className={`fixed inset-0 lg:left-[var(--sidebar-width)] z-0 pointer-events-none overflow-hidden transition-all duration-page ${
         fadeOut ? 'opacity-0' : 'opacity-100'
       }`}
     >

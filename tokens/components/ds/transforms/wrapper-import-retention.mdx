@@ -1,0 +1,132 @@
+---
+title: 'Design System/Transforms/Wrapper Import Retention'
+rule: 'Preserve cross-imports of ds/ wrappers during vendor re-pulls (parameterized over WRAPPED_PRIMITIVES)'
+scope: 'components/base/ — applied by codemod at vendor-pull time only'
+detection-command: "rg 'from.*components/base/base/(?:buttons/button|tabs/tabs|modals/modal|featured-icon/featured-icon|tooltip/tooltip)' components/base/"
+enforcement:
+  codemod: 'wrapperImportRetention'
+  eslint-rule: null
+  scope: 'base/'
+  severity: null
+last-audited: '2026-05-09'
+version: 1
+tags: ['transform', 'wrapper-retention', 'vendor-agnostic', 'codemod-axis-6', 'design-system', 'bos-novel']
+---
+
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Design System/Transforms/Wrapper Import Retention" />
+
+# Wrapper Import Retention (Axis 6)
+
+## TL;DR
+
+When BOS re-pulls a vendor primitive via `bun run uui:add`, the pull overwrites `components/base/` source files. If any file in `components/base/` was hand-edited to import from a `components/ds/` wrapper (the correct import direction), the re-pull reverts that edit back to the vendor-pristine import. Axis 6 preserves these wrapper cross-imports automatically.
+
+**This axis is BOS-novel.** No external precedent exists — other design systems ship as npm packages (no source pull) or encourage forking (no upstream sync). BOS's pull-and-transform model requires an axis that no other codemod library provides.
+
+---
+
+## The Rule
+
+During `bun run uui:add`, after pulling vendor source, re-apply all wrapper cross-imports for components in the `WRAPPED_PRIMITIVES` list:
+
+```typescript
+export const WRAPPED_PRIMITIVES = ['Button', 'Tabs', 'Modal', 'FeaturedIcon', 'Tooltip'];
+```
+
+Any `components/base/` file that imports a wrapped primitive from `@/components/base/base/...` is rewritten to import from `@/components/ds/.../...` instead.
+
+---
+
+## Where It's Enforced
+
+| Layer | Mechanism | Scope | Severity |
+|-------|-----------|-------|----------|
+| Vendor pull | `wrapperImportRetention()` in `scripts/uui-apply-transformations.ts` | `components/base/` | Auto-transform |
+| Write-time | None — no ESLint rule needed (imports are in base/, not custom/) | — | — |
+| Manual review | Detection command above | `components/base/` | Audit |
+
+---
+
+## Before / After
+
+The following fixtures are sourced from `tests/unit/scripts/fixtures/axis6-group-b.ts` (Wave 1c test fixtures). The MDX before/after blocks match the fixture content exactly — docs and codemod cannot drift.
+
+```before
+// components/base/application/pagination/pagination.tsx (Group B.1)
+// BEFORE axis-6 (fresh vendor pull reverts to vendor-pristine import):
+import { Button } from "@/components/base/base/buttons/button";
+
+export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+  return (
+    <div className="flex items-center gap-2">
+      <Button onClick={() => onPageChange(currentPage - 1)}>Previous</Button>
+      <Button onClick={() => onPageChange(currentPage + 1)}>Next</Button>
+    </div>
+  );
+}
+```
+
+```after
+// components/base/application/pagination/pagination.tsx (Group B.1)
+// AFTER axis-6 (wrapper import retained):
+import { Button } from "@/components/ds/buttons/button";
+
+export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+  return (
+    <div className="flex items-center gap-2">
+      <Button onClick={() => onPageChange(currentPage - 1)}>Previous</Button>
+      <Button onClick={() => onPageChange(currentPage + 1)}>Next</Button>
+    </div>
+  );
+}
+```
+
+---
+
+## Why BOS-Novel
+
+Other design system architectures don't need this axis because:
+
+- **npm-package DSes (shadcn, Radix, MUI)**: Components are installed via `npm install`. There's no source pull to revert. The package version pinned in `package.json` is the source of truth.
+- **Fork-and-own DSes**: The fork IS the source. No upstream sync means no reversion risk.
+- **BOS's pull-and-transform model**: UUI Pro ships source files. `bun run uui:add` pulls fresh source and applies transforms. Without Axis 6, every re-pull would silently revert the wrapper import direction that PRD 017 established.
+
+The parameterization over `WRAPPED_PRIMITIVES` makes this axis forward-compatible: if BOS introduces a 6th wrapper (e.g., a RadioButton wrapper), adding it to `WRAPPED_PRIMITIVES` is the only required change. The regex is auto-generated from the list.
+
+**Future-proofing:** A future ShadCN/Radix vendor swap (PRD 018) would use the same axis with a different primitive list — the axis is vendor-agnostic by design.
+
+---
+
+## Adding a New Wrapper
+
+When you add a new `components/ds/<folder>/<name>.tsx` wrapper:
+
+1. Add the component name to `WRAPPED_PRIMITIVES` in `scripts/uui-apply-transformations.ts`
+2. Add a test fixture in `tests/unit/scripts/fixtures/axis6-group-b.ts`
+3. Re-run the unit tests: `bun test tests/unit/scripts/uui-apply-transformations.test.ts`
+4. Verify with `bun run uui:add <name> --validate-axis-6`
+
+---
+
+## Detection Command
+
+```bash
+# Find any base/ files that still import from vendor-pristine locations
+# (should be 0 for wrapped primitives):
+rg 'from.*components/base/base/(?:buttons/button|tabs/tabs|modals/modal|featured-icon/featured-icon|tooltip/tooltip)' components/base/
+```
+
+Expected: 0 results. Any match means a wrapper cross-import was reverted.
+
+---
+
+## Related
+
+- [Motion (Axis 1)](./motion.mdx)
+- [Dev Props (Axis 5)](./dev-props.mdx)
+- [Wrapper Template](../wrapper-template.mdx)
+- Codemod: `scripts/uui-apply-transformations.ts` → `wrapperImportRetention()`
+- Validation flag: `bun run uui:add <name> --validate-axis-6`
+- Test fixtures: `tests/unit/scripts/fixtures/axis6-group-b.ts`

@@ -134,7 +134,7 @@ const WIDGETS: Record<string, { label: string; element: ReactNode }> = {
       >
         <div className="flex w-full flex-col gap-2.5">
           <div className="flex items-center gap-2">
-            <div className="h-4 w-4 bg-[var(--color-brand-500)]" />
+            <div className="h-4 w-4 bg-bg-brand-solid" />
             <Eyebrow tone="tertiary">Apr 17</Eyebrow>
           </div>
           <p className="m-0 text-xs font-normal leading-snug text-fg-primary">

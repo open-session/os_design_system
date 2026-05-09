@@ -11,7 +11,7 @@ import { Button } from './button';
  * for visual comparison / vendor-swap auditing.
  */
 const meta: Meta<typeof Button> = {
-  title: 'Design System/Button',
+  title: 'Base/Base/Button',
   component: Button,
   tags: ['autodocs'],
 };

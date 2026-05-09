@@ -110,7 +110,7 @@ function TreeNode({
         onClick={handleClick}
         className={`
           w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left
-          transition-colors duration-150
+          transition-colors duration-quick
           ${isSelected 
             ? 'bg-bg-brand-primary text-fg-brand-primary' 
             : 'hover:bg-bg-tertiary text-fg-primary'

@@ -76,7 +76,7 @@ export function CategoryFilterDropdown({ value, onChange }: CategoryFilterDropdo
       {/* Backdrop */}
       {isOpen && (
         <div 
-          className="fixed inset-0 z-30 bg-black/20 backdrop-blur-sm animate-in fade-in duration-150"
+          className="fixed inset-0 z-30 bg-black/20 backdrop-blur-sm animate-in fade-in duration-quick"
           onClick={() => setIsOpen(false)}
           aria-hidden="true"
         />
@@ -93,9 +93,9 @@ export function CategoryFilterDropdown({ value, onChange }: CategoryFilterDropdo
               text-sm font-medium
               rounded-lg
               border border-border-secondary
-              transition-all duration-150
+              transition-all duration-quick
               ${isOpen 
-                ? 'bg-bg-tertiary ring-2 ring-brand-aperol/20 border-brand-aperol' 
+                ? 'bg-bg-tertiary ring-1 ring-brand-aperol/20 border-brand-aperol' 
                 : 'bg-bg-secondary hover:bg-bg-tertiary text-fg-primary'
               }
             `}
@@ -127,7 +127,7 @@ export function CategoryFilterDropdown({ value, onChange }: CategoryFilterDropdo
               rounded-xl
               shadow-xl shadow-black/20
               overflow-hidden
-              animate-in fade-in slide-in-from-top-2 duration-150
+              animate-in fade-in slide-in-from-top-2 duration-quick
               min-w-[200px]
               z-40
             "

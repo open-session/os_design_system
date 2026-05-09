@@ -50,8 +50,8 @@ export function Modal({
         cn(
           'fixed inset-0 z-50 flex items-center justify-center p-4',
           'bg-bg-overlay backdrop-blur-sm',
-          isEntering && 'animate-in fade-in-0 duration-200',
-          isExiting && 'animate-out fade-out-0 duration-150'
+          isEntering && 'animate-in fade-in-0 duration-standard',
+          isExiting && 'animate-out fade-out-0 duration-quick'
         )
       }
     >
@@ -64,8 +64,8 @@ export function Modal({
             'max-h-[90vh] overflow-hidden flex flex-col',
             'outline-hidden',
             sizeClasses[size],
-            isEntering && 'animate-in fade-in-0 zoom-in-95 duration-200',
-            isExiting && 'animate-out fade-out-0 zoom-out-95 duration-150'
+            isEntering && 'animate-in fade-in-0 zoom-in-95 duration-standard',
+            isExiting && 'animate-out fade-out-0 zoom-out-95 duration-quick'
           )
         }
       >

@@ -116,7 +116,7 @@ export function TabSelector({
   return (
     <div
       {...devProps('TabSelector')}
-      className={`relative flex items-center bg-bg-tertiary rounded-lg p-1 transition-opacity duration-200 ${locked ? 'opacity-50' : ''} ${className}`}
+      className={`relative flex items-center bg-bg-tertiary rounded-lg p-1 transition-opacity duration-standard ${locked ? 'opacity-50' : ''} ${className}`}
     >
       {/* Left arrow - only render when needed */}
       <AnimatePresence>
@@ -130,7 +130,7 @@ export function TabSelector({
               rounded-md
               text-fg-tertiary hover:text-fg-primary
               hover:bg-bg-quaternary
-              transition-colors duration-150
+              transition-colors duration-quick
             "
             aria-label="Scroll tabs left"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -229,7 +229,7 @@ export function TabSelector({
                     px-1.5 py-0.5
                     text-[10px] font-medium
                     rounded-full
-                    transition-colors duration-150
+                    transition-colors duration-quick
                     ${isActive
                       ? 'bg-bg-tertiary text-fg-tertiary'
                       : 'bg-bg-quaternary text-fg-quaternary'
@@ -256,7 +256,7 @@ export function TabSelector({
               rounded-md
               text-fg-tertiary hover:text-fg-primary
               hover:bg-bg-quaternary
-              transition-colors duration-150
+              transition-colors duration-quick
             "
             aria-label="Scroll tabs right"
             initial={{ opacity: 0, scale: 0.8 }}

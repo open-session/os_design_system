@@ -37,17 +37,17 @@ function PaletteSwatch({ palette, isSelected, onSelect }: PaletteSwatchProps) {
       type="button"
       onClick={() => onSelect(palette.id)}
       className={cx(
-        'group flex flex-col items-center gap-2 rounded-xl p-3 transition-all duration-150',
+        'group flex flex-col items-center gap-2 rounded-xl p-3 transition-all duration-quick',
         'hover:bg-bg-secondary-alt',
         isSelected
-          ? 'bg-bg-secondary-alt ring-2 ring-brand-500 ring-offset-2 ring-offset-bg-primary'
+          ? 'bg-bg-secondary-alt ring-1 ring-brand-500 shadow-focus-ring'
           : 'ring-1 ring-border-secondary',
       )}
       aria-pressed={isSelected}
       aria-label={`${palette.name} palette`}
     >
       <div
-        className="size-10 rounded-full shadow-xs transition-transform duration-150 group-hover:scale-110"
+        className="size-10 rounded-full shadow-xs transition-transform duration-quick group-hover:scale-110"
         style={{ backgroundColor: palette.shades[500] }}
       />
       <span className="text-xs font-medium text-fg-secondary">{palette.name}</span>

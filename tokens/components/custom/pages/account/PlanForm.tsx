@@ -177,7 +177,7 @@ export function PlanForm() {
                 border rounded-2xl
                 transition-all
                 ${isCurrentPlan
-                  ? 'border-border-brand ring-2 ring-border-brand'
+                  ? 'border-border-brand ring-1 ring-border-brand'
                   : 'border-border-secondary hover:border-border-primary'
                 }
               `}

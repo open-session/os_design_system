@@ -55,7 +55,7 @@ export function SetupChecklistView() {
           </div>
           <div className="h-[3px] w-full overflow-hidden bg-border-secondary">
             <div
-              className="h-full bg-[var(--color-brand-500)] transition-[width] duration-500"
+              className="h-full bg-bg-brand-solid transition-[width] duration-page"
               style={{ width: `${percent}%` }}
             />
           </div>
@@ -75,7 +75,7 @@ export function SetupChecklistView() {
               className={cx(
                 'flex h-3.5 w-3.5 flex-shrink-0 items-center justify-center rounded-full',
                 item.done
-                  ? 'bg-[var(--color-brand-500)] text-[var(--color-charcoal)]'
+                  ? 'bg-bg-brand-solid text-fg-primary'
                   : 'border border-border-primary',
               )}
             >

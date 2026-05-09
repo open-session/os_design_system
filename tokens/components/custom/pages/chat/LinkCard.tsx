@@ -213,7 +213,7 @@ export function LinkCard({
             bg-bg-secondary
             border border-border-secondary
             hover:bg-bg-secondary-hover hover:border-border-primary
-            transition-all duration-150
+            transition-all duration-quick
           "
         >
           {/* Top row: icon only */}
@@ -284,7 +284,7 @@ export function LinkCard({
                 setMenuOpen(!menuOpen);
               }}
               className={`
-                p-1.5 rounded-md transition-all duration-150
+                p-1.5 rounded-md transition-all duration-quick
                 ${menuOpen 
                   ? 'bg-bg-tertiary text-fg-primary'
                   : 'opacity-0 group-hover:opacity-100 text-fg-tertiary hover:text-fg-primary hover:bg-bg-tertiary'
@@ -455,7 +455,7 @@ export function LinkCard({
         className="
           flex items-center gap-3 px-3 py-2.5
           rounded-lg hover:bg-bg-tertiary
-          transition-colors duration-100
+          transition-colors duration-micro
         "
       >
         {/* Favicon/Icon */}
@@ -520,7 +520,7 @@ export function LinkCard({
         <div className="flex items-center gap-1 flex-shrink-0">
           {/* Overflow menu */}
           <div 
-            className="opacity-0 group-hover:opacity-100 transition-opacity duration-150"
+            className="opacity-0 group-hover:opacity-100 transition-opacity duration-quick"
             onClick={(e) => e.preventDefault()}
           >
             <button
@@ -537,9 +537,9 @@ export function LinkCard({
           </div>
           
           {isInternal ? (
-            <ArrowRight className="w-3.5 h-3.5 text-fg-quaternary opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+            <ArrowRight className="w-3.5 h-3.5 text-fg-quaternary opacity-0 group-hover:opacity-100 transition-opacity duration-quick" />
           ) : (
-            <LinkExternal01 className="w-3.5 h-3.5 text-fg-quaternary opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+            <LinkExternal01 className="w-3.5 h-3.5 text-fg-quaternary opacity-0 group-hover:opacity-100 transition-opacity duration-quick" />
           )}
         </div>
       </ListWrapper>

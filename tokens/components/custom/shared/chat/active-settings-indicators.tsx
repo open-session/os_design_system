@@ -43,7 +43,7 @@ function IndicatorChip({ icon: Icon, tooltip, onRemove, disabled }: IndicatorChi
           flex items-center
           h-9 rounded-lg
           bg-bg-brand-primary text-fg-brand-primary
-          transition-all duration-150
+          transition-all duration-quick
           overflow-hidden
         `}
       >

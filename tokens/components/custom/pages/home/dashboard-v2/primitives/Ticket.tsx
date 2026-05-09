@@ -17,7 +17,7 @@ interface TicketProps {
 const surfaceByVariant: Record<TicketVariant, string> = {
   dark: 'bg-bg-secondary text-fg-primary',
   vanilla: 'bg-fg-primary text-bg-primary',
-  aperol: 'text-[var(--color-charcoal)]',
+  aperol: 'text-fg-primary',
 };
 
 export function Ticket({

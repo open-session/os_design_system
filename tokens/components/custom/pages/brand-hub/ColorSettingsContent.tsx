@@ -701,7 +701,7 @@ export function ColorSettingsContent() {
                     aria-expanded={scaleExpanded}
                     aria-label="Toggle Brand Scale"
                   >
-                    <ChevronDown className={`w-4 h-4 transition-transform duration-150 ${scaleExpanded ? '' : '-rotate-90'}`} />
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-quick ${scaleExpanded ? '' : '-rotate-90'}`} />
                     Brand Scale
                   </button>
                   {brandScaleColors.length > 0 && (

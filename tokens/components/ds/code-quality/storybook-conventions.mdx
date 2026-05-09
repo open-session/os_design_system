@@ -1,0 +1,190 @@
+---
+title: "Storybook Conventions"
+rule: "storybook"
+scope: [".storybook/preview.tsx", "**/*.stories.tsx"]
+author: "@karim"
+last-updated: "2026-05-09"
+---
+
+# Storybook Conventions
+
+## Overview
+
+This document captures BOS-specific conventions for authoring Storybook stories and configuring the global preview. These patterns are required to ensure stories render correctly in the `@storybook/nextjs-vite` environment.
+
+---
+
+## Convention 1 — Global App Router Mock (`nextjs.appDirectory`)
+
+### Rule Summary
+
+The global `parameters` block in `.storybook/preview.tsx` **must** include `nextjs: { appDirectory: true }`. Without this flag, `@storybook/nextjs-vite` does not mount the Next.js App Router mock, causing any story that (directly or transitively) uses `usePathname()`, `useRouter()`, `useSearchParams()`, or `next/image` to throw:
+
+```
+invariant expected app router to be mounted
+```
+
+This flag was added globally in the Wave 4b fix (2026-05-09). It covers all 9 original V1 failures and any future stories that use App Router APIs.
+
+### Configuration Location
+
+`.storybook/preview.tsx` — `parameters` block:
+
+```tsx
+const preview: Preview = {
+  parameters: {
+    controls: { ... },
+    layout: 'padded',
+    backgrounds: { disable: true },
+    // REQUIRED: mount the Next.js App Router mock for all stories.
+    nextjs: {
+      appDirectory: true,
+    },
+  },
+};
+```
+
+### When to Override Per-Story
+
+Individual stories can override this global default if needed:
+
+```tsx
+// A story that explicitly needs Pages Router behavior (unusual):
+export const MyStory: Story = {
+  parameters: {
+    nextjs: { appDirectory: false },
+  },
+};
+```
+
+In practice, all BOS components are App Router components. Override to `false` only if you are testing Pages Router compatibility for a specific reason.
+
+### Affected Component Patterns
+
+Any component that uses the following requires `appDirectory: true`:
+
+| Pattern | Hook / Module | Classification |
+|---------|--------------|----------------|
+| Active nav links | `usePathname()` | Direct |
+| Programmatic navigation | `useRouter()` | Direct |
+| URL query reading | `useSearchParams()` | Direct |
+| Optimized images | `next/image` | Indirect (Next.js context) |
+| Theme provider (next-themes) | `next-themes` | Indirect (Next.js context) |
+| Transitive consumers | Any component that renders the above | Transitive |
+
+The transitive case is important: a story for `TopHeader` fails not because `TopHeader` itself calls `useRouter()`, but because it renders `SearchModal` and `ProfileDropdown`, which do. The global flag prevents silent failures in deep component trees.
+
+---
+
+## Convention 2 — Story Title Naming
+
+### Rule Summary
+
+Story titles must match the component's location in the `components/` tree using one of two prefixes:
+
+| Component location | Title prefix |
+|-------------------|-------------|
+| `components/base/**` | `Base/` |
+| `components/custom/shared/<category>/` | `Custom/Shared/<Category>/` |
+| `components/custom/pages/<route>/` | `Custom/Pages/<Route>/` |
+| `components/ds/**` | (docs-only, see Convention 4) |
+
+### Examples
+
+```tsx
+// components/base/base/button.tsx
+export default {
+  title: 'Base/Base/Button',
+  component: Button,
+};
+
+// components/custom/shared/navigation/TopHeader.tsx
+export default {
+  title: 'Custom/Shared/Navigation/TopHeader',
+  component: TopHeader,
+};
+
+// components/custom/pages/chat/ChatInput.tsx
+export default {
+  title: 'Custom/Pages/Chat/ChatInput',
+  component: ChatInput,
+};
+```
+
+**Anti-pattern (do not use):**
+
+```tsx
+// Flat title with no prefix — not allowed:
+export default { title: 'TopHeader' };
+
+// Wrong prefix — not allowed:
+export default { title: 'Components/Navigation/TopHeader' };
+```
+
+---
+
+## Convention 3 — Co-location
+
+Story files must be co-located with their component:
+
+```
+components/custom/shared/navigation/
+├── TopHeader.tsx
+├── TopHeader.stories.tsx   ← correct: co-located
+└── Sidebar.tsx
+```
+
+Do not place story files in a separate `__stories__/` or `stories/` subdirectory. The ESLint rule `bos-local/require-story` (warn-level during rollout) enforces co-location.
+
+**Multi-export files:** When a single file exports multiple components (e.g., `badges.tsx` exports `Badge` and `BadgeWithDot`), use one shared story file:
+
+```
+components/base/base/
+├── badges.tsx
+└── badges.stories.tsx   ← covers all exports from badges.tsx
+```
+
+---
+
+## Convention 4 — DS Section: Docs Only
+
+The `DS/` section in the Storybook sidebar is **documentation only**. It contains MDX docs that describe design tokens, transforms, and system rules. It does not contain interactive component stories.
+
+Stories for design system primitives live under `Base/` (vendor primitives) or `Custom/` (compositions), not `DS/`. A story titled `DS/Motion` would be wrong — the correct placement is a docs-only MDX page at `components/ds/motion/motion.mdx` with `tags: ['autodocs']`.
+
+---
+
+## Convention 5 — Story Verification Before Push
+
+Before pushing a branch that contains new or modified stories, run the Storybook test runner locally:
+
+```bash
+# Build Storybook (catches import errors, missing providers):
+bun run storybook:build
+
+# Run smoke tests against the built Storybook:
+bunx test-storybook
+```
+
+This catches the `invariant expected app router to be mounted` class of error before CI. A story that passes `test-storybook` locally is unlikely to fail in CI.
+
+---
+
+## Enforcement
+
+| Convention | Enforcement mechanism |
+|-----------|----------------------|
+| `nextjs.appDirectory: true` | Manual — set once in `.storybook/preview.tsx`; CI `test-storybook` catches regressions |
+| Title naming | `storySort` config in `.storybook/preview.tsx` controls sidebar order; wrong prefixes appear out of place |
+| Co-location | `bos-local/require-story` ESLint rule (warn during rollout, error at coverage target) |
+| DS docs-only | Convention; no automated enforcement currently |
+| Story verification | Pre-push local check; CI runs `test-storybook` on PRs |
+
+---
+
+## History
+
+| Date | Change |
+|------|--------|
+| 2026-05-09 | Added `nextjs.appDirectory: true` globally (Wave 4b, PRD 020) — fixed 9 V1 failures |
+| 2026-04-xx | Co-location and title conventions established (Phase C Storybook rollout) |

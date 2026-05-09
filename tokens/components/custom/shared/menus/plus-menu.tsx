@@ -224,7 +224,7 @@ export function PlusMenu({
                       }}
                       className={`
                         w-full flex items-center justify-between px-3 py-2
-                        text-left transition-colors duration-150
+                        text-left transition-colors duration-quick
                         ${isActiveSubmenu
                           ? 'bg-bg-tertiary text-fg-primary'
                           : 'text-fg-secondary hover:bg-bg-tertiary hover:text-fg-primary'
