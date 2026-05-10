@@ -205,6 +205,7 @@ export function PeopleTable({ orgId: _orgId }: PeopleTableProps) {
             <TableHeader className="bg-bg-secondary border-b border-border-secondary">
               {/* Checkbox column header */}
               <Column
+                id="select"
                 isRowHeader={false}
                 className="pl-4 pr-3 py-3 w-10"
               >
@@ -218,35 +219,35 @@ export function PeopleTable({ orgId: _orgId }: PeopleTableProps) {
               </Column>
 
               {/* Name column */}
-              <Column isRowHeader className="px-3 py-3 text-left">
+              <Column id="name" isRowHeader className="px-3 py-3 text-left">
                 <span className="text-xs font-medium text-fg-tertiary uppercase tracking-wider">
                   Name
                 </span>
               </Column>
 
               {/* Seat type column */}
-              <Column className="px-3 py-3 text-left">
+              <Column id="seatType" className="px-3 py-3 text-left">
                 <span className="text-xs font-medium text-fg-tertiary uppercase tracking-wider">
                   Seat type
                 </span>
               </Column>
 
               {/* Billing cycle column */}
-              <Column className="px-3 py-3 text-left">
+              <Column id="billingCycle" className="px-3 py-3 text-left">
                 <span className="text-xs font-medium text-fg-tertiary uppercase tracking-wider">
                   Billing cycle
                 </span>
               </Column>
 
               {/* Joined column */}
-              <Column className="px-3 py-3 text-left">
+              <Column id="joined" className="px-3 py-3 text-left">
                 <span className="text-xs font-medium text-fg-tertiary uppercase tracking-wider">
                   Joined
                 </span>
               </Column>
 
               {/* Chevron column */}
-              <Column className="pl-3 pr-4 py-3 w-10">
+              <Column id="actions" className="pl-3 pr-4 py-3 w-10">
                 <span className="sr-only">Actions</span>
               </Column>
             </TableHeader>
