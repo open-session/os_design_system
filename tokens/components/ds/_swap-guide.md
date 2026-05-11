@@ -101,7 +101,7 @@ Tailwind-class-based wrappers in `components/base/`.
 
 ### 2. Apply `components/ds/transforms/` rules to the new vendor sources
 
-The six transform axes (see `components/ds/transforms/*.mdx` or [docs/design-system/frontend-framework.md §4](../../docs/design-system/frontend-framework.md))
+The six transform axes (see `components/ds/transforms/*.mdx` or [docs/design-system/design-system-framework.md §4](../../docs/design-system/design-system-framework.md))
 align any vendor's stock conventions with BOS brand tokens:
 
 1. **Motion** (`components/ds/motion/`) — replace stock durations
@@ -196,7 +196,7 @@ For full details and code examples, see:
 - **Focus ring / shape** — `components/ds/shape/`
 - **Accessibility / disabled state** — `components/ds/accessibility/`
 - **Code-quality / token syntax** — `components/ds/code-quality/`
-- **Source spec** — [`docs/design-system/frontend-framework.md §4`](../../docs/design-system/frontend-framework.md) (and `components/ds/transforms/*.mdx` for per-axis MDX)
+- **Source spec** — [`docs/design-system/design-system-framework.md §4`](../../docs/design-system/design-system-framework.md) (and `components/ds/transforms/*.mdx` for per-axis MDX)
 
 These six axes turn ANY vendor's primitives into BOS-branded primitives.
 They are the structural reason why a vendor swap is feasible — they encode
@@ -304,7 +304,7 @@ The campaign retrospective documents predictions vs reality, what the framework 
 - [`components/README.md`](../README.md) — three-folder decision tree
 - [`components/ds/README.md`](./README.md) — formula spec architecture
 - [`components/custom/README.md`](../custom/README.md) — pages-vs-shared taxonomy
-- [`docs/design-system/frontend-framework.md`](../../docs/design-system/frontend-framework.md) — the six transform axes + three wrapper shapes + enforcement layers
+- [`docs/design-system/design-system-framework.md`](../../docs/design-system/design-system-framework.md) — the six transform axes + three wrapper shapes + enforcement layers
 - [`docs/spikes/design-system/2026-04-23-architecture-migration.md`](../../docs/spikes/design-system/2026-04-23-architecture-migration.md) — the spike that informed PRD 016/017
 - [`docs/spikes/design-system/2026-05-06-uui-v8-campaign.md`](../../docs/spikes/design-system/2026-05-06-uui-v8-campaign.md) — Phase C campaign record (worked example for vendor major-version upgrade)
 - [`docs/spikes/design-system/2026-05-06-vendor-design-system-upgrades.md`](../../docs/spikes/design-system/2026-05-06-vendor-design-system-upgrades.md) — Type 1/2/3 framework

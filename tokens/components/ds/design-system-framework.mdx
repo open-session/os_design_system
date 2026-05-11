@@ -1,6 +1,6 @@
 ---
-title: 'Design System/Frontend Framework'
-rule: 'BOS doesn''t build UI from scratch — we pull vendor primitives, then apply brand on top via two mechanisms (tokens in brand.css, wrappers in ds/<primitive>/). Six transform axes apply mechanical edits at vendor-pull time; three wrapper shapes (A/B/C) handle case-by-case overrides. Six enforcement layers stop anyone from breaking the rules.'
+title: 'Design System/Framework'
+rule: 'BOS doesn''t build UI from scratch — we pull vendor primitives, then apply brand through two mechanisms (tokens ≈ 90%; wrappers ≈ 10%). Wrappers come in three shapes (A/B/C). Six transform axes keep vendor source clean. Six enforcement layers stop anyone from breaking the rules.'
 scope: 'Architectural — informs decisions across all three component folders'
 detection-command: "rg -l 'bg-\\[var\\(--|ring-brand-500' components/base/ components/custom/ | wc -l"
 enforcement:
@@ -9,17 +9,17 @@ enforcement:
   scope: null
   severity: null
 last-audited: '2026-05-11'
-version: 2
-tags: ['frontend-framework', 'architecture', 'two-mechanisms', 'wrapper-shapes', 'vendor-agnostic', 'design-system']
+version: 3
+tags: ['design-system-framework', 'architecture', 'two-mechanisms', 'wrapper-shapes', 'vendor-agnostic']
 ---
 
 import { Meta } from '@storybook/blocks';
 
-<Meta title="Design System/Frontend Framework" />
+<Meta title="Design System/Framework" />
 
-# BOS Frontend Framework
+# Design System Framework
 
-> **In one paragraph.** BOS doesn't build UI from scratch. We pull primitives from Untitled UI Pro (and one day from ShadCN, Radix, Daisy — whichever the user picks), then apply our brand on top through two routes: **tokens** (one CSS file that retints everything automatically) and **wrappers** (a handful of files that override specific primitives where the brand needs them to *behave* differently). Six transform axes keep vendor source clean. Three wrapper shapes (A/B/C) handle case-by-case overrides. Six enforcement layers stop anyone from breaking the rules.
+> **In one paragraph.** BOS doesn't build UI from scratch. We pull primitives from a vendor (Untitled UI Pro today; ShadCN / Radix / Daisy tomorrow), then express our brand on top through two routes: **tokens** (one CSS file that retints everything automatically — handles ~90% of brand decisions) and **wrappers** (a handful of files that override specific primitives where the brand needs them to behave differently — the other ~10%). Six transform axes keep vendor source clean at pull time. Six enforcement layers stop anyone from breaking the rules.
 
 ---
 
@@ -46,126 +46,69 @@ The shape is enforced at error level: `.githooks/check-components-folders.sh` (p
 
 ## The Two Mechanisms
 
-```
-┌──────────────────────────────────────────────────────────────────────────┐
-│                     How brand reaches a primitive                        │
-├─────────────────────────────────────┬────────────────────────────────────┤
-│  Mechanism 1 — Tokens               │  Mechanism 2 — Structural Variants │
-│                                     │                                    │
-│  "What is the value of this thing?" │  "What does this variant DO?"      │
-│                                     │                                    │
-│  Lives in: components/ds/brand.css  │  Lives in: components/ds/<name>/   │
-│                                     │                                    │
-│  Flows automatically via CSS vars   │  Imported explicitly via barrel    │
-│                                     │                                    │
-│  Covers ~95% of brand decisions     │  Covers ~5% — the hard cases       │
-│                                     │                                    │
-│  Examples:                          │  Examples:                         │
-│    • brand color → #FF6900          │    • Button primary = neutral with │
-│    • motion-micro → 100ms           │      hover-reveal (not orange CTA) │
-│    • radius-brand → 12px            │    • Tabs sizing scale restructure  │
-│    • focus-ring brand → blue tint   │    • FeaturedIcon outline behavior │
-└─────────────────────────────────────┴────────────────────────────────────┘
-```
+Brand expression flows through `ds/` in two ways. Both live in the same folder; they answer different questions and they're used for different things.
 
----
+**Rule of thumb.** *Changing a value → Mechanism 1. Changing a behavior → Mechanism 2.*
 
-## Mechanism 1 — Tokens (the automatic 95%)
+### Mechanism 1 — Tokens (≈ 90% of brand)
 
-`components/ds/brand.css` is the single source of truth for **what every brand value equals**. It uses Tailwind's `@theme` to define CSS custom properties: `--bg-primary`, `--ring-brand`, `--motion-micro`, `--radius-brand`, and the full token vocabulary.
+**The question.** *What value should this thing have?*
 
-Vendor primitives in `components/base/` don't hardcode pixel values — they reference token names. UUI's Button says "use `bg-brand-solid`" — and `brand.css` decides what `bg-brand-solid` means today.
+**Where it lives.** A single CSS file at `components/ds/brand.css`. Every brand value — colors, focus ring tint, motion timings, corner radii — has a name. Vendor primitives reference the *names*, never raw values.
 
-**Why this is mostly automatic:** Tailwind reads CSS variables at build time. Change a value in `brand.css`, and every Button / Input / Tab / FeaturedIcon across the app updates — no code edits, no imports. The vendor file doesn't know anything changed.
+**How it works.** Tailwind reads CSS variables at build time. Change a value in `brand.css`, every Button / Input / Tab / FeaturedIcon picks it up automatically. No code edits, no imports. **Just like Figma Variables** — change the brand color in one place, every component using it updates everywhere. That parent-child cascade is what makes tokens so cheap to change.
 
-**The catch:** Mechanism 1 is automatic for VALUES within a stable vocabulary, not for the vocabulary itself. If the vendor renames or removes CSS custom properties, `brand.css` needs a coordinated update. This is a "Type 1" change (see below). The UUI v7→v8 upgrade reduced CSS variables from 1,093 to 657 (a 40% drop) — that was a real Type 1 event.
+**Coverage.** Roughly 90% of brand decisions are just values. Mechanism 1 handles them all.
 
-**What tokens cannot do:** They change values, not behaviors. There is no token called `--button-personality`. Token swaps don't restructure logic.
+**What it can't do.** Change *behaviors*. There's no token called `--button-personality`. If the brand decision is "Button should be calm by default and only get loud on hover," that's a behavior — use Mechanism 2.
 
----
+**The catch.** Tokens are automatic only when the vendor and `brand.css` agree on the vocabulary. If the vendor renames or removes a token, `brand.css` needs a coordinated update (Type 1 change — see below).
 
-## Mechanism 2 — Wrappers (the explicit 5%)
+### Mechanism 2 — Wrappers (≈ 10% of brand)
 
-Some brand decisions aren't values — they're behaviors. UUI's Button `primary` variant means "orange background, white text." BOS's `primary` means "neutral surface by default, brand color appears on hover." That is a different interaction pattern, not a color swap.
+**The question.** *What does this primitive **do** that's different from what the vendor ships?*
 
-For these cases, BOS publishes its own version of the primitive at `components/ds/<primitive>/<primitive>.tsx`. The barrel at `components/base/index.ts` re-routes consumers to the BOS version. The vendor's pristine source stays at `components/base/<sub>/<primitive>/<file>.tsx` as a reference, but no application code routes through it.
+**Where it lives.** A small set of files — five today — at `components/ds/<primitive>/<name>.tsx`. Each wrapper is a *component-within-a-component*: a thin file we author that wraps a vendor primitive and applies our brand decision on top. Think Figma published variant — inherit the vendor's structure, override the parts that matter, and your app uses *your* version instead of the original.
 
-**In Figma terms:** think of it as publishing your own variant of someone else's master component. You inherit their structure, override the parts that matter, and your team links to your variant — not the original.
+**How it works.** When app code writes `import { Button } from '@/components/base'`, the barrel re-routes to `@/components/ds/buttons/button` (our wrapper). The vendor's pristine file still exists at `components/base/<sub>/<primitive>/<file>.tsx` as a reference, but at runtime our wrapper renders.
 
-Mechanism 2's wrappers come in **three shapes** (Shape A, B, C). Which one you use depends on how deep the override needs to go — see the dedicated section below.
+**Coverage.** The other ~10% — variant arms redefined, sizing scale restructured, new conditional logic, different interaction pattern. Five primitives have a wrapper today: Button, Tabs, Modal, FeaturedIcon, Tooltip.
 
----
+**Wrappers come in three shapes** (A, B, C). Pick the lightest shape that covers the decision; escalate only when forced.
 
-## Axes vs Shapes — what's the difference?
+#### Shape A — Behavioral re-export ("set different defaults")
 
-This is the part people get confused about, so let's make it explicit.
+A 5–10 line file. Import vendor primitive, call with new default props, re-export. Vendor's classes, rendering, behavior — all unchanged. We just pre-fill the props.
 
-You'll see two things named like this:
+- **When to use.** Brand decision is "we prefer different defaults" — no class changes, no rendering changes.
+- **BOS example.** [Tooltip](./tooltips/tooltip.tsx) — vendor ships `delay=0, placement="top"`. BOS wants `delay=300, placement="top"`. That's the entire override.
+- **Analogy.** *Same product, different out-of-the-box settings.* The vendor sells a toaster; we ship it preset to bagel mode.
 
-- **The six transform axes** (motion, focus, disabled, token syntax, devProps, vendor-primitive wrapper retention).
-- **The three wrapper shapes** (Shape A, B, C).
+#### Shape B — CVA override ("remap classes per variant")
 
-They sound similar but they're different concepts.
+A 30–100 line file. Re-implement the variant-mapping function (the `cva(...)` call that maps `size: "sm" | "md" | "lg"` to className strings). Keep vendor's renderer — only the classes per variant differ.
 
-| | **Axes (the six)** | **Shapes (the three)** |
-| --- | --- | --- |
-| What they describe | Things we **rewrite in vendor source code** automatically | Three different **kinds of wrapper file** we author by hand |
-| Apply to | `components/base/` — vendor files we don't author | `components/ds/<primitive>/<name>.tsx` — wrapper files we DO author |
-| When they run | Every `bun run uui:add` (codemod time) + write-time ESLint in `custom/` | Whenever we write or edit a wrapper file |
-| Driven by | Mechanical rules — same edit applied uniformly everywhere | Per-primitive judgement — pick the lightest shape that covers the decision |
+- **When to use.** Vendor's variant arms exist and you want them, but the classes each variant produces should be different.
+- **BOS example.** None today — Shape B is the "missing middle." Available; waiting for a use case where class deltas exist without behavioral change.
+- **Analogy.** *Same product structure, repainted variants.* The Small/Medium/Large arms are the right shape; we repaint each one without rebuilding the widget.
 
-Put another way: **axes are about cleaning up someone else's code so it matches our conventions**; **shapes are about replacing someone else's component with our own version**. A primitive can be touched by axes (codemod transforms its motion classes, focus ring, etc.) without ever needing a wrapper — most primitives are like this (Input, Select, Badge, Avatar). Only when there's a *behavioral* brand decision do we add a wrapper.
+#### Shape C — Full fork ("build your own from the same foundations")
 
----
+A 200–500 line file. Re-implement the entire primitive against the same React Aria foundations the vendor uses. Vendor's source becomes reference-only.
 
-## The Three Wrapper Shapes — when to use which
+- **When to use.** The brand decision crosses so many points that re-implementing is cleaner than overriding piecemeal. Or the vendor's variant arms aren't exposed for override. Or the brand wants new variant arms / interaction patterns the vendor doesn't ship.
+- **BOS examples.** [Button](./buttons/button.tsx) (calm-primary), [Tabs](./tabs/tabs.tsx), [Modal](./modals/modal.tsx), [FeaturedIcon](./featured-icon/featured-icon.tsx).
+- **Analogy.** *Build your own using the same internal parts.* The vendor's primitive is built on React Aria; when their pre-built widget doesn't fit and the brand decision is structural, we rebuild from those same React Aria parts ourselves.
 
-Three different *kinds* of wrapper file, in order of effort. Pick the lightest shape that covers the brand decision; escalate only when forced.
+#### The escalation rule
 
-### Shape A — Behavioral re-export ("set different defaults")
-
-**What it is.** A 5–10 line file. Imports the vendor primitive, calls it with new default props, re-exports the result. The vendor's actual rendering, classes, internal behavior — all unchanged. We just pre-fill the props.
-
-**When to use it.** The brand decision is "we prefer different defaults" — no class changes, no rendering changes.
-
-**BOS example today.** [Tooltip](./tooltips/tooltip.tsx). The vendor ships Tooltip with `delay=0, placement="top"`. BOS wants `delay=300, placement="top"` so tooltips feel less twitchy. Vendor's rendering, classes, a11y behavior — all identical. Just different default values for two props.
-
-**Designer analogy.** *Same product, different settings out-of-the-box.* The vendor sells a toaster; we ship the same toaster but pre-configured to "bagel mode."
-
-### Shape B — CVA override ("remap classes per variant")
-
-**What it is.** A 30–100 line file. Re-implements the variant-mapping function (the `cva(...)` call that maps variant props like `size: "sm" | "md" | "lg"` to className strings). Keeps the vendor's JSX renderer — only the *classes* each variant produces are different.
-
-**When to use it.** The vendor's variant arms exist and you want to keep them, but the class strings each variant produces should be different. The vendor's component structure is fine; only the visual output of variants needs to change.
-
-**BOS example today.** None. We don't currently use Shape B — every brand decision so far has fit Shape A (Tooltip's defaults) or required Shape C (Button's calm-primary couldn't be expressed by remapping classes alone). Shape B sits in the middle; we'll likely use it the next time a primitive needs class-level deltas but no behavioral change.
-
-**Designer analogy.** *Same product structure, repainted variants.* The vendor's Small/Medium/Large variants are in the right shape, but the paint colors don't match our brand — we repaint each variant without rebuilding the widget.
-
-### Shape C — Full fork ("build your own from the same foundations")
-
-**What it is.** A 200–500 line file. Re-implements the entire primitive against the same React Aria foundations the vendor uses. The vendor's source becomes a reference; at runtime, nothing reads from it — our wrapper is what renders.
-
-**When to use it.** The brand decision crosses so many points that re-implementing is cleaner than continuing to override. Or the vendor's variant arms aren't exposed for override. Or the brand wants new variant arms / interaction patterns the vendor doesn't ship.
-
-**BOS examples today.** Four wrappers:
-
-- [Button](./buttons/button.tsx) — calm-primary (neutral by default, brand color appears on hover) + 5 secondary deltas. Different interaction pattern, not just classes.
-- [Tabs](./tabs/tabs.tsx) — `ease-motion-out` retained for active-tab indicator + restructured sizing scale.
-- [Modal](./modals/modal.tsx) — BOS Dialog surface treatment + slower modal motion.
-- [FeaturedIcon](./featured-icon/featured-icon.tsx) — modern-theme + sm icon-stroke deltas.
-
-**Designer analogy.** *Build your own version using the same internal parts.* The vendor's primitive is built on React Aria; when their pre-built primitive doesn't fit and the brand decision is structural rather than paintable, we rebuild from those same React Aria parts ourselves.
-
-### The escalation rule
-
-**Always try Shape A first.** Most brand decisions are just defaults. *Different delay = Shape A. Different placement = Shape A.* If you can express the decision as "the same primitive with different default props," you're done.
+**Always try Shape A first.** Most brand decisions are just defaults dressed up to sound bigger. If you can express the decision as "the same primitive with different default props," you're done.
 
 **Escalate to Shape B only when Shape A can't.** When you need different classes per existing variant arm.
 
-**Escalate to Shape C only when Shape B can't.** When the brand wants new variant arms or a different interaction pattern. Shape C is the heaviest commitment — bigger file to maintain, each vendor update is a manual merge.
+**Escalate to Shape C only when Shape B can't.** When the brand wants new variant arms or a different interaction pattern. Shape C is the heaviest commitment — bigger file to maintain, manual merge per vendor update.
 
-In BOS today: 4 Shape C, 1 Shape A, 0 Shape B. Shape B is the "missing middle" waiting for the right use case.
+In BOS today: 4 Shape C, 1 Shape A, 0 Shape B.
 
 ---
 
@@ -194,6 +137,19 @@ The 6-axis design is parameterized — adding a 7th is mechanical:
 4. Add a write-time enforcement rule (if applicable): configure `better-tailwindcss/no-restricted-classes` for class-name patterns, or write a custom rule at `eslint-rules/<rule-name>.js` and register in `eslint.config.mjs`.
 5. Add unit tests at `tests/unit/scripts/fixtures/<axis-name>-*.ts`. The MDX docs reuse these fixtures as before/after examples.
 6. Update [eslint-coverage.mdx](./code-quality/eslint-coverage.mdx) and this doc.
+
+### Axes vs Shapes — what's the difference?
+
+People sometimes confuse the six axes with the three wrapper shapes (above, in §Mechanism 2). Quick resolver:
+
+| | **Axes (the six)** | **Shapes (the three)** |
+| --- | --- | --- |
+| What | Mechanical edits to **vendor source code** | Three different **kinds of wrapper file** we author |
+| Apply to | `base/` — vendor files we don't author | `ds/<primitive>/<name>.tsx` — wrapper files we DO author |
+| When | Every `bun run uui:add` + write-time ESLint in `custom/` | Whenever we write or edit a wrapper file |
+| Driven by | Mechanical rules — same edit uniformly everywhere | Per-primitive judgement — pick the lightest shape |
+
+**The TL;DR.** Axes are about cleaning up someone else's code so it matches our conventions. Shapes are about replacing someone else's component with our own version. Most primitives only get axes (Input, Select, Badge, Avatar). Only the 5 with a *behavioral* brand decision get a wrapper.
 
 ---
 
@@ -389,6 +345,6 @@ Blocker today: a second adopter showing up. Premature now; tracked.
 - [transforms/dev-props.mdx](./transforms/dev-props.mdx) — Axis 5
 - [transforms/wrapper-import-retention.mdx](./transforms/wrapper-import-retention.mdx) — Axis 6
 - [code-quality/eslint-coverage.mdx](./code-quality/eslint-coverage.mdx) — current axis × ESLint enforcement matrix
-- Comprehensive narrative version: `docs/design-system/frontend-framework.md`
+- Comprehensive narrative version: `docs/design-system/design-system-framework.md`
 - Vendor change framework: `docs/spikes/design-system/2026-05-06-vendor-design-system-upgrades.md`
 - Brand decisions: `components/ds/_exceptions.md`
