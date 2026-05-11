@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link01, SearchLg } from '@untitledui-pro/icons/line';
 import { Modal } from '@/components/custom/shared/overlays/Modal';
-import { Button } from '@/components/ds/buttons/button';
+import { Button } from '@/components/base/base/buttons/button';
 import { devProps } from '@/lib/utils/dev-props';
 import { Icon } from '@/components/custom/shared/branding/Icon';
 import { CategoryInput } from '@/components/custom/shared/forms/CategoryInput';

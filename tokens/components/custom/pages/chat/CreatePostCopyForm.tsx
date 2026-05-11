@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { devProps } from '@/lib/utils/dev-props';
 import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, XClose, Link01 as LinkIcon, Check, Zap, Upload01 as Upload } from '@untitledui-pro/icons/line';
-import { Button } from '@/components/ds/buttons/button';
+import { Button } from '@/components/base/base/buttons/button';
 import type {
   PostCopyFormData,
   Channel,

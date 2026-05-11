@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { XClose, Check, ArrowRight, Fingerprint01 as Fingerprint, Type01, File01, Palette } from '@untitledui-pro/icons/line';
-import { Button } from '@/components/ds/buttons/button';
+import { Button } from '@/components/base/base/buttons/button';
 import { devProps } from '@/lib/utils/dev-props';
 
 export type BrandHubSection = 'logo' | 'colors' | 'typography' | 'guidelines';

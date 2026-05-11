@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '@/components/ds/buttons/button';
+import { Button } from '@/components/base/base/buttons/button';
 import { Dialog, Modal, ModalOverlay, SlideoutMenu } from './slideout-menu';
 
 void Dialog;

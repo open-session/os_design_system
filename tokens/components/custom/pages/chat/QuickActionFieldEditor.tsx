@@ -8,7 +8,7 @@ import {
   Trash01,
   XClose,
 } from '@untitledui-pro/icons/line';
-import { Button } from '@/components/ds/buttons/button';
+import { Button } from '@/components/base/base/buttons/button';
 import type { ContentFormat } from '@/lib/quick-actions';
 import { CONTENT_FORMATS } from '@/lib/quick-actions';
 import { devProps } from '@/lib/utils/dev-props';

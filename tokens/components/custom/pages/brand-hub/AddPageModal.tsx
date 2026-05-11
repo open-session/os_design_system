@@ -17,7 +17,7 @@ import {
 } from '@untitledui-pro/icons/line';
 import { ModalOverlay, Modal, Dialog } from '@/components/base/application/modals/modal';
 import { Input } from '@/components/base/base/input/input';
-import { Button } from '@/components/ds/buttons/button';
+import { Button } from '@/components/base/base/buttons/button';
 import { devProps } from '@/lib/utils/dev-props';
 import type { BrandHubPageType, BrandHubPage } from '@/lib/supabase/types';
 

@@ -2,13 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Button } from './button';
 
 /**
- * BOS Button — the canonical product Button. Imports through the barrel
- * (`@/components/base`) resolve here, NOT to the upstream UUI vendor file at
- * `components/base/base/buttons/button.tsx` (which is preserved as the
- * pristine vendor-survival baseline).
+ * BOS Button — the vendor primitive (UUI Pro v8) with the 5-axis BOS transforms
+ * applied at vendor-pull time. The Shape C wrapper at components/ds/buttons/
+ * was removed in the DS framework simplification pass; UUI's primary/secondary
+ * variants accepted as the new resting state.
  *
- * The vendor-pristine Button is rendered separately at `Base (Upstream UUI)/Button`
- * for visual comparison / vendor-swap auditing.
+ * Consumer entry point: `import { Button } from '@/components/base'`.
  */
 const meta: Meta<typeof Button> = {
   title: 'Base/Base/Button',

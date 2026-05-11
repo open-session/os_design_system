@@ -15,7 +15,7 @@ import {
     Heading as AriaHeading,
     useSlottedContext,
 } from "react-aria-components";
-import { Button } from "@/components/ds/buttons/button";
+import { Button } from "@/components/base/base/buttons/button";
 import { InputDateBase } from "@/components/base/base/input/input-date";
 import { cx } from "@/utils/cx";
 import { devProps } from "@/lib/utils/dev-props";

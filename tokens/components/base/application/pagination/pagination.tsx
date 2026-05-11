@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, ChevronLeft, ChevronLeftDouble, ChevronRight, Ch
 import { ButtonGroup, ButtonGroupItem } from "@/components/base/base/button-group/button-group";
 import { InputBase } from "@/components/base/base/input/input";
 import { Select } from "@/components/base/base/select/select";
-import { Button } from "@/components/ds/buttons/button";
+import { Button } from "@/components/base/base/buttons/button";
 import { useBreakpoint } from "@/hooks/use-breakpoint";
 import { cx } from "@/utils/cx";
 import { devProps } from "@/lib/utils/dev-props";

@@ -38,10 +38,7 @@ export {
 
 export { ButtonGroup, ButtonGroupItem } from "./base/button-group/button-group";
 
-// Button is re-exported from the BOS Layer-4 wrapper (ds/buttons/button.tsx, Shape C),
-// NOT from base/base/buttons/button.tsx (which is preserved as vendor-pristine UUI source).
-// See components/ds/_wrapper-template.md.
-export { Button } from "@/components/ds/buttons/button";
+export { Button } from "./base/buttons/button";
 export { CloseButton } from "./base/buttons/close-button";
 
 export { Checkbox, CheckboxBase } from "./base/checkbox/checkbox";

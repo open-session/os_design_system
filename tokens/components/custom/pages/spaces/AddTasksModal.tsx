@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Modal } from '@/components/custom/shared/overlays/Modal';
-import { Button } from '@/components/ds/buttons/button';
+import { Button } from '@/components/base/base/buttons/button';
 import {
   CheckSquare,
   Plus,

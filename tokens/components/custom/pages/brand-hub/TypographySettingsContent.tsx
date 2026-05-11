@@ -18,7 +18,7 @@ import {
 } from '@untitledui-pro/icons/line';
 import { useBrandFonts } from '@/hooks/useBrandFonts';
 import type { BrandFont, BrandFontMetadata, FontWeight, FontFormat } from '@/lib/supabase/types';
-import { Button } from '@/components/ds/buttons/button';
+import { Button } from '@/components/base/base/buttons/button';
 import { Input } from '@/components/base/base/input/input';
 import { Select } from '@/components/base/base/select/select';
 import type { SelectItemType } from '@/components/base/base/select/select';
