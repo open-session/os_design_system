@@ -3,14 +3,13 @@ import { Button } from '@/components/ds/buttons/button';
 import { Dialog, DialogTrigger, Modal, ModalOverlay } from './modal';
 
 /**
- * BOS Modal — the canonical product Modal/Dialog/ModalOverlay. Imports through
- * the barrel (`@/components/base`) resolve here, NOT to the upstream UUI v8
- * vendor files at `components/base/application/modals/modal.tsx`
- * (which are preserved as the pristine vendor-survival baseline).
+ * BOS Modal — the vendor primitive (UUI Pro v8) with the 5-axis BOS transforms
+ * applied at vendor-pull time. The Shape C wrapper at components/ds/modals/
+ * was removed in the DS framework simplification pass; vendor Dialog surface
+ * treatment accepted as the new resting state.
  *
- * Type 3 brand decisions retained:
- *   1. Dialog owns surface treatment (rounded, bg, shadow).
- *   2. Slower modal motion: duration-moderate enter, duration-standard exit.
+ * Consumer entry point: `import { Modal, ModalOverlay, Dialog, DialogTrigger }
+ * from '@/components/base'`.
  */
 const meta: Meta<typeof Modal> = {
   title: 'Base/Application/Modal',
