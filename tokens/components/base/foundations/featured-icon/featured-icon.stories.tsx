@@ -3,8 +3,12 @@ import { Star01 } from '@untitledui/icons';
 import { FeaturedIcon } from './featured-icon';
 
 /**
- * BOS FeaturedIcon — Layer 4 wrapper (Shape C fork). The canonical FeaturedIcon entry point.
- * Imports through `@/components/base` resolve here, NOT to the upstream UUI vendor file.
+ * BOS FeaturedIcon — the vendor primitive (UUI Pro v8) with the 5-axis BOS
+ * transforms applied at vendor-pull time. The Shape C wrapper at
+ * components/ds/featured-icon/ was removed in the DS framework simplification
+ * pass; UUI defaults accepted as the new resting state.
+ *
+ * Consumer entry point: `import { FeaturedIcon } from '@/components/base'`.
  */
 const meta: Meta<typeof FeaturedIcon> = {
   title: 'Base/Foundations/FeaturedIcon',

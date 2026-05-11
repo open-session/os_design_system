@@ -4,7 +4,7 @@ import type { ComponentProps, ComponentPropsWithRef } from "react";
 import { Children, createContext, isValidElement, useContext } from "react";
 import { FileIcon } from "@untitledui/file-icons";
 import { SearchLg } from "@untitledui/icons";
-import { FeaturedIcon as FeaturedIconbase } from "@/components/ds/featured-icon/featured-icon";
+import { FeaturedIcon as FeaturedIconbase } from "@/components/base/foundations/featured-icon/featured-icon";
 import type { BackgroundPatternProps } from "@/components/base/shared-assets/background-patterns";
 import { BackgroundPattern } from "@/components/base/shared-assets/background-patterns";
 import { Illustration as Illustrations } from "@/components/base/shared-assets/illustrations";
