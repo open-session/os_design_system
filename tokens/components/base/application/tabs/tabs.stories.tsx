@@ -6,8 +6,12 @@ void TabList;
 void TabPanel;
 
 /**
- * BOS Tabs — Layer 4 wrapper (Shape C fork). The canonical Tabs entry point.
- * Imports through `@/components/base` resolve here, NOT to the upstream UUI vendor file.
+ * BOS Tabs — the vendor primitive (UUI Pro v8) with the 5-axis BOS transforms
+ * applied at vendor-pull time. The Shape C wrapper at `components/ds/tabs/`
+ * was removed in the DS framework simplification pass once codemod Axis 1b
+ * (ease-linear → ease-motion-out) closed the only remaining manual delta.
+ *
+ * Consumer entry point: `import { Tabs } from '@/components/base'`.
  */
 const meta: Meta = {
   title: 'Base/Application/Tabs',

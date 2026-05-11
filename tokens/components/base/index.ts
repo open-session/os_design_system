@@ -119,8 +119,7 @@ export { SlideoutMenu } from "./application/slideout-menus/slideout-menu";
 
 export { TableRowActionsDropdown } from "./application/table/table";
 
-// Tabs lifted to ds/ (Shape C wrapper) so brand variant overrides survive UUI re-pulls.
-export { Tab, TabList, TabPanel, Tabs } from "@/components/ds/tabs/tabs";
+export { Tab, TabList, TabPanel, Tabs } from "./application/tabs/tabs";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // foundations/ — building-block primitives
