@@ -1,6 +1,6 @@
-# @open-session/design-system
+# @opensession/design-system
 
-Open Session design system, distributed as a private npm package on the `@open-session` scope.
+Open Session design system, distributed as a private npm package on the `@opensession` scope.
 
 - **v0.1.x** — brand tokens only: `brand.css` (Tailwind v4 `@theme` source of truth) and a Tailwind preset.
 - **v0.2.x** — adds React components (`base/`, `custom/shared/`, `custom/pages/`) with build-time shims and mock fixtures so they render inside Figma Make.
@@ -12,7 +12,7 @@ This package is private. It is published to npmjs.com under a restricted scope a
 ## Install
 
 ```bash
-npm install @open-session/design-system
+npm install @opensession/design-system
 ```
 
 Authentication required — see [Consumer setup](#consumer-setup).
@@ -25,11 +25,11 @@ Two entry points:
 
 ```ts
 // 1. Inject brand CSS variables (Tailwind v4 @theme)
-import "@open-session/design-system/tokens/brand.css";
+import "@opensession/design-system/tokens/brand.css";
 
 // 2. Use the Tailwind preset
 // tailwind.config.ts
-import preset from "@open-session/design-system/tokens/preset";
+import preset from "@opensession/design-system/tokens/preset";
 
 export default {
   presets: [preset],
@@ -40,7 +40,7 @@ export default {
 Or merge the theme manually:
 
 ```ts
-import { theme } from "@open-session/design-system/tokens/preset";
+import { theme } from "@opensession/design-system/tokens/preset";
 
 export default {
   theme: {
@@ -60,7 +60,7 @@ The CSS file ships verbatim — it contains Tailwind v4 `@theme` blocks that mus
 ### Local development
 
 ```bash
-npm login --scope=@open-session --registry=https://registry.npmjs.org
+npm login --scope=@opensession --registry=https://registry.npmjs.org
 ```
 
 ### CI / hosted environments
@@ -68,11 +68,11 @@ npm login --scope=@open-session --registry=https://registry.npmjs.org
 Add to your project's `.npmrc`:
 
 ```
-@open-session:registry=https://registry.npmjs.org
+@opensession:registry=https://registry.npmjs.org
 //registry.npmjs.org/:_authToken=${NPM_TOKEN}
 ```
 
-Where `NPM_TOKEN` is a read-only npm automation token with access to `@open-session/*` packages.
+Where `NPM_TOKEN` is a read-only npm automation token with access to `@opensession/*` packages.
 
 ### Figma Make
 
@@ -100,7 +100,7 @@ The BOS-3.0 sync workflow (`.github/workflows/sync.yml`, added in v0.2) updates 
 cd package
 npm install
 npm run build      # produces dist/tokens/{brand.css,tailwind.config.{js,d.ts}}
-npm pack           # produces @open-session-design-system-x.y.z.tgz
+npm pack           # produces @opensession-design-system-x.y.z.tgz
 ```
 
 To test consumption end-to-end against the packed tarball:
@@ -108,8 +108,8 @@ To test consumption end-to-end against the packed tarball:
 ```bash
 cd /tmp && mkdir consumer && cd consumer
 npm init -y
-npm install ../path/to/os_design_system/package/open-session-design-system-*.tgz
-node -e "import('@open-session/design-system/tokens/preset').then(m => console.log(Object.keys(m)))"
+npm install ../path/to/os_design_system/package/opensession-design-system-*.tgz
+node -e "import('@opensession/design-system/tokens/preset').then(m => console.log(Object.keys(m)))"
 ```
 
 ---
@@ -118,13 +118,13 @@ node -e "import('@open-session/design-system/tokens/preset').then(m => console.l
 
 Items requiring action outside this repo:
 
-- [ ] Verify ownership of `@open-session` org on npmjs.com (already exists per setup)
-- [ ] Generate **publish** automation token: `Settings → Access Tokens → Generate New Token → Granular Token`, with `Write` access to `@open-session/*`. Lifetime caps at 90 days.
+- [ ] Verify ownership of `@opensession` org on npmjs.com (already exists per setup)
+- [ ] Generate **publish** automation token: `Settings → Access Tokens → Generate New Token → Granular Token`, with `Write` access to `@opensession/*`. Lifetime caps at 90 days.
 - [ ] Generate **read-only** automation token for Figma Make and internal CI consumers (separate from publish token)
 - [ ] Add publish token to this repo's secrets as `NPM_TOKEN` (`Settings → Secrets and variables → Actions`)
 - [ ] Tag the release: `git tag v0.1.0 && git push origin v0.1.0` — fires the publish workflow
 - [ ] Confirm publish succeeded on npmjs.com with provenance attestation visible
-- [ ] In a throwaway Vite project, `npm install @open-session/design-system` and verify both subpath imports resolve
+- [ ] In a throwaway Vite project, `npm install @opensession/design-system` and verify both subpath imports resolve
 - [ ] In Figma Make workspace, paste the `.npmrc` snippet into the admin panel and confirm tokens render in the canvas
 
 ---

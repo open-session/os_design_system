@@ -1,7 +1,7 @@
 {
-  "name": "@open-session/design-system",
+  "name": "@opensession/design-system",
   "version": "0.1.0",
-  "description": "Open Session design system — brand tokens and Tailwind preset (v0.1) and components (v0.2+). Private to @open-session.",
+  "description": "Open Session design system — brand tokens and Tailwind preset (v0.1) and components (v0.2+). Private to @opensession.",
   "type": "module",
   "license": "UNLICENSED",
   "sideEffects": ["./dist/tokens/brand.css"],

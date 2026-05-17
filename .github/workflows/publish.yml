@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
-          scope: "@open-session"
+          scope: "@opensession"
           cache: npm
           cache-dependency-path: package/package-lock.json
 
@@ -43,7 +43,7 @@ jobs:
           # writes one to $RUNNER_TEMP and points NPM_CONFIG_USERCONFIG at it, but
           # that path interacts unreliably with `defaults.run.working-directory`
           # (npm publish here landed on ENEEDAUTH). Writing one in cwd is bulletproof.
-          printf '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n@open-session:registry=https://registry.npmjs.org/\n' > .npmrc
+          printf '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n@opensession:registry=https://registry.npmjs.org/\n' > .npmrc
           # --provenance requires public access; we publish restricted so it is omitted.
           npm publish --access restricted
         env:
