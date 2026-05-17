@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/opensesh/os_design_system.git",
+    "url": "git+https://github.com/open-session/os_design_system.git",
     "directory": "package"
   },
   "exports": {
