@@ -38,6 +38,12 @@ jobs:
         run: npm run build
 
       - name: Publish
-        run: npm publish --access restricted --provenance
+        run: |
+          # Write project-scoped .npmrc with the auth token reference. setup-node@v4
+          # writes one to $RUNNER_TEMP and points NPM_CONFIG_USERCONFIG at it, but
+          # that path interacts unreliably with `defaults.run.working-directory`
+          # (npm publish here landed on ENEEDAUTH). Writing one in cwd is bulletproof.
+          printf '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n@open-session:registry=https://registry.npmjs.org/\n' > .npmrc
+          npm publish --access restricted --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
