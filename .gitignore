@@ -23,6 +23,9 @@ node_modules/
 # Build outputs
 dist/
 build/
+# ...except the package's build/ folder which holds source scripts, not output
+!package/build/
+!package/build/**
 
 # Large video files
 content/videos/

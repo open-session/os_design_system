@@ -1,0 +1,44 @@
+{
+  "name": "@open-session/design-system",
+  "version": "0.1.0",
+  "description": "Open Session design system — brand tokens and Tailwind preset (v0.1) and components (v0.2+). Private to @open-session.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "sideEffects": ["./dist/tokens/brand.css"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://registry.npmjs.org"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opensesh/os_design_system.git",
+    "directory": "package"
+  },
+  "exports": {
+    "./tokens/brand.css": "./dist/tokens/brand.css",
+    "./tokens/preset": {
+      "types": "./dist/tokens/tailwind.config.d.ts",
+      "import": "./dist/tokens/tailwind.config.js"
+    }
+  },
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.6.0"
+  },
+  "scripts": {
+    "build": "npm run build:clean && npm run build:types && npm run build:copy",
+    "build:clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build:types": "tsc -p tsconfig.build.json",
+    "build:copy": "node build/copy-css.mjs",
+    "verify-tag": "node build/verify-tag-version.mjs",
+    "prepublishOnly": "npm run build"
+  }
+}
