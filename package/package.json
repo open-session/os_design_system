@@ -1,9 +1,9 @@
 {
   "name": "@opensession/design-system",
-  "version": "0.1.0",
-  "description": "Open Session design system — brand tokens and Tailwind preset (v0.1) and components (v0.2+). Private to @opensession.",
+  "version": "0.1.1",
+  "description": "Open Session design system — brand tokens and Tailwind preset (v0.1) and components (v0.2+). Distributed publicly on npm; see LICENSE for usage terms.",
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "SEE LICENSE IN LICENSE",
   "sideEffects": ["./dist/tokens/brand.css"],
   "files": [
     "dist",
@@ -11,8 +11,9 @@
     "LICENSE"
   ],
   "publishConfig": {
-    "access": "restricted",
-    "registry": "https://registry.npmjs.org"
+    "access": "public",
+    "registry": "https://registry.npmjs.org",
+    "provenance": true
   },
   "repository": {
     "type": "git",

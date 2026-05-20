@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
+      id-token: write   # required for npm Trusted Publishers (OIDC) + provenance
     defaults:
       run:
         working-directory: package
@@ -24,7 +24,6 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
-          scope: "@opensession"
           cache: npm
           cache-dependency-path: package/package-lock.json
 
@@ -38,13 +37,8 @@ jobs:
         run: npm run build
 
       - name: Publish
-        run: |
-          # Write project-scoped .npmrc with the auth token reference. setup-node@v4
-          # writes one to $RUNNER_TEMP and points NPM_CONFIG_USERCONFIG at it, but
-          # that path interacts unreliably with `defaults.run.working-directory`
-          # (npm publish here landed on ENEEDAUTH). Writing one in cwd is bulletproof.
-          printf '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n@opensession:registry=https://registry.npmjs.org/\n' > .npmrc
-          # --provenance requires public access; we publish restricted so it is omitted.
-          npm publish --access restricted
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # Auth happens via npm Trusted Publishers (OIDC) using the id-token
+        # permission above. No NPM_TOKEN, no .npmrc write, no OTP.
+        # Configured on npmjs.com per package at:
+        # Package → Settings → Trusted publishing
+        run: npm publish --access public --provenance

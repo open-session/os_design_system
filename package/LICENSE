@@ -1,12 +1,16 @@
 Copyright (c) Open Session. All rights reserved.
 
-This package is proprietary and confidential. It is distributed under a private
-npm scope (@opensession) and intended for use only by Open Session and its
-authorized partners (including the Open Session Figma Make workspace).
+This package is distributed publicly on the npm registry under the
+@opensession scope, primarily for use by Open Session, its authorized
+partners, and the Open Session Figma Make workspace.
 
-Redistribution, public publication, or use outside of authorized Open Session
-contexts is not permitted.
+Public distribution is for installation convenience — it does not grant
+any license to redistribute, sublicense, or commercially exploit the
+package or its contents outside of authorized Open Session contexts.
+All rights are reserved.
 
 This package incorporates components derived from Untitled UI Pro under a
-separate license held by Open Session. Untitled UI Pro source is included
-solely for internal/authorized use and is not separately redistributable.
+separate commercial license held by Open Session. Inclusion of Untitled UI
+Pro source under this package is permitted under that license for internal
+and authorized use only; it does not grant downstream consumers any rights
+to redistribute the Untitled UI Pro source.
