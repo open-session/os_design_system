@@ -39,6 +39,14 @@ jobs:
         # gitignored as a defense-in-depth in case anyone runs this locally.
         run: |
           printf '%s\n' "$FIGMA_NPMRC" > .npmrc
+          echo "DEBUG: .npmrc byte count = $(wc -c < .npmrc)"
+          echo "DEBUG: .npmrc line count = $(wc -l < .npmrc)"
+          echo "DEBUG: .npmrc structure (token will be redacted by GHA):"
+          # Print with token portion stripped to avoid any chance of leaking.
+          # The registry-URL parts will be redacted by GHA if FIGMA_NPMRC contains them.
+          sed 's/=.*$/=<value>/' .npmrc
+          echo "DEBUG: npm config get registry = $(npm config get registry)"
+          echo "DEBUG: npm config get @opensession:registry = $(npm config get @opensession:registry)"
           npm publish
         env:
           FIGMA_NPMRC: ${{ secrets.FIGMA_NPMRC }}
