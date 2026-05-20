@@ -1,7 +1,7 @@
 {
   "name": "@opensession/design-system",
-  "version": "0.1.1",
-  "description": "Open Session design system — brand tokens and Tailwind preset (v0.1) and components (v0.2+). Distributed publicly on npm; see LICENSE for usage terms.",
+  "version": "0.1.2",
+  "description": "Open Session design system — brand tokens and Tailwind preset (v0.1) and components (v0.2+). Distributed via Figma's npm registry for use in Figma Make kits.",
   "type": "module",
   "license": "SEE LICENSE IN LICENSE",
   "sideEffects": ["./dist/tokens/brand.css"],
@@ -10,11 +10,6 @@
     "README.md",
     "LICENSE"
   ],
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org",
-    "provenance": true
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/open-session/os_design_system.git",
